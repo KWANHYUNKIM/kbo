@@ -1,26 +1,40 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="layout/header::userHead"></head>
+
+<head th:replace="layout/header::userHead"></head> <!-- 헤더 -->
+
 <body>
+
 <div th:replace="layout/top::header"></div>
-<div th:replace="layout/sidebar ::sidebar"></div>
-        <div style="padding-top:50px;"  class="col">
-            <div class="container text-center">
-                <!--<div class="security"></div> -->
-                <!-- Todo : 광고 -->
-                <!-- Todo : TEAM RANKING / PLAYER RANKING  -->
-                <!-- Todo : 경기정보 -->
-                <!-- Todo : KBO 소식 , KBO 뉴스, 선수 이동 현황 -->
-                <!-- Todo : 구단 홈페이지 -->
-                <!-- Todo : 하이라이트 -->
-                <!-- Todo : 비디오 판독 -->
-                <!-- Todo : 인스타그램 -->
-                <!-- Todo : Youtube -->
-                <!-- Todo : 캠페인 / 협찬 -->
-            </div>
+<div class="container-fluid">
+    <div th:replace="layout/sidebar ::sidebar"></div> <!-- 사이드 바 -->
+    <div class="row">
+        <!-- 광고 -->
+        <div class="col-md-4">
+            <div th:replace="kbo/advertises :: advertise"></div>
+        </div>
+
+        <!-- 사이드바 -->
+        <div class="col-md-4">
+            <!-- Content goes here -->
+        </div>
+
+        <!-- 테이블 -->
+        <div class="col-md-4">
+            <div th:replace="kbo/teamBoardList :: body"></div>
         </div>
     </div>
+
+    <!-- Add more rows or customize as needed -->
+    <!-- Todo : 경기정보 -->
+    <!-- Todo : KBO 소식 , KBO 뉴스, 선수 이동 현황 -->
+    <!-- Todo : 구단 홈페이지 -->
+    <!-- Todo : 하이라이트 -->
+    <!-- Todo : 비디오 판독 -->
+    <!-- Todo : 인스타그램 -->
+    <!-- Todo : Youtube -->
+    <!-- Todo : 캠페인 / 협찬 -->
 </div>
-<div th:replace="layout/footer::footer"></div>
 </body>
+<div th:replace="layout/footer::footer"></div>
 </html>
