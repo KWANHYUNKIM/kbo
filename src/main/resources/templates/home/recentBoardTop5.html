@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+</head>
+
+<body>
+<div class="table-responsive">
+  <table class="table table-hover h-auto w-auto">
+    <thead>
+    <tr style = "font-size: 14px;">
+      <th>제목</th>
+      <th>작성자</th>
+      <th>조회수</th>
+      <th>좋아요</th>
+      <th>작성날짜</th>
+    </tr>
+    </thead>
+    <tr th:if="${not board.content.isEmpty()}" th:each="board : ${boards}"
+        style="font-size: 14px;">
+      <td>
+        <a th:href="@{/boards/{boardId}/detail(boardId=${board.id})}" th:text="${board.title}" style="color : black"></a>
+      </td>
+      <td th:text="${board.account.username}"></td>
+      <td th:text="${board.viewCount}"></td>
+      <td th:text="${board.likes}"></td>
+      <td th:text="${board.createdDate.year} + '-' + ${board.createdDate.monthValue} + '-' + ${board.createdDate.dayOfMonth}"></td>
+      <!-- 추가: 현재 사용자와 게시글 작성자를 비교하여 버튼 표시 -->
+    </tr>
+    <tr th:if="${board.content.isEmpty()}">
+      <td colspan="13">No records found</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

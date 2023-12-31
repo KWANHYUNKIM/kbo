@@ -1,6 +1,5 @@
 package io.security.corespringsecurity.domain.dto.kbo;
 
-import io.security.corespringsecurity.domain.entity.kbo.TeamEntity;
 import lombok.*;
 
 @Data

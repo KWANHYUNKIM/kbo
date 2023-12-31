@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="banner-1" >
+  <head>
+    <link rel ="stylesheet" th:href="@{/css/layout/bnt-banner.css}"/>
+  </head>
+
+  <body>
+    <div class = "banner-img">
+      <img class="banner_1 w-75" src="images/banner/banner_1.png" alt="광고 이미지">
+      <!-- 버튼 추가 -->
+      <a th:href="@{/다른라우터}" class="btn-banner" >미디어∙뉴스</a>
+    </div>
+  </body>
+</div>
+</html>

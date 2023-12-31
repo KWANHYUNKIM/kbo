@@ -27,6 +27,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private HttpServletRequest request;
 
+    // auth 부여
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         Account account = userRepository.findByUsername(username);

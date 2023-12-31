@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<!-- Todo : Padding 작업  -->
+
+<div class ="container p-3">
+  <head th:replace="layout/header::userHead"></head> <!-- 헤더 -->
+  <header th:replace="layout/topOverTop::topOverTop"></header>
+  <header th:replace="layout/top::header"></header>
+</div>
+<body>
+
+<div class="container">
+  <div class="row">
+    <div class ="col-sm-3">
+      <div th:replace="settings/layout/settingSidebar ::sidebar"></div> <!-- 사이드 바 --> <!-- col-sm-3 -->
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Todo: 광고 -->
+
+  </div>
+  <row class = "row p-3">
+    <!-- 광고 -->
+    <div class="col-8 col-sm-6">
+    </div>
+    <!-- 팀순위 -->
+    <div class="col-8 col-sm-6">
+    </div>
+  </row>
+
+  <row class = "row ">
+    <!-- banner#1 -->
+    <div class="col-8 col-sm-6 mx-auto">
+
+    </div>
+    <!-- banner#2 -->
+    <div class="col-8 col-sm-6 mx-auto">
+    </div>
+  </row>
+
+</div>
+</body>
+<div th:replace="layout/footer::footer"></div>
+</html>

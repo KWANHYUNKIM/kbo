@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<div th:fragment="sidebar">
+  <nav class="d-none d-md-block bg-light sidebar"> <!-- 사이드 바  -->
+    <div class="sidebar-sticky">
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <div style="padding-top:10px;" class="nav flex-column nav-pills" aria-orientation="vertical">
+            <li class="nav-item"><a class="nav-link text-dark" th:href="@{/}" style="margin:5px">선수 조회</a></li>
+            <li class="nav-item"><a class="nav-link text-dark" th:href="@{/}" style="margin:5px">선수 등록 현황</a></li>
+            <li class="nav-item"><a class="nav-link text-dark" th:href="@{/}" style="margin:5px">선수 이동 현황</a></li>
+            <li class="nav-item"><a class="nav-link text-dark" th:href="@{/}" style="margin:5px">수상 현황</a></li>
+            <li class="nav-item"><a class="nav-link text-dark" th:href="@{/}" style="margin:5px">레전드 40</a></li>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</div>
+</html>

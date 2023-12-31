@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<div class ="container p-3">
+    <head th:replace="layout/header::userHead"></head> <!-- 헤더 -->
+    <header th:replace="layout/top::header"></header>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+</div>
+<body>
+<div class="row p-3">
+    <div class="col-sm-3">
+        <div th:replace="player/playerSider::sidebar"></div>
+    </div>
+</div>
+<div class="row">
+    <div class="container">
+        <h1>선수조회</h1>
+    </div>
+</div>
+<div class="row p-3">
+    <div class="container">
+        <div th:replace="teamRankings/layout/teamFilter :: teamFilter"></div>
+        <div th:replace="teamRankings/layout/teamPosition :: teamPosition"></div>
+        <input type="text" id="teamName" name="teamName" placeholder="검색어를 입력하세요">
+        <button onclick="applyFilters()">검색</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="container">
+        <table class="table table-hover h-auto w-auto" style="font-size: 14px;">
+            <thead>
+            <tr>
+                <th>등번호</th>
+                <th>선수명</th>
+                <th>팀명</th>
+                <th>포지션</th>
+                <th>생년월일</th>
+                <th>키</th>
+                <th>몸무게</th>
+                <th>출신교</th>
+            </tr>
+            </thead>
+            <tbody th:if="${not player.isEmpty()}">
+            <h6>검색결과 : <span th:text="${totalResults}"></span> 건</h6>
+            <tr th:each="players, loop : ${player}">
+                <td th:text="${players.jerseyNumber}"></td>
+                <td th:text="${players.name}"></td>
+                <td th:text="${players.team}"></td>
+                <td th:text="${players.position}"></td>
+                <td th:text="${players.birthDate}"></td>
+                <td th:text="${players.height}"></td>
+                <td th:text="${players.weight}"></td>
+                <td th:text="${players.careerHistory}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+
+<div th:replace="layout/footer::footer"></div>
+</body>
+
+<script>
+    function applyFilters() {
+        // 선택된 팀과 포지션 가져오기
+        var selectedTeam = $("#teamFilter").val();
+        var selectedPosition = $("#teamPosition").val();
+        var selectedName = $("#teamName").val();
+
+        // 서버에 선택된 팀과 포지션에 대한 데이터 요청
+        $.ajax({
+            url: '/player/search/sort',
+            type: 'GET',
+            data: { team: selectedTeam, position: selectedPosition, name:selectedName },
+            success: function (data) {
+                console.log(data);
+                // 데이터 표시
+                $('.table').html($(data).find('.table').html());
+            },
+            error: function () {
+                console.error('데이터를 불러오는 데 실패했습니다.');
+            }
+        });
+    }
+</script>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="sortedData">
+<head>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+
+
+<body>
+<div class="table-responsive" id="tableContainer">
+    <div class="container">
+      <div th:replace="teamRankings/layout/teamFilter :: teamFilter"></div>
+      <div th:replace="teamRankings/layout/teamSeasonFilter :: teamSeasonFilter"></div>
+      <div th:replace="teamRankings/layout/teamYear :: teamYearFilter"></div>
+      <div th:replace="teamRankings/layout/teamPosition :: teamPosition"></div>
+
+    </div>
+    <table class="table table-hover h-auto w-auto" id="baseballTable">
+      <thead>
+      <tr style="font-size: 14px;">
+        <!-- 헤더 부분은 그대로 두기 -->
+        <th>선수명</th>
+        <th>팀명</th>
+        <th><a onclick="sortTable('avg')" id="avgHeader">타율</a></th>
+        <th><a onclick="sortTable('games')" id="gamesHeader">경기</a></th>
+        <th><a onclick="sortTable('plateAppearances')" id="plateAppearances">타석</a></th>
+        <th><a onclick="sortTable('atBats')" id="atBatsHeader">타수</a></th>
+        <th><a onclick="sortTable('runs')" id="runsHeader">득점</a></th>
+        <th><a onclick="sortTable('hits')" id="hitsHeader">안타</a></th>
+        <th><a onclick="sortTable('doubles')" id="doublesHeader">2루타</a></th>
+        <th><a onclick="sortTable('triples')" id="triplesHeader">3루타</a></th>
+        <th><a onclick="sortTable('homeRuns')" id="homeRunsHeader">홈런</a></th>
+        <th><a onclick="sortTable('totalBases')" id="totalBasesHeader">루타</a></th>
+        <th><a onclick="sortTable('rbi')" id="rbiHeader">타점</a></th>
+        <th><a onclick="sortTable('sac')" id="sacHeader">희생번트</a></th>
+        <th><a onclick="sortTable('sf')" id="sfHeader">희생플레이</a></th>
+      </tr>
+      </thead>
+    <tbody id="pagingData">
+    <div th:if="${not paging.isEmpty()}">
+      <tr th:each="record, loop : ${paging}"
+          style="font-size: 14px;">
+        <!-- 페이징 처리 이동 전에 tbody 태그 안으로 이동 -->
+        <td th:text="${record.playerName}"></td>
+        <td th:text="${record.teamName}"></td>
+        <td th:text="${record.avg}"></td>
+        <td th:text="${record.games}"></td>
+        <td th:text="${record.plateAppearances}"></td>
+        <td th:text="${record.atBats}"></td>
+        <td th:text="${record.runs}"></td>
+        <td th:text="${record.hits}"></td>
+        <td th:text="${record.doubles}"></td>
+        <td th:text="${record.triples}"></td>
+        <td th:text="${record.homeRuns}"></td>
+        <td th:text="${record.totalBases}"></td>
+        <td th:text="${record.rbi}"></td>
+        <td th:text="${record.sac}"></td>
+        <td th:text="${record.sf}"></td>
+      </tr>
+    </div>
+    <div>
+
+    </div>
+      <tr th:if="${paging.isEmpty()}">
+      <td colspan="13">No records found</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+  var sorting = { column: 'avg' };
+
+  function sortTable(columnName) {
+    sorting.column = columnName;
+    updateTable();
+  }
+
+  function updateTable() {
+    $.ajax({
+      url: '/record/hitter/sort',
+      type: 'GET',
+      data: { column: sorting.column },
+      success: function (data) {
+        // 데이터 표시
+        $('#pagingData').html($(data).find('#pagingData').html());
+      },
+      error: function () {
+        console.error('데이터를 불러오는 데 실패했습니다.');
+      }
+    });
+  }
+  // 초기 테이블 로딩
+  updateTable();
+</script>
+
+<script>
+  function applyTeamFilter() {
+    // 선택된 팀 가져오기
+    var selectedTeam = $("#teamFilter").val();
+    // alert(selectedTeam)
+    // 서버에 선택된 팀에 대한 데이터 요청
+    $.ajax({
+      url: '/record/hitter/sort',
+      type: 'GET',
+      data: { team: selectedTeam }, // 팀 정보를 서버에 전달
+      success: function (data) {
+        // 데이터 표시
+        $('#pagingData').html($(data).find('#pagingData').html());
+      },
+      error: function () {
+        console.error('데이터를 불러오는 데 실패했습니다.');
+      }
+    });
+  }
+</script>
+
+<script>
+  function applyYearFilter() {
+    // 선택된 팀 가져오기
+    var selectedYear = $("#teamYearFilter").val();
+     alert(selectedYear)
+    // 서버에 선택된 팀에 대한 데이터 요청
+    $.ajax({
+      url: '/record/hitter/sort',
+      type: 'GET',
+      data: { year: selectedYear }, // 팀 정보를 서버에 전달
+      success: function (data) {
+        // 데이터 표시
+        $('#pagingData').html($(data).find('#pagingData').html());
+      },
+      error: function () {
+        console.error('데이터를 불러오는 데 실패했습니다.');
+      }
+    });
+  }
+</script>
+
+</body>
+</html>

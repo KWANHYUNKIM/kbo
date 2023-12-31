@@ -18,6 +18,9 @@ public class AccountDto {
     private String email;
     private int age;
     private String password;
+
+    private String filename;
+    private String filepath;
     private List<String> roles;
 }
 

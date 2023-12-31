@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="recordBanner" >
+  <head>
+  </head>
+
+  <body>
+  <div class = "banner-img ">
+
+    <img class="banner_1 img-fluid " src="/images/banner/record_banner.png" alt="광고 이미지">
+    <!-- 버튼 추가 -->
+    <a th:href="@{/다른라우터}" class="btn" >기록실</a>
+    <style>
+      .btn{
+        color: black;
+        font-size : 30px;
+        position: absolute;
+        top: 30%; /* 버튼을 수직 중앙으로 위치시킵니다. */
+        left: 20%; /* 버튼을 수평 중앙으로 위치시킵니다. */
+        transform: translate(-50%, -50%); /* 버튼을 정확한 중앙으로 이동시킵니다. */
+      }
+    </style>
+  </div>
+  </body>
+</div>
+</html>

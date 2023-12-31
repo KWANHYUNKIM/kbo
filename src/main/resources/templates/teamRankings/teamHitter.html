@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+</head>
+<body>
+<div class="table-responsive" id="tableContainer">
+  <div th:fragment="sortedData">
+    <table class="table table-hover h-auto w-auto" id="baseballTable">
+      <thead>
+      <tr style="font-size: 14px;">
+        <!-- 헤더 부분은 그대로 두기 -->
+        <th>선수명</th>
+        <th>팀명</th>
+        <th><a onclick="sortTable('avg')" id="avgHeader">타율</a></th>
+        <th><a onclick="sortTable('games')" id="gamesHeader">경기</a></th>
+        <th><a onclick="sortTable('plateAppearances')" id="plateAppearances">타석</a></th>
+        <th><a onclick="sortTable('atBats')" id="atBatsHeader">타수</a></th>
+        <th><a onclick="sortTable('runs')" id="runsHeader">득점</a></th>
+        <th><a onclick="sortTable('hits')" id="hitsHeader">안타</a></th>
+        <th><a onclick="sortTable('doubles')" id="doublesHeader">2루타</a></th>
+        <th><a onclick="sortTable('triples')" id="triplesHeader">3루타</a></th>
+        <th><a onclick="sortTable('homeRuns')" id="homeRunsHeader">홈런</a></th>
+        <th><a onclick="sortTable('totalBases')" id="totalBasesHeader">루타</a></th>
+        <th><a onclick="sortTable('rbi')" id="rbiHeader">타점</a></th>
+        <th><a onclick="sortTable('sac')" id="sacHeader">희생번트</a></th>
+        <th><a onclick="sortTable('sf')" id="sfHeader">희생플레이</a></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:if="${not hitters.isEmpty()}" th:each="record, loop : ${hitters}"
+          style="font-size: 14px;">
+        <!-- 페이징 처리 이동 전에 tbody 태그 안으로 이동 -->
+        <td th:text="${record.playerName}"></td>
+        <td th:text="${record.teamName}"></td>
+        <td th:text="${record.avg}"></td>
+        <td th:text="${record.games}"></td>
+        <td th:text="${record.plateAppearances}"></td>
+        <td th:text="${record.atBats}"></td>
+        <td th:text="${record.runs}"></td>
+        <td th:text="${record.hits}"></td>
+        <td th:text="${record.doubles}"></td>
+        <td th:text="${record.triples}"></td>
+        <td th:text="${record.homeRuns}"></td>
+        <td th:text="${record.totalBases}"></td>
+        <td th:text="${record.rbi}"></td>
+        <td th:text="${record.sac}"></td>
+        <td th:text="${record.sf}"></td>
+      </tr>
+      <tr th:if="${hitters.isEmpty()}">
+        <td colspan="13">No records found</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

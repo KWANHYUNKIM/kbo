@@ -62,6 +62,11 @@ public class UserServiceImpl implements UserService {
         userRepository.save(account);
 
     }
+    @Transactional
+    @Override
+    public Account editByUser(Long userId, Account updatedAccount){
+        return userRepository.editByUser(userId,updatedAccount);
+    }
 
     @Transactional
     public AccountDto getUser(Long id) {
@@ -88,4 +93,7 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
+
+    @Transactional
+    public Account getUser(String user){return userRepository.findByUsername(user);}
 }

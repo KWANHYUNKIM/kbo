@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="profiledropdown" >
+    <head>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/layout/profileDropdown.css}"/>
+    </head>
+    <body>
+    <div class = "profileDropdown">
+        <div th:each="currentUser : ${currentUser}">
+            <div class="user-action-item my-menu">
+                <button type="button" class="dropdown-button avatar avatar-26">
+                    <img th:if="${currentUser != null}" th:src="${currentUser.filepath}" height="32" width="32" title="profile">
+                </button>
+                <div class="my-menu-content">
+                    <ul class="my-menu-list">
+                        <li class="my-menu-item">
+                            <i class="far fa-user-circle"></i>
+                            <a th:href="@{/settings/profile}">프로필</a>
+                        </li>
+                        <li class="my-menu-item">
+                            <i class="far fa-bookmark"></i>
+                            <a th:href="@{/settings/account}">계정 관리</a>
+                        </li>
+                        <li class="my-menu-item">
+                            <i class="fas fa-cog"></i>
+                            <a href="#">활동 내역</a>
+                        </li>
+                        <li class="my-menu-item">
+                            <i class="fas fa-cog"></i>
+                            <a th:href="@{/logout}">로그아웃</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+</div>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<div class ="container p-3">
+    <head th:replace="layout/header::userHead"></head> <!-- 헤더 -->
+    <header th:replace="layout/top::header"></header>
+</div>
+
+<body>
+<div class="container p-3">
+    <div class="row p-3">
+        <div class="col-sm-3">
+            <div th:replace="layout/sidebar::sidebar"></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="container">
+            <h1>기록실</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="container">
+            <div th:replace="teamRankings/layout/teamYear :: teamYearFilter"></div>
+        </div>
+
+        <div class ="container p-3">
+            <table class="table table-hover h-auto w-auto">
+                <thead>
+                <tr>
+                    <th>순위</th>
+                    <th>팀명</th>
+                    <th>경기</th>
+                    <th>승</th>
+                    <th>패</th>
+                    <th>무</th>
+                    <th>승률</th>
+                    <th>게임차</th>
+                    <th>최근10경기</th>
+                    <th>연속</th>
+                    <th>홈</th>
+                    <th>방문</th>
+                </tr>
+                </thead>
+                <tbody id="teamTableBody">
+                <tr th:each="teamyear : ${teamyears}">
+                    <td th:text="${teamyear.ranking}"></td>
+                    <td th:text="${teamyear.teamName}"></td>
+                    <td th:text="${teamyear.matches}"></td>
+                    <td th:text="${teamyear.win}"></td>
+                    <td th:text="${teamyear.loss}"></td>
+                    <td th:text="${teamyear.draw}"></td>
+                    <td th:text="${teamyear.winningPercentage}"></td>
+                    <td th:text="${teamyear.gameDifference}"></td>
+                    <td th:text="${teamyear.recent10Games}"></td>
+                    <td th:text="${teamyear.streak}"></td>
+                    <td th:text="${teamyear.home}"></td>
+                    <td th:text="${teamyear.away}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    <div class ="container">
+        <h1>통계</h1>
+        <label for="rankingFilter">전체:</label>
+        <select id="rankingFilter" onchange="applyRankingFilter()">
+            <option value="All">All</option>
+            <!-- Thymeleaf 반복문을 사용하여 1982부터 2023년까지의 옵션 값을 생성 -->
+            <option th:each="ranking : ${#numbers.sequence(1, 10)}" th:value="${#strings.toString(ranking)}" th:text="${#strings.toString(ranking)}"></option>
+        </select>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+        <canvas id="bar-chart" width="300" height="230"></canvas>
+    </div>
+
+    </div>
+    <div th:replace="layout/footer::footer"></div>
+</div>
+</body>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    function applyRankingFilter() {
+        var selectedRanking = $("#rankingFilter").val();
+
+        // 서버에서 전달받은 Thymeleaf 모델 데이터
+        var rankings = /*[[${rankings}]]*/ null;
+
+        // 데이터가 존재하는 경우에만 차트 생성
+        if (rankings) {
+            // Calculate total place count for each team based on the selected ranking
+            var totalPlaceCount = {};
+            rankings.forEach(function (item) {
+                if (item.ranking == selectedRanking) {
+                    if (!totalPlaceCount[item.teamName]) {
+                        totalPlaceCount[item.teamName] = 0;
+                    }
+                    totalPlaceCount[item.teamName] += 1;
+                }
+            });
+
+            // Sort teams based on total place count
+            var sortedTeams = Object.keys(totalPlaceCount).sort(function (a, b) {
+                return totalPlaceCount[b] - totalPlaceCount[a];
+            });
+
+            // Get top 3 teams
+            var top3Teams = sortedTeams.slice(0, 3);
+
+            // Create color array for the top 3 teams
+            var colorArray = ["#3e95cd", "#8e5ea2", "#3cba9f"];
+
+            // Create datasets for the chart
+            var datasets = [{
+                label: "Total " + selectedRanking + " Place Count",
+                backgroundColor: sortedTeams.map(function (team) {
+                    return top3Teams.includes(team) ? colorArray[top3Teams.indexOf(team)] : "#e8c3b9";
+                }),
+                data: sortedTeams.map(function (team) {
+                    return totalPlaceCount[team] || 0;
+                })
+            }];
+
+            new Chart(document.getElementById("bar-chart"), {
+                type: 'bar',
+                data: {
+                    labels: sortedTeams,  // x 값은 팀 이름
+                    datasets: datasets
+                },
+                options: {
+                    legend: {display: false},
+                    title: {
+                        display: true,
+                        text: '1982 ~ 2023년 ' + selectedRanking + '등 수'
+                    }
+                }
+            });
+        }
+    }
+    /*]]>*/
+</script>
+</html>

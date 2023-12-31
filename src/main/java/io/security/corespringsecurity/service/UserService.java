@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface UserService {
 
+    Account editByUser(Long userId, Account updatedAccount);
     void createUser(Account account);
 
     void modifyUser(AccountDto accountDto);
@@ -16,4 +17,6 @@ public interface UserService {
     AccountDto getUser(Long id);
 
     void deleteUser(Long idx);
+
+    Account getUser(String user);
 }

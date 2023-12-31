@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="...">
+
+<!-- Bootstrap JS, Popper.js, jQuery -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="..." crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="..." crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="..." crossorigin="anonymous"></script>
+
+<div class ="container" style="position: relative; z-index: 2;">
+  <head th:replace="layout/header::userHead"></head> <!-- 헤더 -->
+  <header th:replace="layout/topOverTop::topOverTop"></header>
+</div>
+
+<div class ="container" style="position: relative; z-index: 1;">
+  <header th:replace="layout/top::header"></header>
+</div>
+<body>
+
+<div class="container p-3">
+  <div class="row">
+    <div class="col-sm-3">
+      <div th:replace="settings/layout/settingSidebar ::sidebar"></div> <!-- 사이드 바 --> <!-- col-sm-3 -->
+    </div>
+  </div>
+
+  <!-- 수정 -->
+  <div class="container">
+    <!-- Todo: UI 제작 -->
+    <form th:action="@{/settings/profile}" method="post" enctype="multipart/form-data" th:object="${account}">
+
+      <label th:for="title">유저네임</label>
+      <input type="text" th:field="*{username}" class="form-control" placeholder="타이틀을 입력하세요"
+             th:class="${#fields.hasErrors('username')}? 'form-control fieldError' : 'form-control'">
+
+      <label th:for="profileImage">프로필</label>
+      <img th:src="*{filepath}" class="current-profile-image" alt="프로필 이미지">
+      <!-- 이미지 선택을 위한 드롭다운 메뉴 -->
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          이미지 선택
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <!-- 이미지 목록을 반복하면서 각 이미지에 대한 선택 옵션 생성 -->
+          <a class="dropdown-item" href="javascript:void(0)" th:each="image : ${images}" th:data-imagepath="${image.filepath}" onclick="selectImage(this)">
+            <img th:src="${image.filepath}" class="dropdown-image" alt="프로필 이미지">
+          </a>
+        </div>
+      </div>
+      <!-- 선택한 이미지의 경로를 서버로 전송할 hidden input -->
+      <input type="hidden" id="selectedImagePathInput" name="selectedImagePath" th:value="${account.filepath}" />
+
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+</div>
+
+<div th:replace="layout/footer::footer"></div>
+
+<script>
+  function selectImage(element) {
+    var imagePath = element.getAttribute('data-imagepath');
+    document.getElementById('selectedImagePathInput').value = imagePath;
+
+  }
+</script>
+</body>
+</html>

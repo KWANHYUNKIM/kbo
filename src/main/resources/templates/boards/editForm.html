@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div class ="container">
+  <head th:replace="layout/header::userHead"></head> <!-- 헤더 -->
+  <header th:replace="layout/top::header"></header>
+</div>
+
+<body>
+
+<div class="container">
+  <div class="row">
+    <div class ="col-sm-3">
+      <div th:replace="layout/sidebar ::sidebar"></div> <!-- 사이드 바 --> <!-- col-sm-3 -->
+    </div>
+  </div>
+  <row class = "row">
+    <!-- 수정 -->
+    <div class="container">
+    <!-- Todo : UI 제작 -->
+      <form th:action="@{/boards/edit/{boardId}(boardId=${board.id})}" method="post" th:object="${board}">
+
+        <label th:for="title">제목</label>
+        <input type="text" th:field="*{title}" class="form-control" placeholder="타이틀을 입력하세요"
+               th:class="${#fields.hasErrors('title')}? 'form-control fieldError' : 'form-control'">
+        <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Incorrect date</p>
+
+        <div class="form-group">
+          <label th:for="content">내용</label>
+          <input type="text" th:field="*{content}" class="form-control" placeholder="내용을 입력하세요"
+                 th:class="${#fields.hasErrors('content')}? 'form-control fieldError' : 'form-control'">
+          <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}">Incorrect date</p>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </row>
+</div>
+
+
+</body>
+</html>
+
+
+

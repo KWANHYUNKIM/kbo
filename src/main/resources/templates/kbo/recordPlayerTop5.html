@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<div class ="container p-3">
+    <head th:replace="layout/header::userHead"></head> <!-- 헤더 -->
+    <header th:replace="layout/top::header"></header>
+</div>
+<body>
+<div class="row p-3">
+    <div class="col-sm-3">
+        <div th:replace="layout/sidebar::sidebar"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="container">
+        <h1>선수 순위</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="container">
+        <h1></h1>
+
+    </div>
+    <div class="row">
+        <div class="container">
+
+        </div>
+    </div>
+
+    <div class="row p-5">
+        <div class="container">
+            <!-- 타자 -->
+            <div th:replace="kbo/layout/hitterBoardList::sortedData"></div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="layout/footer::footer"></div>
+</body>
+</html>

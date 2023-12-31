@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <style>
+    /* 추가적인 스타일링을 원하는 경우 여기에 추가하세요 */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .point, .hit {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<div class ="container p-3">
+  <head th:replace="layout/header::userHead"></head> <!-- 헤더 -->
+  <header th:replace="layout/top::header"></header>
+</div>
+<body>
+<div class="row p-3">
+  <div class="col-sm-3">
+    <div th:replace="schedule/layout/sidebar::sidebar"></div>
+  </div>
+</div>
+<div class="row">
+  <div class="container">
+    <h1>스코어 보드</h1>
+  </div>
+</div>
+<div class="row">
+  <div class="container">
+    <table>
+      <thead>
+      <tr>
+        <th scope="col">TEAM</th>
+        <th scope="col">1</th>
+        <th scope="col">2</th>
+        <th scope="col">3</th>
+        <th scope="col">4</th>
+        <th scope="col">5</th>
+        <th scope="col">6</th>
+        <th scope="col">7</th>
+        <th scope="col">8</th>
+        <th scope="col">9</th>
+        <th scope="col">10</th>
+        <th scope="col">11</th>
+        <th scope="col">12</th>
+        <th scope="col">R</th>
+        <th scope="col">H</th>
+        <th scope="col">E</th>
+        <th scope="col">B</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <th scope="row">롯데</th>
+        <td>0</td>
+        <td>1</td>
+        <td>0</td>
+        <td>3</td>
+        <td>3</td>
+        <td>1</td>
+        <td>0</td>
+        <td>0</td>
+        <td>1</td>
+        <td>0</td>
+        <td>1</td>
+        <td>-</td>
+        <td class="point">10</td>
+        <td class="hit">14</td>
+        <td class="hit">1</td>
+        <td class="hit">10</td>
+      </tr>
+      <tr>
+        <th scope="row">두산</th>
+        <td>3</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>5</td>
+        <td>1</td>
+        <td>0</td>
+        <td>0</td>
+        <td>3</td>
+        <td>-</td>
+        <td class="point">12</td>
+        <td class="hit">12</td>
+        <td class="hit">2</td>
+        <td class="hit">7</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div th:replace="layout/footer::footer"></div>
+</body>
+</html>

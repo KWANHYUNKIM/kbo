@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+
+<div th:fragment="teamPosition" style="display: flex; align-items: center;">
+  <select id="teamPosition" onchange="applyFilters()" style="width: 150px;">
+    <option value="All">포지션 선택</option>
+    <option value="내야수">내야수</option>
+    <option value="외야수">외야수</option>
+    <option value="포수">포수</option>
+  </select>
+</div>
+
+</html>

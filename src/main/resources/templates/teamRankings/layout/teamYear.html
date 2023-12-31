@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+
+<body>
+
+<div th:fragment="teamYearFilter">
+  <label for="teamYearFilter">년도 선택:</label>
+  <select id="teamYearFilter" onchange="applyYearFilter()">
+    <option value="All">All</option>
+    <!-- Thymeleaf 반복문을 사용하여 1982부터 2023년까지의 옵션 값을 생성 -->
+    <option th:each="year : ${#numbers.sequence(1982, 2023)}" th:value="${year}" th:text="${year}"></option>
+  </select>
+
+
+  <script th:inline="javascript">
+    function applyYearFilter() {
+      var selectedYear = $("#teamYearFilter").val();
+
+      // Ajax 요청 생성
+      $.ajax({
+        type: "GET",
+        url: "/record/teamRanking",
+        data: { years: selectedYear },
+        success: function(data) {
+          // 서버에서 받은 데이터로 화면 업데이트 등 필요한 동작 수행
+          $('.table').html($(data).find('.table').html());
+        },
+        error: function(error) {
+          console.error("Error:", error);
+        }
+      });
+    }
+  </script>
+</div>
+</body>
+</html>

@@ -2,17 +2,18 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <div th:fragment="sidebar">
-    <nav class="col-md-3 d-none d-md-block bg-light sidebar"> <!-- 사이드 바  -->
+    <nav class="d-none d-md-block bg-light sidebar"> <!-- 사이드 바  -->
         <div class="sidebar-sticky">
             <ul class="nav flex-column">
                 <li class="nav-item">
                     <div style="padding-top:10px;" class="nav flex-column nav-pills" aria-orientation="vertical">
                         <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link text-dark" th:href="@{/login}" style="margin:5px">로그인</a></li>
                         <li class="nav-item" sec:authorize="isAuthenticated()"><a class="nav-link text-dark" th:href="@{/logout}" style="margin:5px">로그아웃</a></li>
-                        <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link text-dark" th:href="@{/}" style="margin:5px">전체</a></li>
-                        <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link text-dark" th:href="@{/}" style="margin:5px">정보</a></li>
-                        <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link text-dark" th:href="@{/}" style="margin:5px">커뮤니티</a></li>
-                        <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link text-dark" th:href="@{/}" style="margin:5px">분석</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark" th:href="@{/}" style="margin:5px">전체</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark" th:href="@{/}" style="margin:5px">정보</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark" th:href="@{/boards/all}" style="margin:5px">커뮤니티</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark" th:href="@{/}" style="margin:5px">분석</a></li>
+                        <li class="nav-item" sec:authorize="hasAuthority('ROLE_ADMIN')"><a class="nav-link text-light" th:href="@{/admin}">관리자</a></li>
                     </div>
                 </li>
             </ul>

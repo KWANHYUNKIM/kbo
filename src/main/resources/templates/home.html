@@ -1,40 +1,84 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-
-<head th:replace="layout/header::userHead"></head> <!-- 헤더 -->
-
+<!-- Todo : Padding 작업  -->
+<head>
+    <title>메인 페이</title>
+    <link rel="stylesheet" th:href="@{/css/layout/calender.css}" />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
 <body>
-
-<div th:replace="layout/top::header"></div>
-<div class="container-fluid">
-    <div th:replace="layout/sidebar ::sidebar"></div> <!-- 사이드 바 -->
+<div class="container">
     <div class="row">
-        <!-- 광고 -->
-        <div class="col-md-4">
-            <div th:replace="kbo/advertises :: advertise"></div>
+        <div class="col-12">
+            <head th:replace="layout/header::userHead"></head>
+            <header th:replace="layout/topOverTop::topOverTop"></header>
+            <header th:replace="layout/top::header"></header>
         </div>
+    </div>
+</div>
 
-        <!-- 사이드바 -->
-        <div class="col-md-4">
-            <!-- Content goes here -->
-        </div>
-
-        <!-- 테이블 -->
-        <div class="col-md-4">
-            <div th:replace="kbo/teamBoardList :: body"></div>
+<div class="container">
+    <div class="row">
+        <div class ="col-sm-3">
+            <div th:replace="layout/sidebar ::sidebar"></div> <!-- 사이드 바 --> <!-- col-sm-3 -->
         </div>
     </div>
 
-    <!-- Add more rows or customize as needed -->
-    <!-- Todo : 경기정보 -->
-    <!-- Todo : KBO 소식 , KBO 뉴스, 선수 이동 현황 -->
-    <!-- Todo : 구단 홈페이지 -->
-    <!-- Todo : 하이라이트 -->
-    <!-- Todo : 비디오 판독 -->
-    <!-- Todo : 인스타그램 -->
-    <!-- Todo : Youtube -->
-    <!-- Todo : 캠페인 / 협찬 -->
+    <div class = "row p-3">
+        <!-- 광고 -->
+        <div class="col-8 col-sm-6">
+            <div th:replace="/home/advertise :: advertise"></div>
+        </div>
+        <!-- 팀순위 -->
+        <div class="col-8 col-sm-6">
+            <div th:replace="kbo/layout/teamBoardList"></div>
+        </div>
+    </div>
+    <div class = "row p-3">
+        <div class="col-12">
+            <!-- Todo : 경기 일정  -->
+            <div th:replace="layout/rule"></div>
+            <div th:replace="layout/calender"></div>
+
+
+        </div>
+
+        <div class="col-12 col-sm-6">
+            <!-- Todo : 경기 일정  -->
+
+
+
+        </div>
+
+    </div>
+    <div class = "row">
+        <!-- banner#1 -->
+        <div class="col-8 col-sm-6 mx-auto">
+            <div th:replace="/home/banner_1 :: banner-1"></div>
+            <!-- Todo: 미디어/커뮤니티 내용 최근 top-5 -->
+        </div>
+        <!-- banner#2 -->
+        <div class="col-8 col-sm-6 mx-auto">
+            <div th:replace="/home/banner_2 :: banner-2"></div>
+            <!-- Todo: 커뮤니티 내용 최근 5개  -->
+
+            <div th:replace="/home/recentBoardTop5 :: body"></div>
+        </div>
+    </div>
+
+    <div class = "row">
+        <div class="col-8 col-sm-6 mx-auto">
+
+        </div>
+        <div class="col-8 col-sm-6 mx-auto">
+
+        </div>
+    </div>
 </div>
+<script>
+
+</script>
 </body>
-<div th:replace="layout/footer::footer"></div>
+
 </html>
+

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<div th:fragment="sidebar">
+  <nav class="d-none d-md-block bg-light sidebar"> <!-- 사이드 바  -->
+    <div class="sidebar-sticky">
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <div style="padding-top:10px;" class="nav flex-column nav-pills" aria-orientation="vertical">
+            <li class="nav-item"><a class="nav-link text-dark" th:href="@{/}" style="margin:5px">경기일정결과</a></li>
+            <li class="nav-item"><a class="nav-link text-dark" th:href="@{/}" style="margin:5px">게임센터</a></li>
+            <li class="nav-item"><a class="nav-link text-dark" th:href="@{/}" style="margin:5px">스코어보드</a></li>
+            <li class="nav-item"><a class="nav-link text-dark" th:href="@{/}" style="margin:5px">올스타전</a></li>
+            <li class="nav-item"><a class="nav-link text-dark" th:href="@{/}" style="margin:5px">국제대회</a></li>
+            <li class="nav-item"><a class="nav-link text-dark" th:href="@{/schedule/weather}" style="margin:5px">야구장 날씨</a></li>
+            <li class="nav-item" sec:authorize="hasAuthority('ROLE_ADMIN')"><a class="nav-link text-light" th:href="@{/admin}">관리자</a></li>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</div>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<!-- Todo : 개인정보처리 방침, 문자 중계, 고객질문, 사이드맵 -->
+<style>
+    .active {
+        color: gold;
+    }
+</style>
+
+<nav class="nav justify-content-start">
+    <a th:href="@{/record/hitter/all}" class="middleNav btn" id="recordAll">타자</a>
+    <a th:href="@{/record/pitcher/all}" class="middleNav btn" id="recordPitcher">투수</a>
+    <a th:href="@{/static}" class="middleNav btn" id="otherLink">다른 링크</a>
+</nav>
+<script th:src="@{/js/recordMiddleNav.js}"></script>
+
+</html>

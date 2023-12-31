@@ -47,8 +47,10 @@ public class UserController {
 
 		ModelMapper modelMapper = new ModelMapper();
 		Account account = modelMapper.map(accountDto, Account.class);
-		account.setPassword(passwordEncoder.encode(accountDto.getPassword()));
 
+		account.setPassword(passwordEncoder.encode(accountDto.getPassword()));
+		account.setFilename("init-image");
+		account.setFilepath("/images/profile/baseImg.png");
 		userService.createUser(account);
 
 		return "redirect:/";
@@ -59,7 +61,7 @@ public class UserController {
 
 		String username1 = account.getUsername();
 		System.out.println("username1 = " + username1);
-
+		System.out.println("권한 = " + authentication);
 		Account account2 = (Account) authentication.getPrincipal();
 		String username2 = account2.getUsername();
 		System.out.println("username2 = " + username2);

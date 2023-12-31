@@ -2,21 +2,107 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <div th:fragment="header">
-    <div th:replace="layout/topOverTop::topOverTop"></div>
-    <nav class="navbar navbar-dark sticky-top bg-dark ">
-            <div class="container">
-                <a class="text-light" href="/"><h4>한화이글스는 언제 가을야구에 갈까?</h4></a>
-                <ul class="nav justify-content-end">
-                    <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link text-light" th:href="${''}">일정∙결과</a></li>
-                    <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link text-light" th:href="${''}">기록∙순위</a></li>
-                    <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link text-light" th:href="${''}">미디어∙뉴스</a></li>
-                    <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link text-light" th:href="${''}">퓨처스리그</a></li>
-                    <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link text-light" th:href="${''}">KBO마켓</a></li>
-                    <li class="nav-item" sec:authorize="hasAuthority('ROLE_ADMIN')"><a class="nav-link text-light" th:href="@{/admin}">관리자</a></li>
-                    <li class="nav-item" ><a class="nav-link text-light" href="/">HOME</a></li>
+    <head>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/layout/top.css}"/>
+        <!-- 기존의 다른 스타일 시트들 ... -->
+
+        <!-- Todo: 나머지 스타일 시트 및 스크립트 ... -->
+    </head>
+    <body>
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-dark">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navSchedule" role="button" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">일정∙결과</a>
+                        <div class="dropdown-menu" aria-labelledby="navSchedule">
+                            <a class="dropdown-item" href="#">경기일정∙결과</a>
+                            <a class="dropdown-item" th:href="@{/schedule/scoreboard}">스코어보드</a>
+                            <a class="dropdown-item" th:href="@{/schedule/weather}">야구장 날씨</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navRecord" role="button" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">기록∙순위</a>
+                        <div class="dropdown-menu" aria-labelledby="navRecord">
+                            <a class="dropdown-item" href="#">기록실</a>
+                            <a class="dropdown-item" th:href="@{/record/teamRanking}">팀순위</a>
+                            <a class="dropdown-item" href="#">선수순위</a>
+                            <a class="dropdown-item" href="#">역대 기록</a>
+                            <a class="dropdown-item" href="#">예상 달성 기록</a>
+                            <a class="dropdown-item" href="#">기록 정정 현황</a>
+                            <a class="dropdown-item" href="#">관중 현황</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navPlayer" role="button" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">선수</a>
+                        <div class="dropdown-menu" aria-labelledby="navPlayer">
+                            <a class="dropdown-item" th:href="@{/player/search}">선수 조회</a>
+                            <a class="dropdown-item" href="#">선수 등록 현황</a>
+                            <a class="dropdown-item" href="#">선수 이동 현황</a>
+                            <a class="dropdown-item" href="#">수상 현황</a>
+                            <a class="dropdown-item" href="#">레전드40</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navMedia" role="button" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">미디어∙뉴스</a>
+                        <div class="dropdown-menu" aria-labelledby="navMedia">
+                            <a class="dropdown-item" href="#">하이라이트</a>
+                            <a class="dropdown-item" href="#">구단별 쇼츠∙영상</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navFutureLeague" role="button" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">퓨쳐스리그</a>
+                        <div class="dropdown-menu" aria-labelledby="navFutureLeague">
+                            <a class="dropdown-item" href="#">경기일정∙결과</a>
+                            <a class="dropdown-item" href="#">팀순위</a>
+                            <a class="dropdown-item" href="#">기록실</a>
+                            <a class="dropdown-item" href="#">선수 등록 현황</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" th:href="@{/record/all}">KBO마켓</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" th:href="@{/}">HOME</a>
+                    </li>
+
                 </ul>
             </div>
-        </nav>
-    </div>
-</div>
+        </div>
+    </nav>
+
+    </body>
+
+    <script>
+        // 토글할 메뉴 항목들의 ID를 배열로 정의
+        var toggleMenuItems = ['navSchedule', 'navRecord', 'navPlayer', 'navMedia', 'navFutureLeague', 'navMarket'];
+
+        // 토글될 메뉴 항목들의 display 상태를 관리하는 함수
+        function toggleMenus() {
+            toggleMenuItems.forEach(function (item) {
+                var element = document.getElementById(item);
+                if (element) {
+                    element.style.display = element.style.display === 'none' ? 'block' : 'none';
+                }
+            });
+        }
+
+        // Toggle Menu 클릭 시 toggleMenus 함수 호출
+        document.querySelector('.navbar-toggler').addEventListener('click', toggleMenus);
+    </script>
 </html>

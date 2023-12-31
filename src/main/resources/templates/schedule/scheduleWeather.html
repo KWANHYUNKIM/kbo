@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+        #dotCanvas {
+            position: absolute;
+            z-index: 1;
+            top: 0;
+            left: 0;
+        }
+
+        .container {
+            position: relative;
+        }
+    </style>
+</head>
+<div class="container p-3">
+    <head th:replace="layout/header::userHead"></head> <!-- 헤더 -->
+    <header th:replace="layout/top::header"></header>
+</div>
+<body>
+<div class="row p-3">
+    <div class="col-sm-3">
+        <div th:replace="schedule/layout/sidebar::sidebar"></div>
+    </div>
+</div>
+<div class="row">
+    <div class="container">
+        <h1>야구장 날씨</h1>
+    </div>
+</div>
+<div class="row p-3">
+    <div class="container">
+        <img id="mainImage" src="/images/schedule/korea_map.jpg" alt="main image" width="500px" height="500px">
+        <canvas id="dotCanvas"></canvas>
+    </div>
+    <div class="row">
+        <div class="container">
+            <div id="weather-info"></div>
+        </div>
+    </div>
+
+    <div class="row p-5">
+        <div class="container">
+        </div>
+    </div>
+</div>
+<!-- Todo: 그래픽 만들기  -->
+<div th:replace="layout/footer::footer"></div>
+</body>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var mainImage = document.getElementById("mainImage");
+        var dotCanvas = document.getElementById("dotCanvas");
+        var ctx = dotCanvas.getContext("2d");
+
+        // 캔버스 크기 초기 설정
+        dotCanvas.width = mainImage.width;
+        dotCanvas.height = mainImage.height;
+
+        // 캔버스를 한 번만 지우기 위한 변수 추가
+        var canvasCleared = false;
+
+        function drawDot(x, y, label, data_lng, data_lat) {
+            // 캔버스를 한 번만 지우도록 설정
+            if (!canvasCleared) {
+                ctx.clearRect(0, 0, dotCanvas.width, dotCanvas.height);
+                canvasCleared = true;
+            }
+
+            ctx.beginPath();
+            ctx.arc(x, y, 4, 0, 2 * Math.PI);
+            ctx.fillStyle = "gray";
+            ctx.fill();
+            ctx.closePath();
+
+            // 클릭 이벤트 추가
+            dotCanvas.addEventListener("click", function (event) {
+                const rect = dotCanvas.getBoundingClientRect();
+                const clickX = event.clientX - rect.left;
+                const clickY = event.clientY - rect.top;
+
+                if (isInsideDot(clickX, clickY, x, y)) {
+                    // 클릭한 좌표가 동그라미 안에 있으면 OpenWeatherMap API 호출
+                    getWeatherInfo(label, data_lng, data_lat);
+                }
+            });
+        }
+
+        // 클릭한 좌표가 동그라미 안에 있는지 확인하는 함수
+        function isInsideDot(clickX, clickY, dotX, dotY) {
+            const distance = Math.sqrt((clickX - dotX) ** 2 + (clickY - dotY) ** 2);
+            return distance <= 4;
+        }
+
+        // OpenWeatherMap API Key
+        const apiKey = "40280448ac5cd05b973956bf4a7fc3a6";
+
+        function getWeatherInfo(label, data_lng, data_lat) {
+            // API URL
+            const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${data_lat}&lon=${data_lng}&appid=${apiKey}&units=metric`;
+
+            // Get weather information from OpenWeatherMap API
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    // Display weather information
+                    displayWeatherInfo(label, data);
+                })
+                .catch(error => {
+                    console.error("Error fetching weather data:", error);
+                });
+        }
+
+        // Function to display weather information
+        function displayWeatherInfo(label, weatherData) {
+            const weatherInfoElement = document.getElementById("weather-info");
+
+            const temperature = weatherData.main.temp;
+            const description = weatherData.weather[0].description;
+
+            // Add dynamic UI based on weather conditions
+            let dynamicUI = "";
+            if (description.includes("cloud")) {
+                dynamicUI += `<p>Cloudy</p>`;
+                // Add more UI elements for cloudy weather
+            } else if (description.includes("rain")) {
+                dynamicUI += `<p>Rainy</p>`;
+                // Add more UI elements for rainy weather
+            } else {
+                dynamicUI += `<p>Other weather condition</p>`;
+                // Add more UI elements for other weather conditions
+            }
+
+            const weatherHTML = `
+            <p>Location: ${label}</p>
+            <p>Temperature: ${temperature}°C</p>
+            <p>Description: ${description}</p>
+            ${dynamicUI}
+            `;
+
+            weatherInfoElement.innerHTML = weatherHTML;
+        }
+
+        var points = [
+            { x: 260, y: 150, label: "잠실 종합 운동장", data_lng: "127.0736", data_lat: "37.51480" },
+            { x: 250, y: 150 },
+            { x: 240, y: 150 }
+            // ... 다른 10개의 좌표 추가
+        ];
+
+        points.forEach(function (point) {
+            drawDot(point.x, point.y, point.label, point.data_lng, point.data_lat);
+        });
+    })
+</script>
+</html>

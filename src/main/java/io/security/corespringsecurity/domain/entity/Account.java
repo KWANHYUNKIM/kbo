@@ -1,14 +1,17 @@
 package io.security.corespringsecurity.domain.entity;
 
+import io.security.corespringsecurity.domain.entity.board.Comment;
 import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Data
+@Table(name = "account")
 @ToString(exclude = {"userRoles"})
 @Builder
 @EqualsAndHashCode(of = "id")
@@ -17,7 +20,8 @@ import java.util.Set;
 public class Account implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name ="account_id")
     private Long id;
 
     @Column
@@ -32,10 +36,18 @@ public class Account implements Serializable {
     @Column
     private String password;
 
+    private String filename;
+
+    private String filepath;
+
     @ManyToMany(fetch = FetchType.LAZY, cascade={CascadeType.ALL})
     @JoinTable(name = "user_roles", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
             @JoinColumn(name = "role_id") })
     private Set<Role> userRoles = new HashSet<>();
+
+    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private List<Comment> comments;
+
 }
 
 

@@ -1,0 +1,96 @@
+.my-menu-content{
+    position: absolute;
+}
+.my-menu {
+    /* dropdown은 absolute로 뿌려줘야 하므로 부모를 position: relative로 잡아준다 */
+    position: relative;
+}
+
+.my-menu .avatar:hover::after,
+.my-menu .avatar.is-active::after {
+    /* avatar button이 hover되었을 때나, is-active 상태일 때는 avatar를 감싸주는 테두리를 추가한다. */
+    /* border를 쓰지 않은 이유는 상태변화에 대해서 따로 분리를 해주고 싶었다. */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid #8e8e8e;
+    content: '';
+}
+
+.my-menu-content {
+    display: none;
+    position: relative;
+    width: 225px;
+    top: 37px;
+    left: -175px;
+    padding: 10px 0;
+    background-color: #fff;
+    font-size: 16px;
+    border: 1px solid #dbdbdb;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.my-menu-content.is-active {
+    /* dropdown 메뉴는 기본적으로 display: none 상태이고, JS를 통해 toggling된 css에서 display: block을 주었다. */
+    display: block;
+}
+
+.my-menu-content::before,
+.my-menu-content::after {
+    /* dropdown 메뉴에서 툴팁("▲")에 관한 스타일링이다. */
+    position: absolute;
+    left: 83%;
+    transform: translateX(-50%);
+    top: -24px;
+    display: block;
+    width: 0;
+    height: 0;
+    border-top: 12px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 12px solid transparent;
+    border-left: 10px solid transparent;
+    content: '';
+}
+
+.my-menu-content::before {
+    border-bottom-color: #e0e2e7;
+}
+.my-menu-content::after {
+    top: -22px;
+    border-bottom-color: #fff;
+}
+
+/* 여기서 부터는 세부적인 dropdown menu content item들 정렬하는 스타일 */
+.my-menu-item {
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    height: 35px;
+}
+
+.my-menu-item i {
+    position: relative;
+    top: 2px;
+    width: 14px;
+    height: 14px;
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+.my-menu-item i.fa-bookmark {
+    left: 1px;
+}
+
+.my-menu-item:nth-last-child(2) {
+    margin-bottom: 5px;
+}
+
+.my-menu-item:last-child {
+    padding: 10px 15px 0 15px;
+    border-top: 1px solid #dbdbdb;
+}

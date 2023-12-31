@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" th:href="@{/css/layout/hrline.css}" />
+
+    <!-- include libraries(jQuery, bootstrap) -->
+
+    <!-- include summernote css/js -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+</head>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <head th:replace="layout/header::userHead"></head>
+            <header th:replace="layout/topOverTop::topOverTop"></header>
+            <header th:replace="layout/top::header"></header>
+        </div>
+    </div>
+</div>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class ="col-sm-3">
+            <div th:replace="layout/sidebar ::sidebar"></div> <!-- 사이드 바 --> <!-- col-sm-3 -->
+        </div>
+    </div>
+    <!-- ad -->
+    <row class = "row">
+        <div class ="container">
+            <img class="figure-img img-fluid rounded" src="/images/ad/advertise_2.png" alt="광고 이미지">
+        </div>
+    </row>
+    <!-- 절취선 -->
+    <row class = "row">
+        <div class ="container">
+            <div class="hr-sect">커뮤니티 / 사는얘기</div>
+        </div>
+    </row>
+    <!--  -->
+    <row class="row p-3">
+        <div class="container p-3" th:each="board : ${boards}">
+            <h6 th:text="${board.account.username}"></h6> <!-- 작성자 -->
+            <h6 style="display:inline" id="timeDifference"></h6> <h6 style="display:inline">·</h6>
+            <img style="display:inline" src="/images/detailBoardList/view-icon.png"  height="18" width="18" title="눈동자 아이콘">
+            <h6 style="display:inline" th:text="${board.viewCount}"></h6>
+
+            <!-- Todo: 내용 및 컨텐츠 제작 -->
+        </div>
+    </row>
+
+    <row class="row p-3 ">
+        <div class="container" th:each="board : ${boards}">
+            <strong><p style="font-size:36px" th:text="${board.title}"></p></strong> <br><br>
+
+            <h5 style="font-size:16px" th:if="${board.content != null}" th:text="${board.content}"></h5>
+            <!-- Todo: 내용 및 컨텐츠 제작 -->
+        </div>
+    </row>
+
+    <row class ="row p-3">
+        <div class="container">
+            <form role="form" th:action="@{'/members/boards/' + ${boardId} + '/detail'}" th:object="${commentForm}" method="post">
+                <!--Todo: summernote 적용안됨 -->
+                <textarea type="text" th:field="*{comment}" class="form-control" placeholder="후기를 남겨주세요." id="summernote" name="editordata"></textarea>
+
+                <button type="submit">Submit Comment</button>
+            </form>
+        </div>
+
+        <div class ="container">
+            <div class="container" th:if="${comments != null}">
+                <div th:each="comment : ${comments}">
+                    <p th:text="${comment.account.username}"></p>
+                    <span th:utext ="${comment.comment}"></span>
+                </div>
+            </div>
+        </div>
+    </row>
+
+</div>
+</div>
+
+
+</body>
+
+<script th:inline="javascript">
+    var createdDateString = /*[[${boards[0].createdDate}]]*/ '';
+    // var createdDateComment = /*[[${comment[0].createdDate}]]*/ '';
+    // console.log(createdDateComment);
+</script>
+<!--<script th:inline="javascript" th:src="@{/js/currentTime.js}"></script>-->
+
+<script>
+    $(document).ready(function () {
+
+        $('#summernote').summernote({
+            lang: 'ko-KR',
+            height: 300,
+            placeholder: '내용을 입력하세요',
+            toolbar: [
+                ['fontname', ['fontname']],
+                ['fontsize', ['fontsize']],
+                ['style', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+                ['color', ['forecolor', 'color']],
+                ['table', ['table']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']],
+                ['insert', ['picture', 'link', 'video']],
+                ['view', ['fullscreen', 'help']]
+            ],
+            fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', '맑은 고딕', '궁서', '굴림체',
+                '굴림', '돋음체', '바탕체'],
+            fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '28', '30', '36',
+                '50', '72']
+        });
+    });
+</script>
+</html>

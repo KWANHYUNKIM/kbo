@@ -1,0 +1,7 @@
+.btn-banner{
+    color: black;
+    position: absolute;
+    top: 30px;
+    left: 100px;
+    transform: translate(-50%, -50%); /* 버튼을 정확한 중앙으로 이동시킵니다. */
+}

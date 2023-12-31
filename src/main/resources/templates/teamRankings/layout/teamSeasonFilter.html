@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+
+<div th:fragment="teamSeasonFilter">
+  <label for="teamFilter">시즌 선택:</label>
+  <select id="teamFilter" onchange="applyTeamFilter()">
+    <option value="All">All</option>
+    <option value="정규시즌">KBO 정규시즌</option>
+    <option value="와일드카드">KBO 와일드카드</option>
+    <option value="준플레이오프">KBO 준플레이오프</option>
+    <option value="플레이오프">KBO 플레이오프</option>
+    <option value="한국시리즈">KBO 한국시리즈</option>
+
+  </select>
+</div>
+
+</html>

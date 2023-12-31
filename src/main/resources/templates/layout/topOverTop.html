@@ -1,21 +1,35 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+</head>
 <nav class="navbar navbar-light bg-light">
     <div th:fragment="topOverTop">
         <div class ="container nav justify-content-end">
+            <a class="text-light" href="/">
+<!--                <img src="/images/baseball-logo.png" class="main-logo" alt="logo">-->
+\            </a>
             <ul class ="navbar list-unstyled">
                 <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link text-dark" th:href="@{/login}">로그인</a></li>
                 <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link text-dark" th:href="@{/users}">회원가입</a></li>
-                <li class="nav-item" sec:authorize="isAuthenticated()"><a class="nav-link text-dark" th:href="@{/logout}">로그아웃</a></li>
-            </ul>
 
-            <nav class = "navbar-nav justify-content-center">
-                <form class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
-            </nav>
+                <nav class = "navbar-nav justify-content-center">
+                    <form class="d-flex">
+                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn-search " type="submit">Search</button>
+                    </form>
+                </nav>
+
+                <a class="nav-link text-dark" sec:authorize="isAuthenticated()" th:href="@{/}">
+                    <img src="/images/topOverTop/bookmark.png" height="18" width="18" title="북마크" class="nav-item" sec:authorize="isAuthenticated()">
+                </a>
+                <a class="nav-link text-dark" sec:authorize="isAuthenticated()" th:href="@{/}">
+                    <img src="/images/topOverTop/alarm-ball.png" height="18" width="18" title="알람" class="nav-item" sec:authorize="isAuthenticated()">
+                </a>
+                <div th:replace="/home/profileDropdown"></div>
+
+                <script th:src="@{/js/profileDropdown.js}"></script>
+            </ul>
         </div>
     </div>
 </nav>

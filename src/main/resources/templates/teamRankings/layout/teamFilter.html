@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+
+<style>
+
+</style>
+<div th:fragment="teamFilter" style="display: flex; align-items: center;">
+  <select id="teamFilter" onchange="applyFilters()" style="width: 150px;">
+    <option value="All">팀 선택</option>
+    <option value="LG">LG</option>
+    <option value="한화">한화</option>
+    <option value="롯데">롯데</option>
+    <option value="키움">키움</option>
+    <option value="KIA">KIA</option>
+    <option value="두산">두산</option>
+    <option value="삼성">삼성</option>
+    <option value="NC">NC</option>
+    <option value="KT">KT</option>
+    <option value="SSG">SSG</option>
+  </select>
+</div>
+
+</html>
