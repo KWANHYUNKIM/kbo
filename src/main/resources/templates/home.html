@@ -3,9 +3,9 @@
 <!-- Todo : Padding 작업  -->
 <head>
     <title>메인 페이</title>
-    <link rel="stylesheet" th:href="@{/css/layout/calender.css}" />
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
+
 <body>
 <div class="container">
     <div class="row">
@@ -38,15 +38,11 @@
         <div class="col-12">
             <!-- Todo : 경기 일정  -->
             <div th:replace="layout/rule"></div>
-            <div th:replace="layout/calender"></div>
-
-
+            <div th:replace="layout/schedule"></div>
         </div>
 
         <div class="col-12 col-sm-6">
             <!-- Todo : 경기 일정  -->
-
-
 
         </div>
 
@@ -75,9 +71,7 @@
         </div>
     </div>
 </div>
-<script>
 
-</script>
 </body>
 
 </html>

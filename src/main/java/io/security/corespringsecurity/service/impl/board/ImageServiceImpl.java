@@ -1,7 +1,7 @@
 package io.security.corespringsecurity.service.impl.board;
 
-import io.security.corespringsecurity.domain.entity.ImageEntity;
-import io.security.corespringsecurity.repository.ImageRepository;
+import io.security.corespringsecurity.domain.entity.profile.ImageEntity;
+import io.security.corespringsecurity.repository.profile.ImageRepository;
 import io.security.corespringsecurity.service.board.ImageService;
 import lombok.RequiredArgsConstructor;
 

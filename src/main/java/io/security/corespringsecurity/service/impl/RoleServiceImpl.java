@@ -1,7 +1,7 @@
 package io.security.corespringsecurity.service.impl;
 
-import io.security.corespringsecurity.domain.entity.Role;
-import io.security.corespringsecurity.repository.RoleRepository;
+import io.security.corespringsecurity.domain.entity.auth.Role;
+import io.security.corespringsecurity.repository.kbo.auth.RoleRepository;
 import io.security.corespringsecurity.service.RoleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

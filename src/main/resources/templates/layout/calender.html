@@ -1,109 +1,44 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <div th:calender="calender">
-<head>
-  <style>
+  <head>
+    <link rel="stylesheet" th:href="@{/css/layout/calender.css}" />
+    <script th:src="@{/js/calender.js}"></script>
+  </head>
 
-    .box-container {
-      display: flex;
-      justify-content: space-around;
-      align-items: center; /* 세로 중앙 정렬 */
-      text-align: center;
-    }
-    .box-container p {
-      display: flex;
-    }
-    .box {
-      width:  200px;
-      height: 200px;
-      margin: 15px;
-      background-color: white; /* 내부 색상 흰색으로 설정 */
-      border: 0.5px solid black; /* 테두리 검은색으로 설정 */
-      overflow: hidden; /* overflow 설정으로 이미지를 박스 내에 유지 */
-    }
-    .bottom {
-      width:  200px;
-      height: auto;
-      position: absolute;
-      bottom: 0; /* 이미지를 맨 아래로 위치시킴 */
-      left: 445px;
-    }
-
-    .box .overlay {
-      position: absolute;
-      bottom: 0;
-      font-size: 16px;
-      font-weight: bold;
-      color: white;
-      z-index: 1;
-      left: 510px;
-    }
-
-    .vs {
-      font-weight: bold;
-      font-size: 2.0em; /* 원하는 크기로 조절하세요 */
-    }
+  <body>
+  <button class="toggle-calendar" onclick="toggleCalendar()">
+    <img src="images/home/icon-calender.png" alt="Calendar Toggle" style="height: 16px; width: 16px;">
+    캘린더
+  </button>
 
 
-    .sec_cal {
-      display: none;
-    }
-    .date {
-      cursor: pointer;
-      /* 다른 스타일링도 필요한 경우 추가 가능 */
-    }
-  </style>
-  <script type="text/javascript" src="js/calender.js"></script>
-</head>
-
-<body>
-<button class="toggle-calendar" onclick="toggleCalendar()">
-  <img src="images/home/icon-calender.png" alt="Calendar Toggle" style="height: 16px; width: 16px;">
-  캘린더
-</button>
-
-
-<div class="sec_cal" id="calendar">
-  <div class="cal_nav">
-    <a href="javascript:;" class="nav-btn go-prev">prev</a>
-    <div class="year-month"></div>
-    <a href="javascript:;" class="nav-btn go-next">next</a>
-  </div>
-  <div class="cal_wrap">
-    <div class="days">
-      <div class="day">MON</div>
-      <div class="day">TUE</div>
-      <div class="day">WED</div>
-      <div class="day">THU</div>
-      <div class="day">FRI</div>
-      <div class="day">SAT</div>
-      <div class="day">SUN</div>
+  <div class="sec_cal" id="calendar">
+    <div class="cal_nav">
+      <a href="javascript:;" class="nav-btn go-prev">prev</a>
+      <div class="year-month"></div>
+      <a href="javascript:;" class="nav-btn go-next">next</a>
     </div>
-    <div class="dates"></div>
-  </div>
+    <div class="cal_wrap">
+      <div class="days">
+        <div class="day">MON</div>
+        <div class="day">TUE</div>
+        <div class="day">WED</div>
+        <div class="day">THU</div>
+        <div class="day">FRI</div>
+        <div class="day">SAT</div>
+        <div class="day">SUN</div>
+      </div>
+      <div class="dates"></div>
+    </div>
 
-</div>
-<div class="cal_nav" style="text-align: center;">
-  <img src="images/home/btn_prev.png"  href="javascript:;" class="nav-btn go-prev"/>
-  <div id="resultContainer" class="year-month-day"></div>
-  <img src="images/home/btn_next.png" href="javascript:;" class="nav-btn go-next"/>
-</div>
-</body>
-</div>
-
-<div class="box-container">
-  <div class="box">
-    <img class="bottom" src="images/home/bg_default.png" alt="Background Image" >
-    <p class="top-text">사직 | 18:30</p>
-    <p class="bottom-text">SPO-T, SPO-2T</p>
-    <p class="bottom-text">경기종료</p>
-    <img src="images/home/teams/OB.png" alt="Team A" style="height: 72px; width: 72px;">
-    <span class="vs">vs</span>
-    <img src="images/home/teams/LT.png" alt="Team B" style="height: 72px; width: 72px;">
-    <p class="score_A">0</p>
-    <p class="score_B">5</p>
-    <p class="overlay">경기 정보</p>
   </div>
+  <div class="cal_nav" style="text-align: center;">
+    <img src="images/home/btn_prev.png"  href="javascript:;" class="nav-btn go-prev"/>
+    <div id="resultContainer" class="year-month-day"></div>
+    <img src="images/home/btn_next.png" href="javascript:;" class="nav-btn go-next"/>
+  </div>
+  </body>
 </div>
 
 </html>

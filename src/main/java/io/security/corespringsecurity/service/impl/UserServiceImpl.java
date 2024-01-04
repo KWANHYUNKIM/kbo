@@ -2,9 +2,9 @@ package io.security.corespringsecurity.service.impl;
 
 import io.security.corespringsecurity.domain.dto.AccountDto;
 import io.security.corespringsecurity.domain.entity.Account;
-import io.security.corespringsecurity.domain.entity.Role;
-import io.security.corespringsecurity.repository.RoleRepository;
-import io.security.corespringsecurity.repository.UserRepository;
+import io.security.corespringsecurity.domain.entity.auth.Role;
+import io.security.corespringsecurity.repository.kbo.auth.RoleRepository;
+import io.security.corespringsecurity.repository.kbo.auth.UserRepository;
 import io.security.corespringsecurity.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 

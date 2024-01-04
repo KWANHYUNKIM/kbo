@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BaseballTeamStatsHitterDto {
-
+    // TODO : 정리필요
     private int ranking;          // 순위
     private String teamName;      // 팀명
     private double avg;           // 평균 타율

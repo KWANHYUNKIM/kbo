@@ -1,7 +1,7 @@
 package io.security.corespringsecurity.service.impl;
 
-import io.security.corespringsecurity.domain.entity.RoleHierarchy;
-import io.security.corespringsecurity.repository.RoleHierarchyRepository;
+import io.security.corespringsecurity.domain.entity.auth.RoleHierarchy;
+import io.security.corespringsecurity.repository.kbo.auth.RoleHierarchyRepository;
 import io.security.corespringsecurity.service.RoleHierarchyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Iterator;
 import java.util.List;
+
 
 @Service
 public class RoleHierarchyServiceImpl implements RoleHierarchyService {

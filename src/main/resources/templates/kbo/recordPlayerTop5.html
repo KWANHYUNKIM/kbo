@@ -29,8 +29,53 @@
 
     <div class="row p-5">
         <div class="container">
-            <!-- 타자 -->
-            <div th:replace="kbo/layout/hitterBoardList::sortedData"></div>
+
+            <table class="table table-hover h-auto w-auto" border="1">
+                <p> 타율 Top 5</p>
+                <thead>
+                <tr>
+                    <th>선수명</th>
+                    <th>팀</th>
+                    <th>타율</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${not atHitTop5s.isEmpty()}" th:each="record, loop : ${atHitTop5s}"
+                    style="font-size: 14px;">
+                    <!-- 페이징 처리 이동 전에 tbody 태그 안으로 이동 -->
+                    <td th:text="${record.playerName}"></td>
+                    <td th:text="${record.teamName}"></td>
+                    <td th:text="${record.avg}"></td>
+                </tr>
+                <tr th:if="${atHitTop5s.isEmpty()}">
+                    <td colspan="13">No records found</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <table class="table table-hover h-auto w-auto" border="2">
+                <p> 홈런 Top 5</p>
+                <thead>
+                <tr>
+                    <th>선수명</th>
+                    <th>팀</th>
+                    <th>홈런</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${not atHomeRunTop5s.isEmpty()}" th:each="record, loop : ${atHomeRunTop5s}"
+                    style="font-size: 14px;">
+                    <!-- 페이징 처리 이동 전에 tbody 태그 안으로 이동 -->
+                    <td th:text="${record.playerName}"></td>
+                    <td th:text="${record.teamName}"></td>
+                    <td th:text="${record.homeRuns}"></td>
+                </tr>
+                <tr th:if="${atHomeRunTop5s.isEmpty()}">
+                    <td colspan="13">No records found</td>
+                </tr>
+                </tbody>
+            </table>
+
         </div>
     </div>
 </div>

@@ -47,6 +47,7 @@ public class BoardController {
         return "boards/createBoardForm";
     }
 
+
     @PostMapping(value ="/members/board")
     public String create(Principal principal, @Valid BoardDto form, MultipartFile file, BindingResult result) throws IOException {
         if(result.hasErrors()) {

@@ -13,12 +13,10 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @SpringBootApplication
 @EnableJpaAuditing
 @EnableBatchProcessing
-
 public class CoreSpringSecurityApplication {
 
     public static void main(String[] args) {
 
         SpringApplication.run(CoreSpringSecurityApplication.class, args);
     }
-
 }

@@ -1,11 +1,11 @@
 package io.security.corespringsecurity.controller.admin;
 
 
-import io.security.corespringsecurity.domain.dto.ResourcesDto;
+import io.security.corespringsecurity.domain.dto.auth.ResourcesDto;
 
-import io.security.corespringsecurity.domain.entity.Resources;
-import io.security.corespringsecurity.domain.entity.Role;
-import io.security.corespringsecurity.repository.RoleRepository;
+import io.security.corespringsecurity.domain.entity.auth.Resources;
+import io.security.corespringsecurity.domain.entity.auth.Role;
+import io.security.corespringsecurity.repository.kbo.auth.RoleRepository;
 import io.security.corespringsecurity.security.metadatasource.UrlSecurityMetadataSource;
 import io.security.corespringsecurity.service.MethodSecurityService;
 import io.security.corespringsecurity.service.ResourcesService;

@@ -1,5 +1,6 @@
 package io.security.corespringsecurity.domain.entity;
 
+import io.security.corespringsecurity.domain.entity.auth.Role;
 import io.security.corespringsecurity.domain.entity.board.Comment;
 import lombok.*;
 

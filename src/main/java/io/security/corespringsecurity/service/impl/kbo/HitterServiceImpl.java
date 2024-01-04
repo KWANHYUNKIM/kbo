@@ -42,8 +42,13 @@ public class HitterServiceImpl implements HitterService {
         return this.hitterRepository.findByTeam(team);
     }
 
-//    @Override
-//    public List<Hitter> findByTeam(String team) {
-//        return hitterRepository.findByTeam(team);
-//    }
+    @Override
+    public List<Hitter> findByHomrunTop5(Pageable pageable) {
+        return hitterRepository.findByHomerunTop5(pageable);
+    }
+
+    @Override
+    public List<Hitter> findByHitTop5(Pageable pageable) {
+        return hitterRepository.findbyHitTop5(pageable);
+    }
 }

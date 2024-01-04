@@ -1,7 +1,7 @@
 package io.security.corespringsecurity.service.impl;
 
-import io.security.corespringsecurity.domain.entity.Resources;
-import io.security.corespringsecurity.repository.ResourcesRepository;
+import io.security.corespringsecurity.domain.entity.auth.Resources;
+import io.security.corespringsecurity.repository.kbo.auth.ResourcesRepository;
 import io.security.corespringsecurity.service.ResourcesService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

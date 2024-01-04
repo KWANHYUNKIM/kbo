@@ -1,11 +1,8 @@
 package io.security.corespringsecurity.batch.writer;
 
-import io.security.corespringsecurity.domain.dto.kbo.HitterDto;
-import io.security.corespringsecurity.domain.dto.kbo.PlayerDto;
-import io.security.corespringsecurity.domain.entity.kbo.Hitter;
-import io.security.corespringsecurity.domain.entity.kbo.Player;
-import io.security.corespringsecurity.repository.kbo.HitterRepository;
-import io.security.corespringsecurity.repository.kbo.PlayerRepository;
+import io.security.corespringsecurity.domain.dto.kbo.crawl.PlayerDto;
+import io.security.corespringsecurity.domain.entity.kbo.crawl.Player;
+import io.security.corespringsecurity.repository.kbo.crawl.PlayerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.context.annotation.Configuration;

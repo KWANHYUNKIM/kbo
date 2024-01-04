@@ -1,8 +1,8 @@
 package io.security.corespringsecurity.security.configs;
 
 import io.security.corespringsecurity.domain.entity.Account;
-import io.security.corespringsecurity.domain.entity.Role;
-import io.security.corespringsecurity.repository.UserRepository;
+import io.security.corespringsecurity.domain.entity.auth.Role;
+import io.security.corespringsecurity.repository.kbo.auth.UserRepository;
 import io.security.corespringsecurity.security.service.AccountContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,9 +30,12 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("UsernameNotFoundException");
         }
 
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+
         List<GrantedAuthority> roles = new ArrayList<>();
 
-        Set<io.security.corespringsecurity.domain.entity.Role> userRoles = account.getUserRoles();
+        Set<Role> userRoles = account.getUserRoles();
 
         for (Role role : userRoles) {
             roles.add(new SimpleGrantedAuthority(role.getRoleName()));

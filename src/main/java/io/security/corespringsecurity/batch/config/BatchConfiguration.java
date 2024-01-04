@@ -10,16 +10,14 @@ import io.security.corespringsecurity.batch.writer.CsvPlayerWriter;
 import io.security.corespringsecurity.batch.writer.CsvTeamYearWriter;
 import io.security.corespringsecurity.domain.dto.kbo.HitterDto;
 import io.security.corespringsecurity.domain.dto.kbo.PitcherDto;
-import io.security.corespringsecurity.domain.dto.kbo.PlayerDto;
-import io.security.corespringsecurity.domain.dto.kbo.TeamYearDto;
+import io.security.corespringsecurity.domain.dto.kbo.crawl.PlayerDto;
+import io.security.corespringsecurity.domain.dto.kbo.crawl.TeamYearDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 @Slf4j

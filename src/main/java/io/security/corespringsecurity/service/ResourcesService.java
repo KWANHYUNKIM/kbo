@@ -1,6 +1,6 @@
 package io.security.corespringsecurity.service;
 
-import io.security.corespringsecurity.domain.entity.Resources;
+import io.security.corespringsecurity.domain.entity.auth.Resources;
 
 import java.util.List;
 

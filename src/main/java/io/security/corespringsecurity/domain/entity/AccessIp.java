@@ -9,7 +9,9 @@ import java.io.Serializable;
 @Entity
 @Table(name = "ACCESS_IP")
 @Data
+@EntityListeners(value = { AuditingEntityListener.class})
 @EqualsAndHashCode(of = "id")
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class AccessIp implements Serializable {

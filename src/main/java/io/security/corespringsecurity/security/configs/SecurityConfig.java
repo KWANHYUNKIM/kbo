@@ -67,6 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/members/**").hasAuthority("USER")
+                .antMatchers("/manager/**").hasAuthority("MANAGER")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -76,6 +77,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .successHandler(formAuthenticationSuccessHandler)
                 .failureHandler(formAuthenticationFailureHandler)
                 .permitAll()
+                .and()
+                .logout().permitAll()
+                .invalidateHttpSession(true) // 세션 무효화
         .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))

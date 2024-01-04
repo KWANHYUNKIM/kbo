@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <div class ="container p-3">
     <head th:replace="layout/header::userHead"></head> <!-- 헤더 -->
     <header th:replace="layout/top::header"></header>
@@ -24,6 +24,7 @@
         <input type="text" id="teamName" name="teamName" placeholder="검색어를 입력하세요">
         <button onclick="applyFilters()">검색</button>
     </div>
+
 </div>
 
 <div class="row">
@@ -41,17 +42,25 @@
                 <th>출신교</th>
             </tr>
             </thead>
-            <tbody th:if="${not player.isEmpty()}">
+            <tbody>
             <h6>검색결과 : <span th:text="${totalResults}"></span> 건</h6>
             <tr th:each="players, loop : ${player}">
                 <td th:text="${players.jerseyNumber}"></td>
-                <td th:text="${players.name}"></td>
+                <td>
+                <a th:href="@{'/record/player/hitterDetail/' + ${players.id}}">
+                    <span th:text="${players.name}"></span>
+                </a>
+                </td>
+<!--                <td th:text="${players.name}"></td>-->
                 <td th:text="${players.team}"></td>
                 <td th:text="${players.position}"></td>
                 <td th:text="${players.birthDate}"></td>
                 <td th:text="${players.height}"></td>
                 <td th:text="${players.weight}"></td>
                 <td th:text="${players.careerHistory}"></td>
+                <td>
+                    <a sec:authorize="hasAuthority('ROLE_ADMIN')" th:href="@{/manager/player/edit/{playerId}(playerId=${players.id})}">수정</a>
+                </td>
             </tr>
             </tbody>
         </table>

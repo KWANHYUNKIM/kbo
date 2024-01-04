@@ -8,7 +8,7 @@
         <div class ="container nav justify-content-end">
             <a class="text-light" href="/">
 <!--                <img src="/images/baseball-logo.png" class="main-logo" alt="logo">-->
-\            </a>
+            </a>
             <ul class ="navbar list-unstyled">
                 <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link text-dark" th:href="@{/login}">로그인</a></li>
                 <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link text-dark" th:href="@{/users}">회원가입</a></li>
@@ -26,8 +26,8 @@
                 <a class="nav-link text-dark" sec:authorize="isAuthenticated()" th:href="@{/}">
                     <img src="/images/topOverTop/alarm-ball.png" height="18" width="18" title="알람" class="nav-item" sec:authorize="isAuthenticated()">
                 </a>
-                <div th:replace="/home/profileDropdown"></div>
 
+                <div th:replace="/home/profileDropdown"></div>
                 <script th:src="@{/js/profileDropdown.js}"></script>
             </ul>
         </div>

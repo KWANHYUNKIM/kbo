@@ -1,11 +1,8 @@
 package io.security.corespringsecurity.batch.writer;
 
-import io.security.corespringsecurity.domain.dto.kbo.HitterDto;
-import io.security.corespringsecurity.domain.dto.kbo.TeamYearDto;
-import io.security.corespringsecurity.domain.entity.kbo.Hitter;
-import io.security.corespringsecurity.domain.entity.kbo.TeamYear;
-import io.security.corespringsecurity.repository.kbo.HitterRepository;
-import io.security.corespringsecurity.repository.kbo.TeamYearRepository;
+import io.security.corespringsecurity.domain.dto.kbo.crawl.TeamYearDto;
+import io.security.corespringsecurity.domain.entity.kbo.crawl.TeamYear;
+import io.security.corespringsecurity.repository.kbo.crawl.TeamYearRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.context.annotation.Configuration;

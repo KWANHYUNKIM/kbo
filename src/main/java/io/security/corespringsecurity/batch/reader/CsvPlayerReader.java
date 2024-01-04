@@ -1,7 +1,6 @@
 package io.security.corespringsecurity.batch.reader;
 
-import io.security.corespringsecurity.domain.dto.kbo.PitcherDto;
-import io.security.corespringsecurity.domain.dto.kbo.PlayerDto;
+import io.security.corespringsecurity.domain.dto.kbo.crawl.PlayerDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;

@@ -1,0 +1,35 @@
+<html  xmlns:th="http://www.thymeleaf.org">
+<head th:replace="club/head :: adminHead"></head>
+<body>
+<script type="text/javascript">
+  $(document).ready(function(){
+  });
+</script>
+<div th:replace="admin/common/top::header"></div>
+<div id="maininner"><!-- maininner (s)-->
+  <div class="cc-tab-con">
+    <div class="cc-tab-con">
+      <a href="javascript:void(0);" class="cc-tab-item on">구단생성</a>		<!--// on : 현재 위치 //-->
+      <a href="javascript:tabChange('2');" class="cc-tab-item">구단관리</a>
+      <a href="javascript:tabChange('3');" class="cc-tab-item">스케줄생성</a>
+      <a href="javascript:tabChange('4');" class="cc-tab-item">스케줄확인</a>
+    </div>
+  </div>
+  <div class="tbl_wrp">
+    <form role="form" action="/admin/club/createdClub" th:object="${clubForm}" method="post" enctype="multipart/form-data">
+      <div class="form-group">
+        <label th:for="title">팀이름</label>
+        <input type="text" th:field="*{teamName}" class="form-control" placeholder="팀이름을 입력하세요"
+               th:class="${#fields.hasErrors('teamName')}? 'form-control fieldError' : 'form-control'">
+        <p th:if="${#fields.hasErrors('teamName')}" th:errors="*{teamName}">Incorrect date</p>
+      </div>
+      <div class="form-group">
+        <label th:for="file">업로드</label>
+        <input type="file" class="form-control" name="file">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>

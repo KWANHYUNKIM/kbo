@@ -12,6 +12,7 @@
             <li class="nav-item"><a class="nav-link text-dark" th:href="@{/}" style="margin:5px">선수 이동 현황</a></li>
             <li class="nav-item"><a class="nav-link text-dark" th:href="@{/}" style="margin:5px">수상 현황</a></li>
             <li class="nav-item"><a class="nav-link text-dark" th:href="@{/}" style="margin:5px">레전드 40</a></li>
+            <li class="nav-item" sec:authorize="hasAuthority('ROLE_ADMIN')"><a class="nav-link text-dark" th:href="@{/manager/player/create}">선수등록</a></li>
           </div>
         </li>
       </ul>

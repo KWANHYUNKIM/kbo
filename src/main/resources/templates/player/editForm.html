@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div class ="container">
+  <head th:replace="layout/header::userHead"></head> <!-- 헤더 -->
+  <header th:replace="layout/top::header"></header>
+</div>
+
+<body>
+
+<div class="container">
+  <div class="row">
+    <div class ="col-sm-3">
+      <div th:replace="player/playerSider::sidebar"></div>
+    </div>
+  </div>
+  <row class = "row">
+    <!-- 수정 -->
+    <div class="container">
+      <!-- Todo : UI 제작 -->
+      <form th:action="@{/manager/player/edit/{playerId}(playerId=${players.id})}" method="post" th:object="${players}">
+
+        <div class="form-group">
+          <label th:for="title">등번호</label>
+          <input type="text" th:field="*{jerseyNumber}" class="form-control" placeholder="등번호를 입력하세요"
+                 th:class="${#fields.hasErrors('jerseyNumber')}? 'form-control fieldError' : 'form-control'">
+          <p th:if="${#fields.hasErrors('jerseyNumber')}" th:errors="*{jerseyNumber}">Incorrect date</p>
+        </div>
+        <div class="form-group">
+          <label th:for="content">이름</label>
+          <input type="text" th:field="*{name}" class="form-control" placeholder="이름을 입력하세요"
+                 th:class="${#fields.hasErrors('name')}? 'form-control fieldError' : 'form-control'">
+          <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Incorrect date</p>
+        </div>
+        <div class="form-group">
+          <label th:for="content">포지션</label>
+          <input type="text" th:field="*{position}" class="form-control" placeholder="포지션을 입력하세요"
+                 th:class="${#fields.hasErrors('position')}? 'form-control fieldError' : 'form-control'">
+          <p th:if="${#fields.hasErrors('position')}" th:errors="*{position}">Incorrect date</p>
+        </div>
+        <div class="form-group">
+          <label th:for="content">생년월일</label>
+          <input type="text" th:field="*{birthDate}" class="form-control" placeholder="생년월일을 입력하세요"
+                 th:class="${#fields.hasErrors('birthDate')}? 'form-control fieldError' : 'form-control'">
+          <p th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}">Incorrect date</p>
+        </div>
+        <div class="form-group">
+          <label th:for="content">키</label>
+          <input type="text" th:field="*{height}" class="form-control" placeholder="키를 입력하세요"
+                 th:class="${#fields.hasErrors('height')}? 'form-control fieldError' : 'form-control'">
+          <p th:if="${#fields.hasErrors('height')}" th:errors="*{height}">Incorrect date</p>
+        </div>
+        <div class="form-group">
+          <label th:for="content">몸무게</label>
+          <input type="text" th:field="*{weight}" class="form-control" placeholder="몸무게를 입력하세요"
+                 th:class="${#fields.hasErrors('weight')}? 'form-control fieldError' : 'form-control'">
+          <p th:if="${#fields.hasErrors('weight')}" th:errors="*{weight}">Incorrect date</p>
+        </div>
+        <div class="form-group">
+          <label th:for="content">커리어</label>
+          <input type="text" th:field="*{careerHistory}" class="form-control" placeholder="커리어를 입력하세요"
+                 th:class="${#fields.hasErrors('careerHistory')}? 'form-control fieldError' : 'form-control'">
+          <p th:if="${#fields.hasErrors('careerHistory')}" th:errors="*{careerHistory}">Incorrect date</p>
+        </div>
+        <div class="form-group">
+          <label th:for="content">보너스</label>
+          <input type="text" th:field="*{signingBonus}" class="form-control" placeholder="보너스를 입력하세요"
+                 th:class="${#fields.hasErrors('signingBonus')}? 'form-control fieldError' : 'form-control'">
+          <p th:if="${#fields.hasErrors('signingBonus')}" th:errors="*{signingBonus}">Incorrect date</p>
+        </div>
+        <div class="form-group">
+          <label th:for="content">연봉</label>
+          <input type="text" th:field="*{annualSalary}" class="form-control" placeholder="연봉을 입력하세요"
+                 th:class="${#fields.hasErrors('annualSalary')}? 'form-control fieldError' : 'form-control'">
+          <p th:if="${#fields.hasErrors('annualSalary')}" th:errors="*{annualSalary}">Incorrect date</p>
+        </div>
+        <div class="form-group">
+          <label th:for="content">몇순위</label>
+          <input type="text" th:field="*{draftRank}" class="form-control" placeholder="몇순위를 입력하세요"
+                 th:class="${#fields.hasErrors('draftRank')}? 'form-control fieldError' : 'form-control'">
+          <p th:if="${#fields.hasErrors('draftRank')}" th:errors="*{draftRank}">Incorrect date</p>
+        </div>
+        <div class="form-group">
+          <label th:for="content">첫계약년도</label>
+          <input type="text" th:field="*{debutYear}" class="form-control" placeholder="첫계약년도를 입력하세요"
+                 th:class="${#fields.hasErrors('debutYear')}? 'form-control fieldError' : 'form-control'">
+          <p th:if="${#fields.hasErrors('debutYear')}" th:errors="*{debutYear}">Incorrect date</p>
+        </div>
+
+        <label th:for="profileImage">프로필</label>
+        <img th:src="*{filepath}" class="current-profile-image" alt="프로필 이미지">
+        <input type="file" class="form-control" name="file">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </row>
+</div>
+
+
+</body>
+</html>

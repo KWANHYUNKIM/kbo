@@ -23,16 +23,23 @@
 
 .my-menu-content {
     display: none;
-    position: relative;
+    position: absolute;
     width: 225px;
-    top: 37px;
-    left: -175px;
+    /*top: -10px;*/
+    /*left: 0px;*/
+    top: 100%; /* 부모 요소 아래로 이동하도록 수정 */
+    left:  -165px; /* 부모 요소의 좌측 끝에 위치하도록 수정 */
     padding: 10px 0;
-    background-color: #fff;
-    font-size: 16px;
+    background-color: white;
+    font-size: 12px;
     border: 1px solid #dbdbdb;
     border-radius: 5px;
-    font-size: 14px;
+    z-index: 1000;
+}
+
+.my-menu-content a { /* <a 태그에 의해서  */
+    color: black;
+    text-decoration: none;
 }
 
 .my-menu-content.is-active {

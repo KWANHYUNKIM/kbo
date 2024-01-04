@@ -1,6 +1,6 @@
 package io.security.corespringsecurity.service;
 
-import io.security.corespringsecurity.domain.entity.Role;
+import io.security.corespringsecurity.domain.entity.auth.Role;
 
 import java.util.List;
 

@@ -1,8 +1,7 @@
 package io.security.corespringsecurity.controller.admin;
 
-import io.security.corespringsecurity.domain.dto.RoleDto;
-import io.security.corespringsecurity.domain.entity.Resources;
-import io.security.corespringsecurity.domain.entity.Role;
+import io.security.corespringsecurity.domain.dto.auth.RoleDto;
+import io.security.corespringsecurity.domain.entity.auth.Role;
 import io.security.corespringsecurity.service.RoleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

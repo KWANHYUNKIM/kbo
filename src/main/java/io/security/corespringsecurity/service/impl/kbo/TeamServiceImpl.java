@@ -1,7 +1,7 @@
 package io.security.corespringsecurity.service.impl.kbo;
 
-import io.security.corespringsecurity.repository.kbo.TeamRepository;
-import io.security.corespringsecurity.domain.entity.kbo.Team;
+import io.security.corespringsecurity.repository.kbo.crawl.TeamRepository;
+import io.security.corespringsecurity.domain.entity.kbo.crawl.Team;
 import io.security.corespringsecurity.service.kbo.TeamService;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;

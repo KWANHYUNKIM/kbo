@@ -3,7 +3,7 @@ package io.security.corespringsecurity.controller.admin;
 
 import io.security.corespringsecurity.domain.dto.AccountDto;
 import io.security.corespringsecurity.domain.entity.Account;
-import io.security.corespringsecurity.domain.entity.Role;
+import io.security.corespringsecurity.domain.entity.auth.Role;
 import io.security.corespringsecurity.service.RoleService;
 import io.security.corespringsecurity.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

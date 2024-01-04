@@ -1,6 +1,6 @@
 package io.security.corespringsecurity.service.board;
 
-import io.security.corespringsecurity.domain.entity.ImageEntity;
+import io.security.corespringsecurity.domain.entity.profile.ImageEntity;
 
 
 import java.util.List;

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+        /* 직사각형 스타일 */
+        .rectangle {
+            width: 200px;
+            height: 150px;
+            background-color: white;
+            border: 1px solid black;
+
+        }
+        .profile {
+            width: 500px;
+            height: 600px;
+            background-color: white;
+            border: 1px solid black;
+            text-align: left; /* 가로로 가운데 정렬을 위한 설정 */
+        }
+
+        .profile-details p {
+            margin: 20px 10px; /* 각 항목 사이의 띄어쓰기를 위한 설정 */
+            font-size: 24px;
+        }
+
+    </style>
+</head>
+<div class ="container p-3">
+    <head th:replace="layout/header::userHead"></head> <!-- 헤더 -->
+    <header th:replace="layout/top::header"></header>
+</div>
+<body>
+<div class="row p-3">
+    <div class="col-sm-3">
+        <div th:replace="kbo/recordSidebar::sidebar"></div>
+    </div>
+</div>
+<div class="row">
+    <div class="container">
+        <h1>기록실</h1>
+    </div>
+</div>
+<div class = "row p-3">
+    <div class="col-8 col-sm-6">
+        <!-- 목차 -->
+        <div class ="index rectangle">
+
+        </div>
+    </div>
+    <div class="col-8 col-sm-6">
+        <!-- 프로필 -->
+        <div class="profile">
+
+        </div>
+    </div>
+</div>
+
+<div class = "row">
+    <div class="col-8 col-sm-6">
+
+    </div>
+    <div class="col-8 col-sm-6">
+        <!-- 프로필 디테일 -->
+        <div class="profile profile-details">
+            <p>선수명:</p>
+            <p>생년월일:</p>
+            <p>신장/체중:</p>
+            <p>입단 계약금:</p>
+            <p>지명순위:</p>
+            <p>등번호: No.</p>
+            <p>포지션:</p>
+            <p>경력:</p>
+            <p>연봉:</p>
+            <p>입단년도:</p>
+        </div>
+    </div>
+</div>
+
+<div class = "row p-3">
+    <div class="col-12">
+        <button class="btn btn-light btn-lg text-dark">타자</button>
+        <button class="btn btn-light btn-lg text-dark">투수</button>
+    </div>
+</div>
+
+<div class = "row p-3">
+    <div class="col-12">
+        <button class="btn btn-light btn-lg text-dark">기본기록</button>
+        <button class="btn btn-light btn-lg text-dark">통산기록</button>
+        <button class="btn btn-light btn-lg text-dark">일자별기록</button>
+        <button class="btn btn-light btn-lg text-dark">경기별기록</button>
+        <button class="btn btn-light btn-lg text-dark">상황별기록</button>
+        <button class="btn btn-light btn-lg text-dark">등록일수</button>
+
+    </div>
+</div>
+
+<div class = "row p-3">
+    <div class="col-12">
+        <p>2023 성적</p>
+        <button class="btn btn-light btn-lg text-dark">KBO 퓨처스리 기록 보기 ></button>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>팀명</th>
+                <th>ERA</th>
+                <th>G</th>
+                <th>CG</th>
+                <th>SHO</th>
+                <th>W</th>
+                <th>L</th>
+                <th>SV</th>
+                <th>HLD</th>
+                <th>WPCT</th>
+                <th>TBF</th>
+                <th>NP</th>
+                <th>IP</th>
+                <th>H</th>
+                <th>2B</th>
+                <th>3B</th>
+                <th>HR</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- 각 row에 해당하는 데이터를 삽입하면 됩니다. -->
+            <tr>
+                <td>팀1</td>
+                <td>3.50</td>
+                <td>100</td>
+                <td>10</td>
+                <td>2</td>
+                <td>60</td>
+                <td>40</td>
+                <td>20</td>
+                <td>15</td>
+                <td>0.600</td>
+                <td>1200</td>
+                <td>15000</td>
+                <td>1000</td>
+                <td>250</td>
+                <td>50</td>
+                <td>10</td>
+                <td>30</td>
+            </tr>
+            <!-- 추가적인 데이터를 필요에 따라 삽입하면 됩니다. -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class = "row p-3">
+    <div class="col-12">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>SAC</th>
+                <th>SF</th>
+                <th>BB</th>
+                <th>IBB</th>
+                <th>SO</th>
+                <th>WP</th>
+                <th>BK</th>
+                <th>R</th>
+                <th>ER</th>
+                <th>BSV</th>
+                <th>WHIP</th>
+                <th>AVG</th>
+                <th>QS</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- 각 row에 해당하는 데이터를 삽입하면 됩니다. -->
+            <tr>
+                <td>10</td>
+                <td>5</td>
+                <td>50</td>
+                <td>8</td>
+                <td>120</td>
+                <td>2</td>
+                <td>1</td>
+                <td>80</td>
+                <td>30</td>
+                <td>5</td>
+                <td>1.20</td>
+                <td>0.250</td>
+                <td>15</td>
+            </tr>
+            <!-- 추가적인 데이터를 필요에 따라 삽입하면 됩니다. -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class = "row p-3">
+    <div class="col-12">
+        <table class="table table-bordered">
+            <p>최근 10경기</p>
+            <thead>
+            <tr>
+                <th>일자</th>
+                <th>상대</th>
+                <th>결과</th>
+                <th>ERA</th>
+                <th>TBF</th>
+                <th>IP</th>
+                <th>H</th>
+                <th>HR</th>
+                <th>BB</th>
+                <th>HBP</th>
+                <th>SO</th>
+                <th>R</th>
+                <th>ER</th>
+                <th>AVG</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- 각 row에 해당하는 데이터를 삽입하면 됩니다. -->
+            <tr>
+                <td>2023-01-01</td>
+                <td>상대1</td>
+                <td>승</td>
+                <td>2.50</td>
+                <td>30</td>
+                <td>7.0</td>
+                <td>5</td>
+                <td>1</td>
+                <td>2</td>
+                <td>0</td>
+                <td>10</td>
+                <td>3</td>
+                <td>2</td>
+                <td>0.200</td>
+            </tr>
+            <!-- 추가적인 데이터를 필요에 따라 삽입하면 됩니다. -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!--  -->
+<div class = "row p-3">
+    <div class="col-12">
+        <p>연도별 TOP 10</p>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>연도</th>
+                <th>항목</th>
+                <th>기록</th>
+                <th>순위</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- 각 row에 해당하는 데이터를 삽입하면 됩니다. -->
+            <tr>
+                <td>2022</td>
+                <td>타율</td>
+                <td>0.350</td>
+                <td>1</td>
+            </tr>
+            <!-- 추가적인 데이터를 필요에 따라 삽입하면 됩니다. -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+<div th:replace="layout/footer::footer"></div>
+
+</html>

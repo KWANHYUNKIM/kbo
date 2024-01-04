@@ -1,7 +1,6 @@
 package io.security.corespringsecurity.service.kbo;
 
-import io.security.corespringsecurity.domain.entity.kbo.TeamYear;
-import org.springframework.data.domain.Page;
+import io.security.corespringsecurity.domain.entity.kbo.crawl.TeamYear;
 
 import java.util.List;
 

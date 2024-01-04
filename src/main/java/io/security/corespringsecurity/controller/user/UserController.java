@@ -3,9 +3,7 @@ package io.security.corespringsecurity.controller.user;
 
 import io.security.corespringsecurity.domain.dto.AccountDto;
 import io.security.corespringsecurity.domain.entity.Account;
-import io.security.corespringsecurity.domain.entity.Role;
-import io.security.corespringsecurity.repository.RoleRepository;
-import io.security.corespringsecurity.security.service.AccountContext;
+import io.security.corespringsecurity.repository.kbo.auth.RoleRepository;
 import io.security.corespringsecurity.security.token.AjaxAuthenticationToken;
 import io.security.corespringsecurity.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -20,9 +18,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.security.Principal;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 @Controller
 public class UserController {

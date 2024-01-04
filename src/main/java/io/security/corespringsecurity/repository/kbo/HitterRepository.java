@@ -1,8 +1,6 @@
 package io.security.corespringsecurity.repository.kbo;
 
 import io.security.corespringsecurity.domain.entity.kbo.Hitter;
-import io.security.corespringsecurity.domain.entity.kbo.Team;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -34,4 +32,9 @@ public interface HitterRepository extends JpaRepository<Hitter,Long> {
     @Query("SELECT t FROM Hitter t WHERE t.teamName = :team ORDER BY t.teamName DESC")
     List<Hitter> findByTeam(@Param("team") String team);
 
+    @Query("SELECT h FROM Hitter h ORDER BY h.homeRuns DESC")
+    List<Hitter> findByHomerunTop5(Pageable pageable);
+
+    @Query("SELECT h FROM Hitter h WHERE h.atBats >= 446 ORDER BY h.avg DESC")
+    List<Hitter> findbyHitTop5(Pageable pageable);
 }

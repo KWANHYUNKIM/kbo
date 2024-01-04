@@ -1,14 +1,15 @@
 package io.security.corespringsecurity.service;
 
-import io.security.corespringsecurity.domain.entity.Resources;
-import io.security.corespringsecurity.repository.AccessIpRepository;
-import io.security.corespringsecurity.repository.ResourcesRepository;
+import io.security.corespringsecurity.domain.entity.auth.Resources;
+import io.security.corespringsecurity.repository.kbo.auth.AccessIpRepository;
+import io.security.corespringsecurity.repository.kbo.auth.ResourcesRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
+@Service
 public class SecurityResourceService {
 
     private ResourcesRepository resourcesRepository;
