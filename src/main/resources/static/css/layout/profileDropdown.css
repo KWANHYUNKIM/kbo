@@ -16,8 +16,9 @@
     transform: translate(-50%, -50%);
     width: 26px;
     height: 26px;
-    border-radius: 50%;
+    border-radius: 30%;
     border: 2px solid #8e8e8e;
+    border: none;  /* 띠를 안보이게 하는 방법 */
     content: '';
 }
 

@@ -8,9 +8,9 @@
     <div class = "profileDropdown">
         <div th:each="currentUser : ${currentUser}">
             <div class="user-action-item my-menu">
-                <button type="button" class="dropdown-button avatar avatar-26">
+                <a type="button" class="dropdown-button avatar avatar-26">
                     <img th:if="${currentUser != null}" th:src="${currentUser.filepath}" height="32" width="32" title="profile">
-                </button>
+                </a>
                 <div class="my-menu-content">
                     <ul class="my-menu-list">
                         <li class="my-menu-item">

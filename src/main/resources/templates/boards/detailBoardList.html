@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <link rel="stylesheet" th:href="@{/css/layout/hrline.css}" />
     <!-- include libraries(jQuery, bootstrap) -->
@@ -9,6 +9,49 @@
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 </head>
+<style>
+    .rectangle-1{
+        width: auto;
+        height: 200px;
+        background-color: white;
+        border: 0.5px solid #000;
+        border-radius: 10px;
+    }
+    .rectangle {
+        width: auto;
+        height: 100px;
+        background-color: white;
+        text-align: center;
+        line-height: 100px;
+        border: 0.5px solid #000;
+        border-radius: 10px;
+        margin-top: 20px; /* 또는 다른 값 */
+
+    }
+    .rectangle p{
+        text-align: left;
+        padding-left: 10px;
+    }
+    .rectangle button {
+        width: 100px;
+        height: 40px;
+        border-radius: 10px;
+        font-size : 14px;
+        float: right;
+    }
+    .login-comment-box{
+
+    }
+
+    .login-comment-box button{
+        margin-top: 10px;
+        width: 100px;
+        height: 40px;
+        border-radius: 10px;
+        font-size : 14px;
+        float: right;
+    }
+</style>
 <div class="container">
     <div class="row">
         <div class="col-12">
@@ -40,11 +83,17 @@
     </row>
     <!--  -->
     <row class="row p-3">
-        <div class="container p-3" th:each="board : ${boards}">
-            <h6 th:text="${board.account.username}"></h6> <!-- 작성자 -->
-            <h6 style="display:inline" id="timeDifference"></h6> <h6 style="display:inline">·</h6>
-            <img style="display:inline" src="/images/detailBoardList/view-icon.png"  height="18" width="18" title="눈동자 아이콘">
-            <h6 style="display:inline" th:text="${board.viewCount}"></h6>
+        <div class="container p-3" th:each="board : ${boards}" style="display: flex; align-items: center;">
+            <img style="display:inline" th:if="${board.account.filepath != null}"
+                 th:src="${board.account.filepath}" height="32" width="32" title="profile">
+
+            <div style="display: inline-block; margin-left: 10px;">
+                <h6 style="margin-left: 5px;" th:text="${board.account.username}"></h6> <!-- 작성자 -->
+                <h6 style="display: inline; margin-left: 5px;" id="timeDifference"></h6>
+                <h6 style="display: inline; margin-left: 5px;">·</h6>
+                <img style="display:inline; margin-left: 5px;" src="/images/detailBoardList/view-icon.png" height="15" width="16" title="눈동자 아이콘">
+                <h6 style="display: inline; margin-left: 5px;" th:text="${board.viewCount}"></h6>
+            </div>
 
             <!-- Todo: 내용 및 컨텐츠 제작 -->
         </div>
@@ -52,23 +101,53 @@
 
     <row class="row p-3 ">
         <div class="container" th:each="board : ${boards}">
-            <strong><p style="font-size:36px" th:text="${board.title}"></p></strong> <br><br>
+            <p style="font-size:30px; font-weight: bold; padding-bottom: 30px" th:text="${board.title}"></p>
 
-            <h5 style="font-size:16px" th:if="${board.content != null}" th:text="${board.content}"></h5>
+            <p style="font-size:16px" th:if="${board.content != null}" th:text="${board.content}"></p>
             <!-- Todo: 내용 및 컨텐츠 제작 -->
         </div>
     </row>
 
-    <row class ="row p-3">
-        <div class="container">
-            <form role="form" th:action="@{'/members/boards/' + ${boardId} + '/detail'}" th:object="${commentForm}" method="post">
-                <!--Todo: summernote 적용안됨 -->
-                <textarea type="text" th:field="*{comment}" class="form-control" placeholder="후기를 남겨주세요." id="summernote" name="content"></textarea>
+    <!-- 절취선 -->
+    <row>
+        <div class ="container">
+            <hr>
+        </div>
+    </row>
 
-                <button type="submit">Submit Comment</button>
-            </form>
+
+    <row class ="row p-3">
+        <!-- 로그인을 하지 않았을때, -->
+        <div class="container" sec:authorize="!isAuthenticated()">
+            <div class ="container rectangle-1">
+                <div style="display: flex; align-items: center;">
+                    <img src="/images/comment/icon-profile.svg" style="margin-right: 10px;">
+                    <div class="container rectangle">
+                        <p>댓글을 작성하려면 <a th:href="@{/login}">로그인</a>이 필요합니다.</p>
+                        <button class="btn btn-primary" type="submit">댓글 쓰기</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
+        <!-- 로그인을 했을때 -->
+        <div class="container" sec:authorize="isAuthenticated()">
+            <div class ="container rectangle-1">
+                <div style="display: flex; align-items: center;">
+                    <img src="/images/comment/icon-profile.svg" style="margin-right: 10px;">
+                        <div class="container login-comment-box">
+                            <form role="form" th:action="@{'/members/boards/' + ${boardId} + '/detail'}" th:object="${commentForm}" method="post">
+                            <textarea type="text" th:field="*{comment}" class="form-control"
+                                      placeholder="주제에 대한 생각을 자유롭게 댓글로 표현해 주세요. 여러분의 다양한 의견을 기다립니다." id="summernote" name="content"></textarea>
+                            </form>
+                            <button class="btn btn-primary" type="submit">댓글 쓰기</button>
+                        </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- 작성된 댓글 보여 주기 -->
         <div class ="container">
             <div class="container" th:if="${comments != null}">
                 <div th:each="comment : ${comments}">
@@ -82,6 +161,9 @@
 </div>
 </div>
 </body>
+<script>
+    document.getElementById('commentTextArea').placeholder = '댓글을 작성하려면 <a href="/login">로그인</a>이 필요합니다.';
+</script>
 
 <script th:inline="javascript">
     /*[# th:if="${not #lists.isEmpty(boards)}"]*/
