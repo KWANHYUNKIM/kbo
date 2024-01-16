@@ -1,14 +1,16 @@
-// Use the passed argument instead of directly accessing createdDateString
-(function(createdDateString) {
+// Use the passed argument instead of directly accessing CommentCreatedDateString
+(function(CommentCreatedDateString, CommentIndex) {
+    console.log("Comment" + CommentIndex);
+
     // Convert the string to a Date object
-    var createdDate = new Date(createdDateString);
+    var createdDate = new Date(CommentCreatedDateString);
 
     // Get the current date and time
     var currentDate = new Date();
 
     // Calculate the time difference in milliseconds
     var timeDifference = currentDate - createdDate;
-    // alert(timeDifference)
+
     // Calculate days, hours, minutes, and seconds
     var days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
     var hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -33,7 +35,10 @@
     if (seconds > 0 && days === 0 && hours === 0 && minutes === 0) {
         formattedTimeDifference += seconds + '초 ';
     }
+
     // Display the formatted time difference in the HTML
-    var timeDifferenceElement = document.getElementById('timeDifference');
-    timeDifferenceElement.textContent = formattedTimeDifference + '전';
-})(createdDateString);
+    var timeDifferenceElement = document.getElementById('timeDifference-' + CommentIndex);
+    if (timeDifferenceElement) {
+        timeDifferenceElement.textContent = formattedTimeDifference + '전';
+    }
+})(CommentCreatedDateString);

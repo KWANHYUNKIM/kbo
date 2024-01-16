@@ -42,8 +42,8 @@ public class Board extends BaseTimeEntity {
     @ColumnDefault("0")
     private int viewCount;
 
-    @ColumnDefault("0")
-    private int likes;
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    private List<Like> likes;
 
     @OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OrderBy("id asc")
@@ -55,6 +55,7 @@ public class Board extends BaseTimeEntity {
     }
 
     //==비즈니스 로직==//
+
 
 
 }

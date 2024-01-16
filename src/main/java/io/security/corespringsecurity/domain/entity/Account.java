@@ -3,9 +3,11 @@ package io.security.corespringsecurity.domain.entity;
 import io.security.corespringsecurity.domain.entity.auth.Role;
 import io.security.corespringsecurity.domain.entity.board.Comment;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

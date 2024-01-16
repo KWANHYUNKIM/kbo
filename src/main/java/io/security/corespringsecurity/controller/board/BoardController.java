@@ -1,33 +1,29 @@
 package io.security.corespringsecurity.controller.board;
 
-import io.security.corespringsecurity.domain.dto.AccountDto;
 import io.security.corespringsecurity.domain.dto.board.BoardDto;
 import io.security.corespringsecurity.domain.dto.board.CommentDto;
+import io.security.corespringsecurity.domain.dto.board.ReplyDto;
 import io.security.corespringsecurity.domain.entity.Account;
 import io.security.corespringsecurity.domain.entity.board.Board;
 import io.security.corespringsecurity.domain.entity.board.Comment;
-import io.security.corespringsecurity.domain.entity.kbo.Hitter;
-import io.security.corespringsecurity.service.UserService;
+import io.security.corespringsecurity.domain.entity.board.Like;
+import io.security.corespringsecurity.domain.entity.board.Reply;
 import io.security.corespringsecurity.service.board.BoardService;
 import io.security.corespringsecurity.service.board.CommentService;
+import io.security.corespringsecurity.service.board.LikeService;
+import io.security.corespringsecurity.service.board.ReplyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 import java.io.File;
 import java.io.IOException;
 import java.security.Principal;
@@ -42,15 +38,18 @@ public class BoardController {
 
     @Autowired
     private CommentService commentService;
-    @GetMapping(value ="/members/board")
-    public String boardForm(@ModelAttribute("boardForm") BoardDto form){
+
+    @Autowired
+    private LikeService likeService;
+
+    @GetMapping(value = "/members/board")
+    public String boardForm(@ModelAttribute("boardForm") BoardDto form) {
         return "boards/createBoardForm";
     }
 
-
-    @PostMapping(value ="/members/board")
+    @PostMapping(value = "/members/board")
     public String create(Principal principal, @Valid BoardDto form, MultipartFile file, BindingResult result) throws IOException {
-        if(result.hasErrors()) {
+        if (result.hasErrors()) {
             return "boards/createBoardForm";
         }
         // 파일 저장
@@ -87,6 +86,7 @@ public class BoardController {
 
         return "redirect:/";
     }
+
     /**
      * 게시판 디테일
      * Todo :
@@ -94,24 +94,37 @@ public class BoardController {
 
     @GetMapping(value = "/boards/{boardId}/detail")
     public String detailList(Model model, @PathVariable("boardId") Long boardId,
-                             @ModelAttribute("commentForm") CommentDto form){
+                             @ModelAttribute("commentForm") CommentDto form,
+                             @AuthenticationPrincipal Authentication authentication,
+                             @ModelAttribute("postForm") ReplyDto postForm) {
 
         List<Board> boards = boardService.findByboardId(boardId);
         List<Comment> comments = commentService.findCommentsByBoardId(boardId);
+        List<Like> likes = likeService.findByLikeAndUnlike(boardId);
 
         // 조회수 증가 로직 추가
         boardService.incrementViewCount(boardId);
 
+        // 답글도 가져오기
+        for (Comment comment : comments) {
+            List<Reply> replies = commentService.findByReply(comment.getId());
+            comment.setReplies(replies);
+        }
 
-        model.addAttribute("boards",boards);
+
+        boolean isAuthenticated = authentication != null && authentication.isAuthenticated();
+        model.addAttribute("isAuthenticated", isAuthenticated);
+        model.addAttribute("likes",likes);
+        model.addAttribute("boards", boards);
         model.addAttribute("commentForm", new CommentDto());
+        model.addAttribute("postForm", new ReplyDto());
         model.addAttribute("comments", comments);
         return "boards/detailBoardList";
 
     }
 
     @PostMapping("/members/boards/{boardId}/detail")
-    public String createForm(Principal principal,@PathVariable Long boardId, @Valid @ModelAttribute CommentDto form) {
+    public String createForm(Principal principal, @PathVariable Long boardId, @Valid @ModelAttribute CommentDto form) {
         Account account = null;
         Comment comment = new Comment();
         if (principal instanceof UsernamePasswordAuthenticationToken) {
@@ -126,11 +139,13 @@ public class BoardController {
         commentService.createComment(comment);
 
         // 댓글이 속한 게시물의 세부 페이지로 리다이렉트합니다.
-        return "redirect:/boards/" + boardId +"/detail";
+        return "redirect:/boards/" + boardId + "/detail";
     }
 
+
+
     @GetMapping(value = "/boards/all")
-    public String list(Model model , @RequestParam(value="page", defaultValue="0") int page) {
+    public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
         Page<Board> paging = this.boardService.getList(page);
         model.addAttribute("paging", paging);
 
@@ -138,10 +153,10 @@ public class BoardController {
     }
 
     @GetMapping("/boards/search")
-    public String find(@RequestParam("query") String query, Model model){
+    public String find(@RequestParam("query") String query, Model model) {
 
         List<Board> boards = boardService.findByQuery(query);
-        model.addAttribute("boards",boards);
+        model.addAttribute("boards", boards);
         return "boards/boardList";
     }
 
@@ -149,13 +164,13 @@ public class BoardController {
      * 게시판 삭제
      **/
     @GetMapping("/boards/delete/{boardId}") // @GetMapping : 이 url 에서 반응 해서 boards/boardsList 넣어 준다.
-    public String deleteBoard(@PathVariable("boardId") Long boardId){
+    public String deleteBoard(@PathVariable("boardId") Long boardId) {
         boardService.deleteBoard(boardId);
         return "redirect:/boards/all";
     }
 
     /**
-     *  수정 폼 ( 게시글 수정 )
+     * 수정 폼 ( 게시글 수정 )
      */
     @GetMapping("/boards/edit/{boardId}")
     public String showEditForm(@PathVariable("boardId") Long boardId, Model model) {
@@ -174,15 +189,4 @@ public class BoardController {
         boardService.editByBoard(boardId, updatedBoard);
         return "redirect:/members/all";
     }
-
-//    /**
-//     * 정렬
-//     **/
-//    @GetMapping("/boards/sort")
-//    public String getBoards(Model model, @RequestParam(name = "sort", defaultValue = "createdDate") String sort) {
-//        List<Board> boards = boardService.getAllSortedByBoard(sort);
-//        model.addAttribute("boards", boards);
-//        model.addAttribute("currentSort", sort);
-//        return "boards/boardList";
-//    }
 }

@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
+    <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{/css/layout/hrline.css}" />
+
     <!-- include libraries(jQuery, bootstrap) -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/js/currentTime.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
     <!-- include summernote css/js -->
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+<!--    <script src="/summernote/summernote-lite.js"></script>-->
+<!--    <script src="/summernote/summernote-ko-KR.js"></script>-->
+<!--    <link rel="stylesheet" href="/summernote/summernote-lite.css">-->
 </head>
 <style>
     .rectangle-1{
@@ -92,7 +95,8 @@
                 <h6 style="display: inline; margin-left: 5px;" id="timeDifference"></h6>
                 <h6 style="display: inline; margin-left: 5px;">·</h6>
                 <img style="display:inline; margin-left: 5px;" src="/images/detailBoardList/view-icon.png" height="15" width="16" title="눈동자 아이콘">
-                <h6 style="display: inline; margin-left: 5px;" th:text="${board.viewCount}"></h6>
+                <h6 style="display: inline; margin-left: 1px;" th:text="${board.viewCount}"></h6>
+<!--                <h6 style="display: inline; margin-left: 1px;" id="likeCount" class="fas fa-heart" th:text="${board.likes}"></h6>-->
             </div>
 
             <!-- Todo: 내용 및 컨텐츠 제작 -->
@@ -102,12 +106,20 @@
     <row class="row p-3 ">
         <div class="container" th:each="board : ${boards}">
             <p style="font-size:30px; font-weight: bold; padding-bottom: 30px" th:text="${board.title}"></p>
-
             <p style="font-size:16px" th:if="${board.content != null}" th:text="${board.content}"></p>
             <!-- Todo: 내용 및 컨텐츠 제작 -->
         </div>
     </row>
 
+
+    <row class="row p-3" style="text-align: right;">
+        <div class="container" th:each="like : ${likes}">
+            <i class="fas fa-thumbs-up like-btn" style="font-size: 25px; padding: 10px;" onclick="PostLike()"></i>
+            <p style="font-size:30px; font-weight: bold; padding-bottom: 30px" th:text="${like.likes}" class="likeCount"></p>
+            <i class="fas fa-thumbs-down unlike-btn" style="font-size: 25px; padding: 10px;" onclick="PostUnlike()"></i>
+            <p style="font-size:30px; font-weight: bold; padding-bottom: 30px" th:text="${like.unlikes}" class="unlikeCount"></p>
+        </div>
+    </row>
     <!-- 절취선 -->
     <row>
         <div class ="container">
@@ -129,142 +141,306 @@
                 </div>
             </div>
         </div>
-
         <!-- 로그인을 했을때 -->
         <div class="container" sec:authorize="isAuthenticated()">
             <div class ="container rectangle-1">
                 <div style="display: flex; align-items: center;">
                     <img src="/images/comment/icon-profile.svg" style="margin-right: 10px;">
-                        <div class="container login-comment-box">
-                            <form role="form" th:action="@{'/members/boards/' + ${boardId} + '/detail'}" th:object="${commentForm}" method="post">
-                            <textarea type="text" th:field="*{comment}" class="form-control"
-                                      placeholder="주제에 대한 생각을 자유롭게 댓글로 표현해 주세요. 여러분의 다양한 의견을 기다립니다." id="summernote" name="content"></textarea>
-                            </form>
+                    <div class="container login-comment-box">
+                        <form role="form" th:action="@{'/members/boards/' + ${boardId} + '/detail'}" th:object="${commentForm}" method="post">
+                            <textarea type="text" class="form-control" placeholder="주제에 대한 생각을 자유롭게 댓글로 표현해 주세요. 여러분의 다양한 의견을 기다립니다." id="tiny" name="comment"></textarea>
                             <button class="btn btn-primary" type="submit">댓글 쓰기</button>
-                        </div>
-
-                </div>
-            </div>
-        </div>
-
-        <!-- 작성된 댓글 보여 주기 -->
-        <div class ="container">
-            <div class="container" th:if="${comments != null}">
-                <div th:each="comment : ${comments}">
-<!--                    <p th:text="${comment.account.username}"></p>-->
-                    <span th:utext ="${comment.comment}"></span>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </row>
 
+    <div class="row" style="margin-top: 50px;  flex-direction: column;">
+
+        <div class="container" th:if="${comments != null}" style="display: flex;  flex-direction: column;">
+            <div clas ="container">
+                <h6 th:if="${#lists.isEmpty(comments)}">댓글이 없습니다.</h6>
+                <h6 th:if="${not #lists.isEmpty(comments)}" th:text="${#lists.size(comments) + '의 댓글'}"></h6>
+            </div>
+
+            <div class="container" style="margin-top: 70px" th:each="comment, loop :  ${comments}"
+                 th:data-comment-index="${loop.index}" th:data-comment-created-date="${comment.createdDate}">
+
+                <img style="display:inline" th:if="${comment.account.filepath != null}"
+                     th:src="${comment.account.filepath}" height="32" width="32" title="profile">
+                <h6 style="display: inline" th:text="${comment.account.username}"></h6> <!-- 작성자 -->
+                <h6 style="display: inline">·</h6>
+                <h6 style="display: inline" th:id="'timeDifference-' + ${loop.index}" th:text="'timeDifference-' + ${loop.index}"></h6>
+                <!-- TODO: 흐음.. 왜 안되지? -->
+
+                <div style="padding-top:15px">
+                    <span th:utext ="${comment.comment}"></span>
+                </div>
+
+                <div class = "" style="padding-top: 15px" th:if = "${comment.comment != null}">
+                    <hr>
+                </div>
+
+                <div class ="" style="padding-top: 15px"th:each="reply, loop :  ${comment.replies}"
+                     th:data-comment-index="${loop.index}" th:data-comment-created-date="${comment.createdDate}">
+
+                    <span th:id="'comment_btn_toggle' + ${loop.index}" style="cursor: pointer; text-decoration: underline; color: blue;">댓글 보기</span>
+                    <div class="container" id="commentContainer" th:if="${comment.replies != null}" style="display: flex;  flex-direction: column;">
+                        <div class="container" style="margin-top: 70px">
+
+                            <img style="display:inline" th:if="${reply.account.filepath != null}"
+                                 th:src="${reply.account.filepath}" height="32" width="32" title="profile">
+                            <h6 style="display: inline" th:text="${reply.account.username}"></h6> <!-- 작성자 -->
+                            <h6 style="display: inline">·</h6>
+                            <h6 style="display: inline" th:id="'timeDifference-' + ${loop.index}" th:text="'timeDifference-' + ${loop.index}"></h6>
+                            <div style="padding-top:15px">
+                                <span th:utext ="${reply.content}"></span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container" style="padding-top:15px">
+
+                    <span id="btn_toggle" type="submit" style="cursor: pointer; text-decoration: none; color: blue; padding: 10px">댓글 쓰기</span>
+
+                    <div id="loginPopup" class="popup" style="display: block;">
+                    </div>
+
+                    <div id="auth-toggle" class="container" sec:authorize="isAuthenticated()">
+                        <div class ="container rectangle-1">
+                            <div style="display: flex; align-items: center;">
+                                <img src="/images/comment/icon-profile.svg" style="margin-right: 10px;">
+                                <div class="container login-comment-box">
+                                    <form role="form" th:action="@{'/members/boards/' + ${boardId} + '/comments/' + ${comment.id} + '/replies'}" th:object="${postForm}" method="post">
+                                        <textarea type="text" class="form-control" placeholder="주제에 대한 생각을 자유롭게 댓글로 표현해 주세요. 여러분의 다양한 의견을 기다립니다." id="tiny" name="comment"></textarea>
+                                        <button class="btn btn-primary">댓글 쓰기</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Todo: 내용 및 컨텐츠 제작 -->
+            </div>
+        </div>
+    </row>
 </div>
 </div>
 </body>
+
+
+
+<!--<script>-->
+<!--    // Using jQuery for simplicity-->
+<!--    $(document).ready(function() {-->
+<!--        $("#comment_btn_toggle").click(function() {-->
+<!--            $("#commentContainer").slideToggle();-->
+<!--            $("#btn_toggle").slideToggle();-->
+<!--            $("#auth-toggle").toggle();-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
 <script>
-    document.getElementById('commentTextArea').placeholder = '댓글을 작성하려면 <a href="/login">로그인</a>이 필요합니다.';
+    $(document).ready(function() {
+        $(".comment_btn_toggle").click(function() {
+            var commentIndex = $(this).data("comment-index");
+            var commentContainerId = '#commentContainer_' + commentIndex;
+            var loginPopupId = '#loginPopup_' + commentIndex;
+            var commentWriteContainerId = '#commentWriteContainer_' + commentIndex;
+
+            $(commentContainerId).slideToggle();
+            $(loginPopupId).slideToggle();
+            $(commentWriteContainerId).toggle();  // 댓글 보기를 토글할 때 댓글 쓰기 영역을 보이거나 숨김
+
+            // 이하 필요에 따라 추가적인 토글 작업 수행
+
+            // 토글 상태에 따라 버튼 텍스트 변경
+            var btnText = $(this).text() === '댓글 보기' ? '댓글 숨기기' : '댓글 보기';
+            $(this).text(btnText);
+        });
+    });
+</script>
+
+<script>
+    var selectedOption = null;
+
+    function toggleLike() {
+        selectedOption = 'like';
+        updateButtons();
+        PostLike();
+    }
+
+    function toggleUnlike() {
+        selectedOption = 'unlike';
+        updateButtons();
+        PostUnlike();
+    }
+
+    function updateButtons() {
+        if (selectedOption === 'like') {
+            // 좋아요 선택 시 처리
+            $('.fa-thumbs-up').addClass('selected');
+            $('.fa-thumbs-down').removeClass('selected');
+        } else if (selectedOption === 'unlike') {
+            // 싫어요 선택 시 처리
+            $('.fa-thumbs-up').removeClass('selected');
+            $('.fa-thumbs-down').addClass('selected');
+        } else {
+            // 선택 해제 시 처리
+            $('.fa-thumbs-up').removeClass('selected');
+            $('.fa-thumbs-down').removeClass('selected');
+        }
+    }
+</script>
+
+<script th:inline="javascript">
+    var boardId = /*[[${boardId}]]*/ 0;  // 현재 게시글의 ID
+
+    function PostLike() {
+        $.ajax({
+            type: 'POST',
+            url: '/toggle-like/' + boardId,
+            success: function (likeCount) {
+                // 성공 시 좋아요 개수 갱신
+                $('#likeCount').text(likeCount);
+            },
+            error: function (error) {
+                console.log('좋아요 토글 중 오류 발생: ' + error);
+            }
+        });
+    }
+
+    function PostUnlike() {
+        $.ajax({
+            type: 'POST',
+            url: '/toggle-unlike/' + boardId,
+            success: function (unlikeCount) {
+                // 성공 시 싫어요 개수 갱신
+                $('#unlikeCount').text(unlikeCount);
+            },
+            error: function (error) {
+                console.log('싫어요 토글 중 오류 발생: ' + error);
+            }
+        });
+    }
+</script>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    document.addEventListener('DOMContentLoaded', function() {
+        var isAuthenticated = /*[[${isAuthenticated}]]*/ false;
+        function handleCommentButtonClick() {
+            // 로그인 상태 체크
+            if (isAuthenticated ) {
+                $("#auth-toggle").toggle();
+            } else {
+
+            }
+        }
+        // 댓글 쓰기 버튼에 click 이벤트 리스너를 등록합니다.
+        $("#btn_toggle").click(function() {
+            handleCommentButtonClick();
+        });
+    });
+    /*]]>*/
 </script>
 
 <script th:inline="javascript">
     /*[# th:if="${not #lists.isEmpty(boards)}"]*/
     var createdDateString = /*[[${boards[0].createdDate}]]*/ '';
-    console.log(createdDateString);
+    // console.log(createdDateString);
     /*[/]*/
 </script>
 <script src="/js/currentTime.js"></script>
 
-<script>
-    $(document).ready(function () {
-        $('#summernote').summernote({
-            codeviewFilter: false, // 코드 보기 필터 비활성화
-            codeviewIframeFilter: false, // 코드 보기 iframe 필터 비활성화
-
-            height: 500, // 에디터 높이
-            minHeight: null, // 최소 높이
-            maxHeight: null, // 최대 높이
-            focus: true, // 에디터 로딩 후 포커스 설정
-            lang: 'ko-KR', // 언어 설정 (한국어)
-
-            toolbar: [
-                ['style', ['style']], // 글자 스타일 설정 옵션
-                ['fontsize', ['fontsize']], // 글꼴 크기 설정 옵션
-                ['font', ['bold', 'underline', 'clear']], // 글자 굵게, 밑줄, 포맷 제거 옵션
-                ['color', ['color']], // 글자 색상 설정 옵션
-                ['table', ['table']], // 테이블 삽입 옵션
-                ['para', ['ul', 'ol', 'paragraph']], // 문단 스타일, 순서 없는 목록, 순서 있는 목록 옵션
-                ['height', ['height']], // 에디터 높이 조절 옵션
-                ['insert', ['picture', 'link', 'video']], // 이미지 삽입, 링크 삽입, 동영상 삽입 옵션
-                ['view', ['codeview', 'fullscreen', 'help']], // 코드 보기, 전체 화면, 도움말 옵션
-            ],
-
-            fontSizes: [
-                '8', '9', '10', '11', '12', '14', '16', '18',
-                '20', '22', '24', '28', '30', '36', '50', '72',
-            ], // 글꼴 크기 옵션
-
-            styleTags: [
-                'p',  // 일반 문단 스타일 옵션
-                {
-                    title: 'Blockquote',
-                    tag: 'blockquote',
-                    className: 'blockquote',
-                    value: 'blockquote',
-                },  // 인용구 스타일 옵션
-                'pre',  // 코드 단락 스타일 옵션
-                {
-                    title: 'code_light',
-                    tag: 'pre',
-                    className: 'code_light',
-                    value: 'pre',
-                },  // 밝은 코드 스타일 옵션
-                {
-                    title: 'code_dark',
-                    tag: 'pre',
-                    className: 'code_dark',
-                    value: 'pre',
-                },  // 어두운 코드 스타일 옵션
-                'h1', 'h2', 'h3', 'h4', 'h5', 'h6',  // 제목 스타일 옵션
-            ],
-
-            callbacks: {
-                onImageUpload: function (files, editor, welEditable) {
-                    // 파일 업로드 (다중 업로드를 위해 반복문 사용)
-                    for (var i = files.length - 1; i >= 0; i--) {
-                        var fileName = files[i].name
-
-                        // 이미지 alt 속성 삽일을 위한 설정
-                        var caption = prompt('이미지 설명 :', fileName)
-                        if (caption == '') {
-                            caption = '이미지'
-                        }
-                        uploadSummernoteImageFile(files[i], this, caption)
-                    }
-                },
-            },
-        })
-    })
-
-    // 이미지 업로드 함수 ajax 활용
-    function uploadSummernoteImageFile(file, el, caption) {
-        data = new FormData()
-        data.append('file', file)
-        $.ajax({
-            data: data,
-            type: 'POST',
-            url: 'uploadSummernoteImageFile',
-            contentType: false,
-            enctype: 'multipart/form-data',
-            processData: false,
-            success: function (data) {
-                $(el).summernote(
-                    'editor.insertImage',
-                    data.url,
-                    function ($image) {
-                        $image.attr('alt', caption) // 캡션 정보를 이미지의 alt 속성에 설정
-                    }
-                )
-            },
-        })
-    }
+<script th:inline="javascript">
+    /*[# th:if="${not #lists.isEmpty(comments)}"]*/
+    /*[# th:each="comment, commentIndex : ${comments}"]*/
+    var CommentCreatedDateString = /*[[${comment.createdDate}]]*/ '';
+    var CommentIndex = /*[[${commentIndex.index}]]*/ '';
+    console.log('Comment created date:', CommentCreatedDateString);
+    console.log('Comment index:', CommentIndex);
+    /*[/]*/
+    /*[/]*/
 </script>
+
+<script th:inline="javascript">
+    window.addEventListener('load', function () {
+        // Use the passed argument instead of directly accessing CommentCreatedDateString
+        (function () {
+            // Select all elements with data-comment-created-date attribute
+            var comments = document.querySelectorAll('[data-comment-created-date]');
+
+            comments.forEach(function (comment) {
+                // Retrieve data-comment-created-date and data-comment-index attributes
+                var CommentCreatedDateString = comment.getAttribute('data-comment-created-date');
+                var CommentIndex = comment.getAttribute('data-comment-index');
+                console.log('CommentCreatedDateString 내부' + CommentCreatedDateString);
+                console.log('Comment index: 내부 ', CommentIndex);
+
+                // Convert the string to a Date object
+                var createdDate = new Date(CommentCreatedDateString);
+
+                // Get the current date and time
+                var currentDate = new Date();
+
+                // Calculate the time difference in milliseconds
+                var timeDifference = currentDate - createdDate;
+
+                // Calculate days, hours, minutes, and seconds
+                var days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+                // Format the time difference for display
+                var formattedTimeDifference = '';
+
+                if (days > 0) {
+                    formattedTimeDifference += days + '일 ';
+                }
+
+                if (hours > 0 && days === 0) {
+                    formattedTimeDifference += hours + '시간 ';
+                }
+
+                if (minutes > 0 && days === 0 && hours === 0) {
+                    formattedTimeDifference += minutes + '분 ';
+                }
+
+                if (seconds > 0 && days === 0 && hours === 0 && minutes === 0) {
+                    formattedTimeDifference += seconds + '초 ';
+                }
+
+                // Display the formatted time difference in the HTML
+                var timeDifference= document.getElementById('timeDifference-' + CommentIndex);
+                console.log(timeDifference + "timedifference" + CommentIndex + "인덱스값" + "타임" + timeDifference);
+                if (timeDifference) {
+                    timeDifference.textContent = formattedTimeDifference + '전';
+                }
+            });
+        })();
+    });
+</script>
+
+<!--<script src="/js/currentTime2.js"></script>-->
+
+<!-- 위지윅 에디터 추가 -->
+<script src="https://cdn.tiny.cloud/1/4leh6lsbpk2gwzf0jmuglmc1uohl7ii3mczhdgex8mg4aw2m/tinymce/6/tinymce.min.js"
+        referrerpolicy="origin"></script>
+
+
+<script>
+    tinymce.init({
+        selector: 'textarea#tiny' ,
+        height : '200px'
+    });
+</script>
+
 </html>

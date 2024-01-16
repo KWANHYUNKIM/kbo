@@ -8,6 +8,38 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="..." crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="..." crossorigin="anonymous"></script>
 
+<style>
+  .profile button{
+    margin-top: 10px;
+    width: 100px;
+    height: 40px;
+    border-radius: 10px;
+    font-size : 14px;
+    float: right;
+  }
+  .dropdown-image {
+    border-radius: 50%;
+    max-width: 60px; /* 이미지의 최대 너비를 설정 */
+    max-height: 60px; /* 이미지의 최대 높이를 설정 */
+    width: auto; /* 가로 크기를 자동으로 조절 */
+    height: auto; /* 세로 크기를 자동으로 조절 */
+  }
+  .img-button-main:hover{
+    filter: brightness(90%); /* 마우스 오버 시 밝기를 감소시켜 어둡게 만듦 */
+  }
+  .change-text {
+    position: absolute;
+    top: 45%;
+    left: 17.5%;
+    transform: translate(-45%, -17.5%);
+    color: white; /* 흰색 글자 */
+    font-size: 14px; /* 원하는 폰트 크기 설정 */
+
+  }
+
+</style>
+
+
 <div class ="container" style="position: relative; z-index: 2;">
   <head th:replace="layout/header::userHead"></head> <!-- 헤더 -->
   <header th:replace="layout/topOverTop::topOverTop"></header>
@@ -16,55 +48,95 @@
 <div class ="container" style="position: relative; z-index: 1;">
   <header th:replace="layout/top::header"></header>
 </div>
+
 <body>
-
-<div class="container p-3">
-  <div class="row">
-    <div class="col-sm-3">
-      <div th:replace="settings/layout/settingSidebar ::sidebar"></div> <!-- 사이드 바 --> <!-- col-sm-3 -->
-    </div>
-  </div>
-
-  <!-- 수정 -->
-  <div class="container">
-    <!-- Todo: UI 제작 -->
-    <form th:action="@{/settings/profile}" method="post" enctype="multipart/form-data" th:object="${account}">
-
-      <label th:for="title">유저네임</label>
-      <input type="text" th:field="*{username}" class="form-control" placeholder="타이틀을 입력하세요"
-             th:class="${#fields.hasErrors('username')}? 'form-control fieldError' : 'form-control'">
-
-      <label th:for="profileImage">프로필</label>
-      <img th:src="*{filepath}" class="current-profile-image" alt="프로필 이미지">
-      <!-- 이미지 선택을 위한 드롭다운 메뉴 -->
-      <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          이미지 선택
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <!-- 이미지 목록을 반복하면서 각 이미지에 대한 선택 옵션 생성 -->
-          <a class="dropdown-item" href="javascript:void(0)" th:each="image : ${images}" th:data-imagepath="${image.filepath}" onclick="selectImage(this)">
-            <img th:src="${image.filepath}" class="dropdown-image" alt="프로필 이미지">
-          </a>
-        </div>
+  <div class="container p-3">
+    <div class="row">
+      <div class="col-sm-3">
+        <div th:replace="settings/layout/settingSidebar ::sidebar"></div> <!-- 사이드 바 --> <!-- col-sm-3 -->
       </div>
-      <!-- 선택한 이미지의 경로를 서버로 전송할 hidden input -->
-      <input type="hidden" id="selectedImagePathInput" name="selectedImagePath" th:value="${account.filepath}" />
+    </div>
+  <div class="container profile">
+    <h1>회원정보</h1>
 
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <form th:action="@{/settings/profile}" method="post" enctype="multipart/form-data" th:object="${account}">
+        <div class="container">
+          <div class="row">
+            <div class="col">
+
+              <label th:for="title">유저네임</label>
+              <input type="text" th:field="*{username}" class="form-control"
+                th:class="${#fields.hasErrors('username')}? 'form-control fieldError' : 'form-control'">
+
+              <label th:for="title">이메일</label>
+              <input type="text" th:field="*{email}" class="form-control"
+              th:class="${#fields.hasErrors('email')}? 'form-control fieldError' : 'form-control'">
+            </div>
+
+            <div class="col">
+              <label th:for="profileImage">프로필</label>
+
+              <div class="dropdown">
+              <img style="border-radius: 50%;" th:src="*{filepath}" class="img-button-main btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"/>
+                <div class="change-text">변경</div> <!-- 변경 문구를 나타낼 요소 -->
+
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <!-- 이미지 목록을 반복하면서 각 이미지에 대한 선택 옵션 생성 -->
+              <a class="dropdown-item" href="javascript:void(0)" th:each="image : ${images}" th:data-imagepath="${image.filepath}" onclick="selectImage(this)">
+              <img th:src="${image.filepath}" class="dropdown-image" alt="프로필 이미지">
+              </a>
+              </div>
+              </div>
+          </div>
+          <!-- 선택한 이미지의 경로를 서버로 전송할 hidden input -->
+          <input type="hidden" id="selectedImagePathInput" name="selectedImagePath" th:value="${account.filepath}" />
+        </div>
+          <button type="submit" class="btn btn-primary">저장</button>
+      </div>
     </form>
   </div>
 </div>
 
 <div th:replace="layout/footer::footer"></div>
 
-<script>
+<!-- 프로필 이미지를 클릭했을 때 실행될 JavaScript 함수 -->
+<script th:inline="javascript">
   function selectImage(element) {
+    // 선택한 이미지의 경로 가져오기
     var imagePath = element.getAttribute('data-imagepath');
-    document.getElementById('selectedImagePathInput').value = imagePath;
 
+    // 프로필 이미지 업데이트
+    var profileImage = document.getElementById('dropdownMenuButton');
+    profileImage.src = imagePath;
+
+    // 선택한 이미지의 경로를 hidden input에 업데이트
+    var selectedImagePathInput = document.getElementById('selectedImagePathInput');
+    selectedImagePathInput.value = imagePath;
   }
+</script>
+<script>
+  // 마우스 오버 이벤트
+  document.querySelector('.img-button-main').addEventListener('mouseover', function() {
+    // 마우스 오버 시 밝기 감소
+    this.style.filter =
+
+    this.style.filter = 'brightness(40%)';
+
+    // 변경 문구 표시
+    var changeText = document.querySelector('.change-text');
+    changeText.textContent = '변경';
+  });
+
+  // 마우스 아웃 이벤트
+  document.querySelector('.img-button-main').addEventListener('mouseout', function() {
+    // 마우스 아웃 시 밝기 복원
+    this.style.filter = 'brightness(100%)';
+
+    // 변경 문구 초기화
+    var changeText = document.querySelector('.change-text');
+    changeText.textContent = '';
+  });
 </script>
 </body>
 </html>

@@ -1,16 +1,14 @@
 package io.security.corespringsecurity.domain.entity.board;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.security.corespringsecurity.domain.entity.Account;
 import io.security.corespringsecurity.domain.entity.BaseTimeEntity;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -31,6 +29,9 @@ public class Comment extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name = "board_id")
     private Board board;
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    private List<Reply> replies = new ArrayList<>();  // 답글 목록
 
     private String comment;
 
