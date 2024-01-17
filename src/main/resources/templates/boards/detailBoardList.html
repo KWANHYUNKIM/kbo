@@ -7,6 +7,7 @@
     <!-- include libraries(jQuery, bootstrap) -->
     <script src="/js/currentTime.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+
     <!-- include summernote css/js -->
 <!--    <script src="/summernote/summernote-lite.js"></script>-->
 <!--    <script src="/summernote/summernote-ko-KR.js"></script>-->
@@ -84,9 +85,10 @@
             <div class="hr-sect">커뮤니티 / 사는얘기</div>
         </div>
     </row>
-    <!--  -->
-    <row class="row p-3">
-        <div class="container p-3" th:each="board : ${boards}" style="display: flex; align-items: center;">
+
+    <!-- 프로필  -->
+    <row class="row g-3">
+        <div class="col p-3" th:each="board : ${boards}" style="display: flex; align-items: center;">
             <img style="display:inline" th:if="${board.account.filepath != null}"
                  th:src="${board.account.filepath}" height="32" width="32" title="profile">
 
@@ -101,8 +103,38 @@
 
             <!-- Todo: 내용 및 컨텐츠 제작 -->
         </div>
-    </row>
+        <div class ="col p-3" style="text-align: right;">
+            <div class="dropdown" th:each="board : ${boards}" th:if="${board.account.id == currentUser.id}">
+                <a class="" href="#" role="button" id="dropdownMenuLink-revised" data-toggle="dropdown" aria-expanded="false">...</a>
 
+                <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink-revised" style="right: -21px;">
+                    <li>
+                        <a class="dropdown-item" style="text-align: right" th:if="${board.account.id == currentUser.id}"
+                           th:href="@{/boards/edit/{boardId}(boardId=${board.id})}">
+                            <span style="display: inline-block; vertical-align: middle;"><i class="fas fa-pen"></i></span>
+                            수정하기
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" style="text-align: right" th:if="${board.account.id == currentUser.id}"
+                           th:href="@{/boards/delete/{boardId}(boardId=${board.id})}">
+                            <span style="display: inline-block; vertical-align: middle;"><i class="fas fa-trash"></i></span>
+                            삭제하기
+                        </a>
+                    </li>
+                </ul>
+                <!-- 즐겨찾기 -->
+                <div class="" style="text-align: right; display: inline; margin-left: -50px;" th:if="${currentUser.id != null}">
+                <span style="display: inline-block; vertical-align: middle;" id="bookmarkToggle">
+                    <i class="fas fa-bookmark" style="font-size: 2em; color: grey;"></i>
+                </span>
+                </div>
+            </div>
+
+
+            <!-- 나머지 내용들 -->
+        </div>
+    </row>
     <row class="row p-3 ">
         <div class="container" th:each="board : ${boards}">
             <p style="font-size:30px; font-weight: bold; padding-bottom: 30px" th:text="${board.title}"></p>
@@ -110,16 +142,34 @@
             <!-- Todo: 내용 및 컨텐츠 제작 -->
         </div>
     </row>
-
-
-    <row class="row p-3" style="text-align: right;">
-        <div class="container" th:each="like : ${likes}">
-            <i class="fas fa-thumbs-up like-btn" style="font-size: 25px; padding: 10px;" onclick="PostLike()"></i>
-            <p style="font-size:30px; font-weight: bold; padding-bottom: 30px" th:text="${like.likes}" class="likeCount"></p>
-            <i class="fas fa-thumbs-down unlike-btn" style="font-size: 25px; padding: 10px;" onclick="PostUnlike()"></i>
-            <p style="font-size:30px; font-weight: bold; padding-bottom: 30px" th:text="${like.unlikes}" class="unlikeCount"></p>
+    <row class="row p-3">
+        <div class="container" style="margin-top: 70px; text-align: right;">
+        <i th:if="${#lists.isEmpty(likes)}" class="fas fa-thumbs-up like-btn" style="font-size: 25px; padding: 10px; display: inline; " onclick="PostLike()"></i>
+            <p style="font-size: 30px; font-weight: bold; padding-bottom: 30px; display: inline; ">
+                <span th:if="${#lists.isEmpty(likes)}"  th:text="0" class="likeCount"></span>
+            </p>
+            <i th:if="${#lists.isEmpty(likes)}" class="fas fa-thumbs-down unlike-btn" style="font-size: 25px; padding: 10px; display: inline;" onclick="PostUnlike()"></i>
+            <p style="font-size: 30px; font-weight: bold; padding-bottom: 30px; display: inline;">
+                <span th:if="${#lists.isEmpty(likes)}"  th:text="0" class="unlikeCount"></span>
+            </p>
         </div>
     </row>
+
+    <row class="row p-3" style="text-align: right;" th:if="${likes != null}">
+        <div class="container" style="margin-top: 70px" th:each=" like: ${likes}">
+            <i class="fas fa-thumbs-up like-btn" style="font-size: 25px; padding: 10px; display: inline;" onclick="PostLike()"></i>
+            <p style="font-size: 30px; font-weight: bold; padding-bottom: 30px; display: inline;">
+                <span th:if="${like.likes != null}" th:text="${like.likes}" th:else="0" class="likeCount"></span>
+            </p>
+
+            <i class="fas fa-thumbs-down unlike-btn" style="font-size: 25px; padding: 10px; display: inline;" onclick="PostUnlike()"></i>
+
+            <p style="font-size: 30px; font-weight: bold; padding-bottom: 30px; display: inline;">
+                <span th:if="${like.unlikes != null}" th:text="${like.unlikes}" th:else="0" class="unlikeCount"></span>
+            </p>
+        </div>
+    </row>
+
     <!-- 절취선 -->
     <row>
         <div class ="container">
@@ -184,10 +234,10 @@
                 </div>
 
                 <div class ="" style="padding-top: 15px"th:each="reply, loop :  ${comment.replies}"
-                     th:data-comment-index="${loop.index}" th:data-comment-created-date="${comment.createdDate}">
+                     th:data-reply-index="${loop.index}" th:data-comment-created-date="${comment.createdDate}">
 
-                    <span th:id="'comment_btn_toggle' + ${loop.index}" style="cursor: pointer; text-decoration: underline; color: blue;">댓글 보기</span>
-                    <div class="container" id="commentContainer" th:if="${comment.replies != null}" style="display: flex;  flex-direction: column;">
+                    <span th:id="'comment_btn_toggle' + ${loop.index}" onclick="toggleComments(${loop.index})" style="cursor: pointer; text-dec기oration: underline; color: blue;">댓글 보기</span>
+                    <div class="container" th:id="'commentContainer' + ${loop.index}" th:if="${comment.replies != null}" style="display: flex;  flex-direction: column;">
                         <div class="container" style="margin-top: 70px">
 
                             <img style="display:inline" th:if="${reply.account.filepath != null}"
@@ -198,15 +248,12 @@
                             <div style="padding-top:15px">
                                 <span th:utext ="${reply.content}"></span>
                             </div>
-
+                            <span th:id="btn_toggle + ${loop.index}" type="submit" style="cursor: pointer; text-decoration: none; color: blue; padding: 10px">댓글 쓰기</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="container" style="padding-top:15px">
-
-                    <span id="btn_toggle" type="submit" style="cursor: pointer; text-decoration: none; color: blue; padding: 10px">댓글 쓰기</span>
-
                     <div id="loginPopup" class="popup" style="display: block;">
                     </div>
 
@@ -233,8 +280,47 @@
 </div>
 </div>
 </body>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var isBookmarked = false;
+        // 클릭 이벤트 처리
+        $("#bookmarkToggle").click(function () {
 
-
+            alert(boardId);
+            if (isBookmarked) {
+                // 즐겨찾기가 이미 되어 있는 경우 삭제 요청
+                $.ajax({
+                    url: "/api/bookmarks/remove",
+                    method: "POST",
+                    data: {boardId: boardId},
+                    success: function (data) {
+                        // 삭제 성공 시
+                        $("#bookmarkToggle i").css("color", "grey");
+                        isBookmarked = false;
+                    },
+                    error: function (error) {
+                        console.log("Error removing bookmark:", error);
+                    }
+                });
+            } else {
+                // 즐겨찾기가 되어 있지 않은 경우 추가 요청
+                $.ajax({
+                    url: "/api/bookmarks/add",
+                    method: "POST",
+                    data: {boardId: boardId},
+                    success: function (data) {
+                        // 추가 성공 시
+                        $("#bookmarkToggle i").css("color", "blue");
+                        isBookmarked = true;
+                    },
+                    error: function (error) {
+                        console.log("Error adding bookmark:", error);
+                    }
+                });
+            }
+        });
+    });
+</script>
 
 <!--<script>-->
 <!--    // Using jQuery for simplicity-->
@@ -246,26 +332,19 @@
 <!--        });-->
 <!--    });-->
 <!--</script>-->
+
 <script>
-    $(document).ready(function() {
-        $(".comment_btn_toggle").click(function() {
-            var commentIndex = $(this).data("comment-index");
-            var commentContainerId = '#commentContainer_' + commentIndex;
-            var loginPopupId = '#loginPopup_' + commentIndex;
-            var commentWriteContainerId = '#commentWriteContainer_' + commentIndex;
+    // Function to toggle visibility
+    function toggleComments(index) {
+        var container = document.getElementById('commentContainer' + index);
+        container.style.display = container.style.display === 'none' ? 'flex' : 'none';
 
-            $(commentContainerId).slideToggle();
-            $(loginPopupId).slideToggle();
-            $(commentWriteContainerId).toggle();  // 댓글 보기를 토글할 때 댓글 쓰기 영역을 보이거나 숨김
-
-            // 이하 필요에 따라 추가적인 토글 작업 수행
-
-            // 토글 상태에 따라 버튼 텍스트 변경
-            var btnText = $(this).text() === '댓글 보기' ? '댓글 숨기기' : '댓글 보기';
-            $(this).text(btnText);
-        });
-    });
+        // You may want to add logic to update the "댓글 보기" text as well
+        var toggleBtn = document.getElementById('comment_btn_toggle' + index);
+        toggleBtn.innerText = container.style.display === 'none' ? '댓글 보기' : '댓글 숨기기';
+    }
 </script>
+
 
 <script>
     var selectedOption = null;

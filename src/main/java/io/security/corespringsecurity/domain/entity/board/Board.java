@@ -49,6 +49,10 @@ public class Board extends BaseTimeEntity {
     @OrderBy("id asc")
     private List<Comment> comments;
 
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    private List<Bookmark> bookmarks;
+
+
     //==연관 관계 메서드==//
     public void setAcount (Account account) {
         this.account = account;

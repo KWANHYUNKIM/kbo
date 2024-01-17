@@ -2,11 +2,13 @@ package io.security.corespringsecurity.controller;
 
 
 import io.security.corespringsecurity.domain.entity.board.Board;
+import io.security.corespringsecurity.domain.entity.board.Like;
 import io.security.corespringsecurity.domain.entity.kbo.crawl.Team;
 import io.security.corespringsecurity.domain.entity.kbo.Teams;
 import io.security.corespringsecurity.domain.entity.schedule.Schedule;
 import io.security.corespringsecurity.repository.board.BoardRepository;
 import io.security.corespringsecurity.repository.kbo.crawl.TeamRepository;
+import io.security.corespringsecurity.service.board.LikeService;
 import io.security.corespringsecurity.service.kbo.ClubService;
 import io.security.corespringsecurity.service.kbo.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,9 @@ public class HomeController {
 	private ScheduleService scheduleService;
 	@Autowired
 	private ClubService clubService;
+	@Autowired
+	private LikeService likeService;
+
 	@GetMapping(value="/")
 	public String home(Model model) throws Exception {
 		Pageable pageable = PageRequest.of(0, 5);
@@ -35,7 +40,6 @@ public class HomeController {
 		List<Team> team = teamRepository.findAll();
 		List<Teams> clubs =  clubService.findAll();
 		List<Schedule> schedules = scheduleService.findAll();
-
 		model.addAttribute("scheduleLists", schedules);
 		model.addAttribute("clubs", clubs);
 		model.addAttribute("teams", team);

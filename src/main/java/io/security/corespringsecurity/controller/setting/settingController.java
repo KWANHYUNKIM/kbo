@@ -1,9 +1,12 @@
 package io.security.corespringsecurity.controller.setting;
 
 import io.security.corespringsecurity.domain.entity.Account;
+import io.security.corespringsecurity.domain.entity.board.Bookmark;
 import io.security.corespringsecurity.domain.entity.profile.ImageEntity;
 import io.security.corespringsecurity.service.UserService;
+import io.security.corespringsecurity.service.board.BookmarkService;
 import io.security.corespringsecurity.service.board.ImageService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -30,6 +30,9 @@ public class settingController {
     private UserService userService;
     @Autowired
     private ImageService imageService;
+    @Autowired
+    private BookmarkService bookmarkService;
+
     @GetMapping(value = "/settings/profile")
     public String getSettingProfile(Model model, @AuthenticationPrincipal Account account) {
         List<ImageEntity> images = imageService.findAll();
@@ -55,5 +58,13 @@ public class settingController {
         return "settings/settingAccount";
     }
 
+    @GetMapping(value = "/users/{userId}/activity")
+    public String getSettingActivity(@PathVariable Long userId, Model model) {
+        List<Bookmark> bookmarks = bookmarkService.getBookmarksByUserId(userId);
 
+        // 모델에 bookmark 목록을 추가
+        model.addAttribute("bookmarks", bookmarks);
+
+        return "settings/settingActivity";
+    }
 }

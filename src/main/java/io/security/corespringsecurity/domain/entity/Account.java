@@ -1,8 +1,11 @@
 package io.security.corespringsecurity.domain.entity;
 
 import io.security.corespringsecurity.domain.entity.auth.Role;
+import io.security.corespringsecurity.domain.entity.board.Bookmark;
 import io.security.corespringsecurity.domain.entity.board.Comment;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -50,6 +53,9 @@ public class Account implements Serializable {
 
     @OneToMany(mappedBy = "account", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<Comment> comments;
+
+//    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+//    private List<Bookmark> bookmarks;
 
 }
 

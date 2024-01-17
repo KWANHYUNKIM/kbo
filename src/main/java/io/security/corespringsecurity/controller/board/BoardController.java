@@ -101,7 +101,11 @@ public class BoardController {
         List<Board> boards = boardService.findByboardId(boardId);
         List<Comment> comments = commentService.findCommentsByBoardId(boardId);
         List<Like> likes = likeService.findByLikeAndUnlike(boardId);
+        if (likes.isEmpty()) {
+            likes = null; // 또는 빈 리스트로 유지할 수도 있습니다.
+        }
 
+        System.out.println("like 값은? " + likes);
         // 조회수 증가 로직 추가
         boardService.incrementViewCount(boardId);
 
@@ -110,6 +114,7 @@ public class BoardController {
             List<Reply> replies = commentService.findByReply(comment.getId());
             comment.setReplies(replies);
         }
+
 
 
         boolean isAuthenticated = authentication != null && authentication.isAuthenticated();
