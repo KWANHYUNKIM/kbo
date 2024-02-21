@@ -27,7 +27,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.security.Principal;
 import java.util.*;
@@ -106,5 +108,15 @@ public class HomeController {
 		model.addAttribute("teams", team);
 		model.addAttribute("communityTop5",top5Boards);
 		return "home";
+	}
+
+	@PostMapping("/winning/player")
+	@ResponseBody
+	public String receiveName(@RequestParam("name") String name) {
+		// 전달받은 이름을 사용하는 로직
+		System.out.println("Received name: " + name);
+
+		// 클라이언트에게 응답을 보냄. 예제에서는 단순한 문자열 응답
+		return "Name received successfully";
 	}
 }

@@ -55,7 +55,4 @@ public class Schedule {
     @JoinColumn(name = "game_board_id", referencedColumnName = "id")
     private GameBoardEntity gameBoard;
 
-
-
-
 }
