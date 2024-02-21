@@ -3,7 +3,10 @@ package io.security.corespringsecurity.repository.kbo.auth;
 import io.security.corespringsecurity.domain.entity.Account;
 import io.security.corespringsecurity.domain.entity.board.Board;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<Account, Long> {
@@ -28,5 +31,6 @@ public interface UserRepository extends JpaRepository<Account, Long> {
     return null; // 해당 ID에 해당하는 게시물이 없을 경우
   }
 
-
+  @Query("SELECT a FROM Account a WHERE a.id = :userId")
+  List<Account> findByUserId(@Param("userId") Long userId);
 }

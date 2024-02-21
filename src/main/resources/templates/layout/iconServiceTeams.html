@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<!-- Todo: css 변경필요  -->
+<!--<div class="container" style="display: flex;">-->
+<!--  <div class="row" th:each="team, loop : ${teamImage}">-->
+<!--    <div class="container"  style="align-items: center; margin-right: 40px;">-->
+<!--      <th:block  id="profileDropdown">-->
+<!--        <img class="dropdown-button"; th:class="'dropdown-button-' + ${loop.index}"-->
+<!--             style="width: 75px; height: auto; align-items: center; cursor: pointer;"-->
+<!--         th:src="'/images/emblem/emblem_' + ${team} + '.png'" th:data-team="${team}">-->
+<!--      </th:block>-->
+<!--    </div>-->
+
+<!--    <div class="container">-->
+<!--      <div th:class="'my-menu-content my-menu-content-' + ${loop.index}" style="position: relative; ">-->
+<!--        <ul th:class="'my-menu-list my-menu-list-' + ${loop.index}" th:data-loop="${loop.index}">-->
+<!--          <li th:class="'my-menu-item my-menu-item-' +${loop.index}" data-index="0;" style="cursor: pointer;">-->
+<!--            <a>인스타그램</a>-->
+<!--          </li>-->
+<!--          <li th:class="'my-menu-item my-menu-item-' +${loop.index}" data-index="1;" style="cursor: pointer;">-->
+<!--            <a>유튜브</a>-->
+<!--          </li>-->
+<!--          <li th:class="'my-menu-item my-menu-item-' +${loop.index}" data-index="2;" style="cursor: pointer;">-->
+<!--            <a>공식사이트</a>-->
+<!--          </li>-->
+<!--        </ul>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+<div class="container" style="display: flex;">
+  <div class="row" th:each="team, loop : ${teamImage}">
+    <div class="container" style="display: flex; align-items: center; margin-right: 40px; position: relative;">
+      <th:block id="profileDropdown">
+        <img class="dropdown-button"; th:class="'dropdown-button-' + ${loop.index}"
+             style="width: 75px; height: auto; cursor: pointer;"
+             th:src="'/images/emblem/emblem_' + ${team} + '.png'" th:data-team="${team}">
+      </th:block>
+
+      <div th:class="'my-menu-content my-menu-content-' + ${loop.index}" style="position: absolute; top: 100%; left: -135px; display: none;">
+        <ul th:class="'my-menu-list my-menu-list-' + ${loop.index}" th:data-loop="${loop.index}">
+          <li th:class="'my-menu-item my-menu-item-' +${loop.index}" data-index="0" style="cursor: pointer;">
+            <a>인스타그램</a>
+          </li>
+          <li th:class="'my-menu-item my-menu-item-' +${loop.index}" data-index="1" style="cursor: pointer;">
+            <a>유튜브</a>
+          </li>
+          <li th:class="'my-menu-item my-menu-item-' +${loop.index}" data-index="2" style="cursor: pointer;">
+            <a>공식사이트</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function(){
+    $('[class^="dropdown-button"]').click(function(){
+      var index = $(this).attr('class').split(' ').find(function(cls) {
+        return cls.startsWith('dropdown-button-');
+      }).replace('dropdown-button-', '');
+
+      // 모든 콘텐츠를 숨김
+      $('[class^="my-menu-content"]').not('.my-menu-content-' + index).hide();
+
+      // 클릭된 버튼과 해당하는 콘텐츠를 토글
+      $('.my-menu-content-' + index).toggle();
+    });
+  });
+</script>
+
+<script th:inline="javascript">
+  $(document).ready(function(){
+    $('.my-menu-item').click(function(){
+      var index = $(this).closest('.my-menu-list').data('loop');
+      var itemIndex =  $(this).closest('.my-menu-item').data('index'); // 클릭된 메뉴 아이템의 부모 요소(ul)에서의 인덱스 가져오기
+      var urls = [
+              // HANWHA
+        [
+          'https://www.instagram.com/hanwhaeagles_soori/', // 인스타그램 URL
+          'https://www.youtube.com/@HanwhaEagles_official',   // 유튜브 URL
+          'https://www.hanwhaeagles.co.kr/index.do' // 공식사이트 URL
+        ],
+              // KIA
+
+        [
+          'https://www.instagram.com/today_tigers/',
+          'https://www.youtube.com/@kiatigerstv',
+          'https://tigers.co.kr/'
+        ],
+              // KT
+        [
+          'https://www.instagram.com/KTwiz.pr/',
+          'https://www.youtube.com/channel/UCvScyjGkBUx2CJDMNAi9Twg',
+          'https://www.ktwiz.co.kr/'
+        ],
+              // LG
+        [
+          'https://www.instagram.com/lgtwinsbaseballclub/',
+          'https://www.youtube.com/@LGTwinsTV',
+          'https://www.lgtwins.com/common/branch.ncd'
+        ],
+              //LT
+        [
+          'https://www.instagram.com/BusanLottegiants/',
+          'https://www.youtube.com/channel/UCAZQZdSY5_YrziMPqXi-Zfw',
+          'https://www.giantsclub.com/html/'
+        ],
+              // NC
+        [
+          'https://www.instagram.com/ncdinos2011/',
+          'https://www.youtube.com/user/ncdinos',
+          'https://www.ncdinos.com/'
+        ],
+              //OB
+        [
+          'https://www.instagram.com/doosanbears.1982/',
+          'https://www.youtube.com/channel/UCsebzRfMhwYfjeBIxNX1brg',
+          'https://www.doosanbears.com/'
+        ],
+              //LD
+        [
+          'https://www.instagram.com/ssglanders.incheon/',
+          'https://www.youtube.com/@SSGLANDERS',
+          'https://www.ssglanders.com/main'
+        ],
+              //LI
+        [
+          'https://www.instagram.com/samsunglions_baseballclub/',
+          'https://www.youtube.com/channel/UCMWAku3a3h65QpLm63Jf2pw',
+          'https://www.samsunglions.com'
+        ],
+              //HE
+        [
+          'https://www.instagram.com/heroesbaseballclub/',
+          'https://www.youtube.com/user/heroesbaseballclub',
+          'https://www.heroesbaseball.co.kr/index.do'
+        ]
+      ];
+
+      // 클릭된 메뉴 아이템에 따른 URL 가져오기
+      var url = urls[index][itemIndex];
+
+      // 새 창에서 해당 URL 열기
+      window.open(url, '_blank');
+    });
+  });
+</script>
+
+</html>

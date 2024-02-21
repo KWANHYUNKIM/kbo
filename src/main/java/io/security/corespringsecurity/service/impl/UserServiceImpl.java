@@ -89,6 +89,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<Account> findByUser(Long id) {
+        return userRepository.findByUserId(id);
+    }
+
+    @Override
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }

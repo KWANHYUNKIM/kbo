@@ -20,7 +20,6 @@ public interface CommentService {
     List<Reply> findByReply(Long commentID);
 
     Optional<Comment> findById (Long commentId);
-
-
+    List<Comment> findByUserId(Long userId);
 
 }

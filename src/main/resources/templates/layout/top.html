@@ -1,15 +1,36 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-<div th:fragment="header">
+
+<div th:fragment="header_teams_management">
+    <nav class="navbar navbar-dark bg-dark" style="margin-bottom: 10px;">
+        <a class="text-light" href="#"><h4>구단 관리</h4></a>
+        <ul class="nav">
+            <li class="nav-item" sec:authorize="isAuthenticated()"><a class="nav-link text-light" th:href="@{/logout}">로그아웃</a></li>
+            <li class="nav-item" ><a class="nav-link text-light" href="/">HOME</a></li>
+        </ul>
+    </nav>
+</div>
+
+<div th:fragment="header_admin_management">
+    <nav class="navbar navbar-dark bg-dark" style="margin-bottom: 10px;">
+        <a class="text-light" href="#"><h4>권한 관리</h4></a>
+        <ul class="nav">
+            <li class="nav-item" sec:authorize="isAuthenticated()"><a class="nav-link text-light" th:href="@{/logout}">로그아웃</a></li>
+            <li class="nav-item" ><a class="nav-link text-light" href="/">HOME</a></li>
+        </ul>
+    </nav>
+</div>
+
+<div th:fragment="header_main">
     <head>
         <link rel="stylesheet" type="text/css" th:href="@{/css/layout/top.css}"/>
         <!-- 기존의 다른 스타일 시트들 ... -->
 
+
         <!-- Todo: 나머지 스타일 시트 및 스크립트 ... -->
     </head>
-    <body>
-    <nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-dark" style="z-index: 0"> <!-- z-index : profile 관련 -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-dark" style="z-index: 1"> <!-- z-index : profile 관련 -->
         <div class="container">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -85,8 +106,6 @@
         </div>
     </nav>
 
-    </body>
-
     <script>
         // 토글할 메뉴 항목들의 ID를 배열로 정의
         var toggleMenuItems = ['navSchedule', 'navRecord', 'navPlayer', 'navMedia', 'navFutureLeague', 'navMarket'];
@@ -104,4 +123,6 @@
         // Toggle Menu 클릭 시 toggleMenus 함수 호출
         document.querySelector('.navbar-toggler').addEventListener('click', toggleMenus);
     </script>
+</div>
+
 </html>

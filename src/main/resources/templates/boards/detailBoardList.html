@@ -16,7 +16,7 @@
 <style>
     .rectangle-1{
         width: auto;
-        height: 200px;
+        height: 220px;
         background-color: white;
         border: 0.5px solid #000;
         border-radius: 10px;
@@ -43,9 +43,6 @@
         font-size : 14px;
         float: right;
     }
-    .login-comment-box{
-
-    }
 
     .login-comment-box button{
         margin-top: 10px;
@@ -54,6 +51,11 @@
         border-radius: 10px;
         font-size : 14px;
         float: right;
+
+    }
+    .v-line {
+        border-left : thick solid #32a1ce;
+        height : 50px;
     }
 </style>
 <div class="container">
@@ -61,7 +63,7 @@
         <div class="col-12">
             <head th:replace="layout/header::userHead"></head>
             <header th:replace="layout/topOverTop::topOverTop"></header>
-            <header th:replace="layout/top::header"></header>
+            <header th:replace="layout/top::header_main"></header>
         </div>
     </div>
 </div>
@@ -74,27 +76,28 @@
         </div>
     </div>
     <!-- ad -->
-    <row class = "row">
+    <div class = "row">
         <div class ="container">
-            <img class="figure-img img-fluid rounded" src="/images/ad/advertise_2.png" alt="광고 이미지">
+            <img class="figure-img img-fluid rounded" style="height: 100px; width: 100%;"
+                 src="/images/ad/advertise_2.png" alt="광고 이미지">
         </div>
-    </row>
+    </div>
     <!-- 절취선 -->
-    <row class = "row">
+    <div class = "row">
         <div class ="container">
             <div class="hr-sect">커뮤니티 / 사는얘기</div>
         </div>
-    </row>
+    </div>
 
     <!-- 프로필  -->
-    <row class="row g-3">
+    <div class="row p-3">
         <div class="col p-3" th:each="board : ${boards}" style="display: flex; align-items: center;">
-            <img style="display:inline" th:if="${board.account.filepath != null}"
+            <img style="display:inline; border-radius: 50%;" th:if="${board.account.filepath != null}"
                  th:src="${board.account.filepath}" height="32" width="32" title="profile">
 
             <div style="display: inline-block; margin-left: 10px;">
                 <h6 style="margin-left: 5px;" th:text="${board.account.username}"></h6> <!-- 작성자 -->
-                <h6 style="display: inline; margin-left: 5px;" id="timeDifference"></h6>
+                <h6 style="display: inline; margin-left: 5px;" id="timeDifference"></h6> <!--게시판 시간 -->
                 <h6 style="display: inline; margin-left: 5px;">·</h6>
                 <img style="display:inline; margin-left: 5px;" src="/images/detailBoardList/view-icon.png" height="15" width="16" title="눈동자 아이콘">
                 <h6 style="display: inline; margin-left: 1px;" th:text="${board.viewCount}"></h6>
@@ -103,8 +106,14 @@
 
             <!-- Todo: 내용 및 컨텐츠 제작 -->
         </div>
-        <div class ="col p-3" style="text-align: right;">
-            <div class="dropdown" th:each="board : ${boards}" th:if="${board.account.id == currentUser.id}">
+        <div th:unless="${currentUser != null}">
+            <!-- 로그인이 안되어 있을 때 아무 것도 보이지 않음 -->
+        </div>
+
+        <div th:each="board : ${boards}" th:if="${currentUser != null and board.account.id == currentUser.id}"
+             class ="col p-3" style="text-align: right;">
+
+            <div class="dropdown">
                 <a class="" href="#" role="button" id="dropdownMenuLink-revised" data-toggle="dropdown" aria-expanded="false">...</a>
 
                 <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink-revised" style="right: -21px;">
@@ -115,60 +124,133 @@
                             수정하기
                         </a>
                     </li>
-                    <li>
-                        <a class="dropdown-item" style="text-align: right" th:if="${board.account.id == currentUser.id}"
-                           th:href="@{/boards/delete/{boardId}(boardId=${board.id})}">
-                            <span style="display: inline-block; vertical-align: middle;"><i class="fas fa-trash"></i></span>
-                            삭제하기
-                        </a>
-                    </li>
+<!--                    <li>-->
+<!--                        <a class="dropdown-item" style="text-align: right" th:if="${board.account.id == currentUser.id}"-->
+<!--                           th:href="@{/boards/delete/{boardId}(boardId=${board.id})}">-->
+<!--                            <span style="display: inline-block; vertical-align: middle;"><i class="fas fa-trash"></i></span>-->
+<!--                            삭제하기-->
+<!--                        </a>-->
+<!--                    </li>-->
                 </ul>
                 <!-- 즐겨찾기 -->
-                <div class="" style="text-align: right; display: inline; margin-left: -50px;" th:if="${currentUser.id != null}">
+                <div  th:if="${currentUser.id != null} "style="text-align: right; display: inline; margin-left: -50px;">
                 <span style="display: inline-block; vertical-align: middle;" id="bookmarkToggle">
                     <i class="fas fa-bookmark" style="font-size: 2em; color: grey;"></i>
                 </span>
                 </div>
             </div>
-
-
             <!-- 나머지 내용들 -->
         </div>
-    </row>
-    <row class="row p-3 ">
+    </div>
+
+    <div class="row p-3 ">
         <div class="container" th:each="board : ${boards}">
             <p style="font-size:30px; font-weight: bold; padding-bottom: 30px" th:text="${board.title}"></p>
-            <p style="font-size:16px" th:if="${board.content != null}" th:text="${board.content}"></p>
+            <p th:if="${board.content != null}" th:utext="${board.content}"></p>
             <!-- Todo: 내용 및 컨텐츠 제작 -->
         </div>
-    </row>
-    <row class="row p-3">
-        <div class="container" style="margin-top: 70px; text-align: right;">
-        <i th:if="${#lists.isEmpty(likes)}" class="fas fa-thumbs-up like-btn" style="font-size: 25px; padding: 10px; display: inline; " onclick="PostLike()"></i>
-            <p style="font-size: 30px; font-weight: bold; padding-bottom: 30px; display: inline; ">
-                <span th:if="${#lists.isEmpty(likes)}"  th:text="0" class="likeCount"></span>
-            </p>
-            <i th:if="${#lists.isEmpty(likes)}" class="fas fa-thumbs-down unlike-btn" style="font-size: 25px; padding: 10px; display: inline;" onclick="PostUnlike()"></i>
-            <p style="font-size: 30px; font-weight: bold; padding-bottom: 30px; display: inline;">
-                <span th:if="${#lists.isEmpty(likes)}"  th:text="0" class="unlikeCount"></span>
-            </p>
+    </div>
+
+    <div class="row p-3">
+        <div th:if="${likes == null or #lists.isEmpty(likes)}" class="container" style="margin-top: 70px; text-align: center;">
+            <div class="container">
+                <hr>
+                <div style="display: inline-block; vertical-align: top;">
+                    <img src="/images/icons/emotions/likeIcon.png" style="width: 70px; height: 70px; padding: 10px; display: inline;" onclick="toggleLike()"></img>
+                    <p style="font-size: 10px;">좋아요</p>
+                    <p style="font-size: 12px; font-weight: bold; padding-bottom: 30px;">
+                        <span th:text="0" class="likeCount"></span>
+                    </p>
+                </div>
+
+                <div style="display: inline-block; vertical-align: top; margin-left: 10px;">
+                    <img src="/images/icons/emotions/sadIcon.png" style="width: 70px; height: 70px; padding: 10px; display: inline;" onclick="toggleSad()"></img>
+                    <p style="font-size: 10px;">슬퍼요</p>
+                    <p style="font-size: 12px; font-weight: bold; padding-bottom: 30px;">
+                        <span th:text="0" class="sadCount"></span>
+                    </p>
+                </div>
+
+                <div style="display: inline-block; vertical-align: top;">
+                    <img src="/images/icons/emotions/angryIcon.png" style="width: 70px; height: 70px; padding: 10px; display: inline;" onclick="toggleAngry()"></img>
+                    <p style="font-size: 10px;">화나요</p>
+                    <p style="font-size: 12px; font-weight: bold; padding-bottom: 30px;">
+                        <span th:text="0" class="angryCount"></span>
+                    </p>
+                </div>
+
+                <div style="display: inline-block; vertical-align: top; margin-left: 10px;">
+                    <img src="/images/icons/emotions/fanIcon.png" style="width: 70px; height: 70px; padding: 10px; display: inline;" onclick="toggleFan()"></img>
+                    <p style="font-size: 10px;">팬이에요</p>
+                    <p style="font-size: 12px; font-weight: bold; padding-bottom: 30px;">
+                        <span th:text="0" class="fanCount"></span>
+                    </p>
+                </div>
+
+                <div style="display: inline-block; vertical-align: top; margin-left: 10px;">
+                    <img src="/images/icons/emotions/followIcon.png" style="width: 70px; height: 70px; padding: 10px; display: inline;" onclick="toggleFollow()"></img>
+                    <p style="font-size: 10px;">궁굼해요</p>
+                    <p style="font-size: 12px; font-weight: bold; padding-bottom: 30px;">
+                        <span th:text="0" class="followCount"></span>
+                    </p>
+                </div>
+                <hr>
+            </div>
         </div>
-    </row>
+    </div>
 
-    <row class="row p-3" style="text-align: right;" th:if="${likes != null}">
-        <div class="container" style="margin-top: 70px" th:each=" like: ${likes}">
-            <i class="fas fa-thumbs-up like-btn" style="font-size: 25px; padding: 10px; display: inline;" onclick="PostLike()"></i>
-            <p style="font-size: 30px; font-weight: bold; padding-bottom: 30px; display: inline;">
-                <span th:if="${like.likes != null}" th:text="${like.likes}" th:else="0" class="likeCount"></span>
-            </p>
+    <div class="row p-3">
+        <div th:if="${likes != null or not #lists.isEmpty(likes)}" th:each="like : ${likes}" class="container" style="margin-top: 70px; text-align: center;">
+            <hr>
+            <div style="display: inline-block; vertical-align: top;">
+                <img src="/images/icons/emotions/likeIcon.png" style="width: 70px; height: 70px; padding: 10px; display: inline;" onclick="toggleLike()"></img>
+                <p style="font-size: 10px;">좋아요</p>
+                <p style="font-size: 12px; font-weight: bold; padding-bottom: 30px;">
+                    <span th:if="${like.likes == null}" th:text="0" class="likeCount"></span>
+                    <span th:if="${like.likes != null}" th:text="${like.likes}" class="likeCount"></span>
+                </p>
+            </div>
 
-            <i class="fas fa-thumbs-down unlike-btn" style="font-size: 25px; padding: 10px; display: inline;" onclick="PostUnlike()"></i>
+            <div style="display: inline-block; vertical-align: top; margin-left: 10px;">
+                <img src="/images/icons/emotions/sadIcon.png" style="width: 70px; height: 70px; padding: 10px; display: inline;" onclick="toggleSad()"></img>
+                <p style="font-size: 10px;">슬퍼요</p>
+                <p style="font-size: 12px; font-weight: bold; padding-bottom: 30px;">
+                    <span th:if="${like.sad != null}" th:text="${like.sad}" class="sadCount"></span>
+                    <span th:if="${like.sad == null}" th:text="0" class="sadCount"></span>
+                </p>
+            </div>
 
-            <p style="font-size: 30px; font-weight: bold; padding-bottom: 30px; display: inline;">
-                <span th:if="${like.unlikes != null}" th:text="${like.unlikes}" th:else="0" class="unlikeCount"></span>
-            </p>
+            <div style="display: inline-block; vertical-align: top;">
+                <img src="/images/icons/emotions/angryIcon.png" style="width: 70px; height: 70px; padding: 10px; display: inline;" onclick="toggleAngry()"></img>
+                <p style="font-size: 10px;">화나요</p>
+                <p style="font-size: 12px; font-weight: bold; padding-bottom: 30px;">
+                    <span th:if="${like.angry != null}" th:text="${like.angry}" class="angryCount"></span>
+                    <span th:if="${like.angry == null}" th:text="0" class="angryCount"></span>
+                </p>
+            </div>
+
+            <div style="display: inline-block; vertical-align: top; margin-left: 10px;">
+                <img src="/images/icons/emotions/fanIcon.png" style="width: 70px; height: 70px; padding: 10px; display: inline;" onclick="toggleFan()"></img>
+                <p style="font-size: 10px;">팬이에요</p>
+                <p style="font-size: 12px; font-weight: bold; padding-bottom: 30px;">
+                    <span th:if="${like.fan != null}" th:text="${like.fan}" class="fanCount"></span>
+                    <span th:if="${like.fan == null}" th:text="0" class="fanCount"></span>
+                </p>
+            </div>
+
+            <div style="display: inline-block; vertical-align: top; margin-left: 10px;">
+                <img src="/images/icons/emotions/followIcon.png" style="width: 70px; height: 70px; padding: 10px; display: inline;" onclick="toggleFollow()"></img>
+                <p style="font-size: 10px;">궁굼해요</p>
+                <p style="font-size: 12px; font-weight: bold; padding-bottom: 30px;">
+                    <span th:if="${like.follow != null}" th:text="${like.follow}" class="followCount"></span>
+                    <span th:if="${like.follow == null}" th:text="0" class="followCount"></span>
+                </p>
+            </div>
+            <hr>
         </div>
-    </row>
+    </div>
+
+
 
     <!-- 절취선 -->
     <row>
@@ -196,7 +278,7 @@
             <div class ="container rectangle-1">
                 <div style="display: flex; align-items: center;">
                     <img src="/images/comment/icon-profile.svg" style="margin-right: 10px;">
-                    <div class="container login-comment-box">
+                    <div class="container login-comment-box" style="padding: 10px;">
                         <form role="form" th:action="@{'/members/boards/' + ${boardId} + '/detail'}" th:object="${commentForm}" method="post">
                             <textarea type="text" class="form-control" placeholder="주제에 대한 생각을 자유롭게 댓글로 표현해 주세요. 여러분의 다양한 의견을 기다립니다." id="tiny" name="comment"></textarea>
                             <button class="btn btn-primary" type="submit">댓글 쓰기</button>
@@ -211,18 +293,18 @@
 
         <div class="container" th:if="${comments != null}" style="display: flex;  flex-direction: column;">
             <div clas ="container">
-                <h6 th:if="${#lists.isEmpty(comments)}">댓글이 없습니다.</h6>
+                <h6 th:if="${#lists.isEmpty(comments)}"></h6>
                 <h6 th:if="${not #lists.isEmpty(comments)}" th:text="${#lists.size(comments) + '의 댓글'}"></h6>
             </div>
 
             <div class="container" style="margin-top: 70px" th:each="comment, loop :  ${comments}"
                  th:data-comment-index="${loop.index}" th:data-comment-created-date="${comment.createdDate}">
 
-                <img style="display:inline" th:if="${comment.account.filepath != null}"
+                <img style="display:inline; border-radius: 50%;" th:if="${comment.account.filepath != null}"
                      th:src="${comment.account.filepath}" height="32" width="32" title="profile">
                 <h6 style="display: inline" th:text="${comment.account.username}"></h6> <!-- 작성자 -->
                 <h6 style="display: inline">·</h6>
-                <h6 style="display: inline" th:id="'timeDifference-' + ${loop.index}" th:text="'timeDifference-' + ${loop.index}"></h6>
+                <h6 style="display: inline" th:id="'timeDifference' + ${loop.index}" ></h6> <!-- th:text="'timeDifference' + ${loop.index}"  -->
                 <!-- TODO: 흐음.. 왜 안되지? -->
 
                 <div style="padding-top:15px">
@@ -232,46 +314,86 @@
                 <div class = "" style="padding-top: 15px" th:if = "${comment.comment != null}">
                     <hr>
                 </div>
+                <!-- Todo: 열고 닫기로 변경  -->
+                <div class="container" th:if="${comment.replies.size() == 0}">
+                    <div class = "container" style="padding-top:50px;">
+                        <span style="cursor: pointer; text-decoration: none; color: blue;">댓글 쓰기</span>
+                    </div>
 
-                <div class ="" style="padding-top: 15px"th:each="reply, loop :  ${comment.replies}"
-                     th:data-reply-index="${loop.index}" th:data-comment-created-date="${comment.createdDate}">
-
-                    <span th:id="'comment_btn_toggle' + ${loop.index}" onclick="toggleComments(${loop.index})" style="cursor: pointer; text-dec기oration: underline; color: blue;">댓글 보기</span>
-                    <div class="container" th:id="'commentContainer' + ${loop.index}" th:if="${comment.replies != null}" style="display: flex;  flex-direction: column;">
-                        <div class="container" style="margin-top: 70px">
-
-                            <img style="display:inline" th:if="${reply.account.filepath != null}"
-                                 th:src="${reply.account.filepath}" height="32" width="32" title="profile">
-                            <h6 style="display: inline" th:text="${reply.account.username}"></h6> <!-- 작성자 -->
-                            <h6 style="display: inline">·</h6>
-                            <h6 style="display: inline" th:id="'timeDifference-' + ${loop.index}" th:text="'timeDifference-' + ${loop.index}"></h6>
-                            <div style="padding-top:15px">
-                                <span th:utext ="${reply.content}"></span>
-                            </div>
-                            <span th:id="btn_toggle + ${loop.index}" type="submit" style="cursor: pointer; text-decoration: none; color: blue; padding: 10px">댓글 쓰기</span>
+                    <div class="container" style="padding-top: 15px;">
+                        <div  class="popup" style="display: block;">
                         </div>
-                    </div>
-                </div>
-
-                <div class="container" style="padding-top:15px">
-                    <div id="loginPopup" class="popup" style="display: block;">
-                    </div>
-
-                    <div id="auth-toggle" class="container" sec:authorize="isAuthenticated()">
-                        <div class ="container rectangle-1">
-                            <div style="display: flex; align-items: center;">
-                                <img src="/images/comment/icon-profile.svg" style="margin-right: 10px;">
-                                <div class="container login-comment-box">
-                                    <form role="form" th:action="@{'/members/boards/' + ${boardId} + '/comments/' + ${comment.id} + '/replies'}" th:object="${postForm}" method="post">
-                                        <textarea type="text" class="form-control" placeholder="주제에 대한 생각을 자유롭게 댓글로 표현해 주세요. 여러분의 다양한 의견을 기다립니다." id="tiny" name="comment"></textarea>
-                                        <button class="btn btn-primary">댓글 쓰기</button>
-                                    </form>
+                        <div  class="container" sec:authorize="isAuthenticated()">
+                            <div class ="container rectangle-1">
+                                <div style="display: flex; align-items: center;">
+                                    <img src="/images/comment/icon-profile.svg" style="margin-right: 10px;">
+                                    <div class="container login-comment-box">
+                                        <form role="form" th:action="@{'/members/boards/' + ${boardId} + '/comments/' + ${comment.id} + '/replies'}" th:object="${postForm}" method="post">
+                                            <textarea type="text" class="form-control" placeholder="주제에 대한 생각을 자유롭게 댓글로 표현해 주세요. 여러분의 다양한 의견을 기다립니다." id="tiny" name="comment"></textarea>
+                                            <button class="btn btn-primary">댓글 쓰기</button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <!--reply값  -->
+                <div th:if="comment.comment != null" class ="container" style="padding-top: 15px"th:each="reply, replyIndex :  ${comment.replies}"
+                     th:data-rely-index="${replyIndex.index}" th:data-rely-created-date="${reply.createdDate}">
+
+
+
+                    <div class="container">
+                         <span th:if="${replyIndex.index == 0}" th:id="'comment_btn_toggle' + ${loop.index}"
+                               th:onclick="toggleComments([[${reply.comment.replies.size()}]], /*[[${loop.index}]]*/);
+                               "style="cursor: pointer; text-decoration: underline; color: blue;">댓글 보기</span>
+
+
+                        <div th:if="reply != null" class="container comment-container" th:id="'commentContainer' + ${replyIndex.index} + ${loop.index}" style="display: none;">
+                            <div class="container"  th:if="${comment.replies != null}" style="display: flex;  flex-direction: column;">
+                                <div class="v-line container" style="margin-top: 70px">
+                                    <img style="display:inline; border-radius: 50%;" th:if="${reply.account.filepath != null}"
+                                         th:src="${reply.account.filepath}" height="32" width="32" title="profile">
+                                    <h6 style="display: inline" th:text="${reply.account.username}"></h6> <!-- 작성자 -->
+                                    <h6 style="display: inline">·</h6>
+                                    <h6 style="display: inline" th:id="'timeDifference-' + ${replyIndex.index}"></h6>
+                                    <div style="padding-top:15px">
+                                        <span th:utext ="${reply.content}"></span>
+                                    </div>
+
+                                    <div class="container">
+                                        <hr>
+                                    </div>
+
+                                </div>
+                                <div class = "container" style="padding-top:50px;">
+                                    <span th:id="'btn_toggle' + ${replyIndex.index}" th:if="${replyIndex.last}" style="cursor: pointer; text-decoration: none; color: blue;">댓글 쓰기</span>
+                                </div>
+
+
+                                <div th:if="${replyIndex.last} " class="container" style="padding-top: 15px;">
+                                    <div id="loginPopup" class="popup" style="display: block;">
+                                    </div>
+                                    <div id="auth-toggle" class="container" sec:authorize="isAuthenticated()">
+                                        <div class ="container rectangle-1">
+                                            <div style="display: flex; align-items: center;">
+                                                <img src="/images/comment/icon-profile.svg" style="margin-right: 10px;">
+                                                <div class="container login-comment-box">
+                                                    <form role="form" th:action="@{'/members/boards/' + ${boardId} + '/comments/' + ${comment.id} + '/replies'}" th:object="${postForm}" method="post">
+                                                        <textarea type="text" class="form-control" placeholder="주제에 대한 생각을 자유롭게 댓글로 표현해 주세요. 여러분의 다양한 의견을 기다립니다." id="tiny" name="comment"></textarea>
+                                                        <button class="btn btn-primary">댓글 쓰기</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Todo: 내용 및 컨텐츠 제작 -->
             </div>
@@ -279,7 +401,45 @@
     </row>
 </div>
 </div>
+<div id="loginRequiredModal" class="modal" style=" display: none; position: fixed; top: 0px; left: 50%; transform: translate(-50%,50%);">
+    <div class="modal-content" style="height: 150px; width: 500px; text-align: center; margin: auto; border-radius: 15px">
+        <div class="container"  style="margin-top: auto;">
+
+            <h6 style="font-size: 12px; margin-top: -20px; font-weight: bold">로그인 필요한 기능</h6>
+            <p style="font-size: 12px; margin-top: 30px;">로그인이 필요한 기능입니다. 로그인 페이지로 이동하시겠습니까?</p>
+        </div>
+        <div class="container" style="display: flex; justify-content: flex-end; background-color: #e8e8e8; height: 55px; ">
+            <button class="btn btn-primary" style="width: 60px; height: 40px; color: black; font-size: 14px;
+        background-color: white; border: 1px solid #b2b2b2; margin-right: 10px; margin-top: 10px" onclick="closeLoginModal()">취소</button>
+            <button class="btn btn-primary" style="width: 60px; height: 40px; font-size: 14px; margin-top: 10px"
+                    onclick="redirectToLoginPage()">확인</button>
+        </div>
+    </div>
+</div>
+
 </body>
+
+<script>
+    // 모달 열기
+    function openLoginModal() {
+        var modal = document.getElementById('loginRequiredModal');
+        modal.style.display = 'block';
+    }
+
+    // 모달 닫기
+    function closeLoginModal() {
+        var modal = document.getElementById('loginRequiredModal');
+        modal.style.display = 'none';
+    }
+
+    // 로그인 페이지로 이동
+    function redirectToLoginPage() {
+        // 여기에서 로그인 페이지로 이동하는 코드를 추가
+        window.location.href = '/login';
+        closeLoginModal();  // 이동 후 모달 닫기
+    }
+</script>
+
 <script type="text/javascript">
     $(document).ready(function () {
         var isBookmarked = false;
@@ -322,43 +482,71 @@
     });
 </script>
 
-<!--<script>-->
-<!--    // Using jQuery for simplicity-->
-<!--    $(document).ready(function() {-->
-<!--        $("#comment_btn_toggle").click(function() {-->
-<!--            $("#commentContainer").slideToggle();-->
-<!--            $("#btn_toggle").slideToggle();-->
-<!--            $("#auth-toggle").toggle();-->
-<!--        });-->
-<!--    });-->
-<!--</script>-->
-
+<!-- 여기수정 -->
 <script>
-    // Function to toggle visibility
-    function toggleComments(index) {
-        var container = document.getElementById('commentContainer' + index);
-        container.style.display = container.style.display === 'none' ? 'flex' : 'none';
+    function toggleComments(index, c_index) {
+        for (var i = 0; i < index; i++) {
+            console.log(c_index + "c_index값은?");
+            // 사용자가 클릭한 버튼에 대응되는 container를 찾음
+            var container = document.querySelector('.comment-container#commentContainer' + i + c_index);
 
-        // You may want to add logic to update the "댓글 보기" text as well
-        var toggleBtn = document.getElementById('comment_btn_toggle' + index);
-        toggleBtn.innerText = container.style.display === 'none' ? '댓글 보기' : '댓글 숨기기';
+            // container가 존재하면 스타일을 toggle
+            if (container) {
+                container.style.display = container.style.display === 'flex' ? 'none' : 'flex';
+            } else {
+                console.error('Container not found for index ' + i);
+            }
+        }
+        console.log("c_index" + c_index);
+        // Update the "댓글 보기" text
+
+            var toggleBtn = document.getElementById('comment_btn_toggle'  + c_index);
+
+            // container가 null이 아니라면 스타일을 toggleBtn에 적용
+            if (container) {
+                if (container.style.display === 'none') {
+                    toggleBtn.innerText = '댓글 보기';
+                } else {
+                    toggleBtn.innerText = '댓글 숨기기';
+                }
+            } else {
+                console.error('Container not found for toggleBtn');
+            }
+
     }
 </script>
 
 
-<script>
+<script th:inline="javascript">
     var selectedOption = null;
-
+    var isAuthenticated = /*[[${isAuthenticated}]]*/ false;;
     function toggleLike() {
         selectedOption = 'like';
         updateButtons();
         PostLike();
+
     }
 
-    function toggleUnlike() {
-        selectedOption = 'unlike';
+    function toggleAngry() {
+        selectedOption = 'angry';
         updateButtons();
-        PostUnlike();
+        PostAngry();
+
+    }
+    function toggleFollow() {
+        selectedOption = 'follow';
+        updateButtons();
+        PostFollow();
+    }
+    function toggleFan() {
+        selectedOption = 'fan';
+        updateButtons();
+        PostFan();
+    }
+    function toggleSad() {
+        selectedOption = 'sad';
+        updateButtons();
+        PostSad();
     }
 
     function updateButtons() {
@@ -380,7 +568,6 @@
 
 <script th:inline="javascript">
     var boardId = /*[[${boardId}]]*/ 0;  // 현재 게시글의 ID
-
     function PostLike() {
         $.ajax({
             type: 'POST',
@@ -388,26 +575,87 @@
             success: function (likeCount) {
                 // 성공 시 좋아요 개수 갱신
                 $('#likeCount').text(likeCount);
+                updateLikeCount();
             },
-            error: function (error) {
-                console.log('좋아요 토글 중 오류 발생: ' + error);
+            error: function () {
+                openLoginModal();
             }
         });
     }
 
-    function PostUnlike() {
+    function PostAngry() {
         $.ajax({
             type: 'POST',
-            url: '/toggle-unlike/' + boardId,
-            success: function (unlikeCount) {
+            url: '/toggle-angry/' + boardId,
+            success: function (angryCount) {
                 // 성공 시 싫어요 개수 갱신
-                $('#unlikeCount').text(unlikeCount);
+                $('#angryCount').text(angryCount);
+                location.reload();
             },
-            error: function (error) {
-                console.log('싫어요 토글 중 오류 발생: ' + error);
+            error: function () {
+                openLoginModal();
             }
         });
     }
+    function PostFan() {
+        $.ajax({
+            type: 'POST',
+            url: '/toggle-fan/' + boardId,
+            success: function (fanCount) {
+                // 성공 시 싫어요 개수 갱신
+                $('#fanCount').text(fanCount);
+                location.reload();
+            },
+            error: function () {
+                openLoginModal();
+            }
+        });
+    }
+    function PostFollow() {
+        $.ajax({
+            type: 'POST',
+            url: '/toggle-follow/' + boardId,
+            success: function (followCount) {
+                // 성공 시 싫어요 개수 갱신
+                $('#followCount').text(followCount);
+                location.reload();
+            },
+            error: function () {
+                openLoginModal();
+            }
+        });
+    }
+    function PostSad() {
+        $.ajax({
+            type: 'POST',
+            url: '/toggle-sad/' + boardId,
+            success: function (sadCount) {
+                // 성공 시 싫어요 개수 갱신
+                $('#sadCount').text(sadCount);
+                location.reload();
+            },
+            error: function () {
+                openLoginModal();
+            }
+        });
+    }
+</script>
+
+<script>
+    function updateLikeCount() {
+        $.ajax({
+            type: 'GET', // 혹은 'POST'에 맞게 변경
+            url: '/get-like-count/' + boardId, // 서버에서 좋아요 개수를 가져오는 엔드포인트에 맞게 변경
+            success: function (likeCount) {
+                // 성공 시 좋아요 개수 갱신
+                $('#likeCount').text(likeCount);
+            },
+            error: function () {
+                console.error('좋아요 개수를 가져오는 중 에러 발생');
+            }
+        });
+    }
+
 </script>
 
 <script th:inline="javascript">
@@ -418,8 +666,6 @@
             // 로그인 상태 체크
             if (isAuthenticated ) {
                 $("#auth-toggle").toggle();
-            } else {
-
             }
         }
         // 댓글 쓰기 버튼에 click 이벤트 리스너를 등록합니다.
@@ -498,7 +744,78 @@
                 }
 
                 // Display the formatted time difference in the HTML
-                var timeDifference= document.getElementById('timeDifference-' + CommentIndex);
+                var timeDifference= document.getElementById('timeDifference' + CommentIndex);
+                console.log(timeDifference + "timedifference" + CommentIndex + "인덱스값" + "타임" + timeDifference);
+                if (timeDifference) {
+                    timeDifference.textContent = formattedTimeDifference + '전';
+                }
+            });
+        })();
+    });
+</script>
+
+
+<script th:inline="javascript">
+    /*[# th:if="${not #lists.isEmpty(rely)}"]*/
+    /*[# th:each="reply, relyIndex : ${comment.replies}"]*/
+    var RelyCreatedDateString = /*[[${reply.createdDate}]]*/ '';
+    var ReplyIndex = /*[[${relyIndex.index}]]*/ '';
+    console.log('reply created date:', RelyCreatedDateString);
+    console.log('reply index:', ReplyIndex);
+    /*[/]*/
+    /*[/]*/
+</script>
+
+<script th:inline="javascript">
+    window.addEventListener('load', function () {
+        // Use the passed argument instead of directly accessing CommentCreatedDateString
+        (function () {
+            // Select all elements with data-comment-created-date attribute
+            var comments = document.querySelectorAll('[data-rely-created-date]');
+
+            comments.forEach(function (comment) {
+                // Retrieve data-comment-created-date and data-comment-index attributes
+                var CommentCreatedDateString = comment.getAttribute('data-rely-created-date');
+                var CommentIndex = comment.getAttribute('data-rely-index');
+                console.log('Rely 내부내부내부' + CommentCreatedDateString);
+                console.log('Rely index: 내부 ', CommentIndex);
+
+                // Convert the string to a Date object
+                var createdDate = new Date(CommentCreatedDateString);
+
+                // Get the current date and time
+                var currentDate = new Date();
+
+                // Calculate the time difference in milliseconds
+                var timeDifference = currentDate - createdDate;
+
+                // Calculate days, hours, minutes, and seconds
+                var days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+                // Format the time difference for display
+                var formattedTimeDifference = '';
+
+                if (days > 0) {
+                    formattedTimeDifference += days + '일 ';
+                }
+
+                if (hours > 0 && days === 0) {
+                    formattedTimeDifference += hours + '시간 ';
+                }
+
+                if (minutes > 0 && days === 0 && hours === 0) {
+                    formattedTimeDifference += minutes + '분 ';
+                }
+
+                if (seconds > 0 && days === 0 && hours === 0 && minutes === 0) {
+                    formattedTimeDifference += seconds + '초 ';
+                }
+
+                // Display the formatted time difference in the HTML
+                var timeDifference = document.getElementById('timeDifference-' + CommentIndex);
                 console.log(timeDifference + "timedifference" + CommentIndex + "인덱스값" + "타임" + timeDifference);
                 if (timeDifference) {
                     timeDifference.textContent = formattedTimeDifference + '전';

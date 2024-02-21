@@ -1,11 +1,9 @@
 package io.security.corespringsecurity.service.board;
 
 import io.security.corespringsecurity.domain.entity.board.Board;
-import io.security.corespringsecurity.domain.entity.kbo.Hitter;
+import io.security.corespringsecurity.domain.entity.board.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +26,6 @@ public interface BoardService {
 //    /** 분류 **/
 //    List<Board> getAllSortedByBoard(String sort);
 
-    List<Board> findTop5ByOrderByTagCountDesc(Pageable pageable);
     /**
      * 편집
      **/
@@ -36,8 +33,13 @@ public interface BoardService {
 
     Board editByBoard (Long boardId, Board updatedBoard);
 
-    Page<Board> getList (int page);
+    Page<Board> getList (int page, Category categoryId);
 
      void incrementViewCount(Long boardId);
 
+    Page<Board> getListTop5(Pageable pageable, List<Category> category);
+
+    Page<Board> getListAll(int page, List<Category> categories);
+
+    Page<Board> getListArticleTop5(Pageable pageable, Category categoryName);
 }

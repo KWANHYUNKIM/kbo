@@ -1,8 +1,11 @@
 package io.security.corespringsecurity.batch.writer;
 
 import io.security.corespringsecurity.domain.dto.kbo.crawl.PlayerDto;
+import io.security.corespringsecurity.domain.dto.kbo.games.PlayersDto;
+import io.security.corespringsecurity.domain.entity.kbo.Players;
 import io.security.corespringsecurity.domain.entity.kbo.crawl.Player;
 import io.security.corespringsecurity.repository.kbo.crawl.PlayerRepository;
+import io.security.corespringsecurity.repository.kbo.games.PlayersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.context.annotation.Configuration;
@@ -12,20 +15,19 @@ import java.util.List;
 
     @Configuration
     @RequiredArgsConstructor
-    public class CsvPlayerWriter implements ItemWriter<PlayerDto> {
+    public class CsvPlayerWriter implements ItemWriter<PlayersDto> {
 
-        private final PlayerRepository playerRepository;
+        private final PlayersRepository playersRepository;
 
         @Override
-        public void write(List<? extends PlayerDto> items) throws Exception {
-            List<Player> playerList = new ArrayList<>();
-
-            items.forEach(getPlayerDto -> {
-                Player player = getPlayerDto.toEntity();
+        public void write(List<? extends PlayersDto> items) throws Exception {
+            List<Players> playerList = new ArrayList<>();
+            items.forEach(getPlayersDto -> {
+                Players player = getPlayersDto.toEntity();
                 playerList.add(player);
             });
 
-            playerRepository.saveAll(playerList);
+            playersRepository.saveAll(playerList);
         }
     }
 

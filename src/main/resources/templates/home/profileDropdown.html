@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<div th:fragment="profiledropdown" >
+<div th:fragment="profiledropdown">
     <head>
         <link rel="stylesheet" type="text/css" th:href="@{/css/layout/profileDropdown.css}"/>
     </head>
+
     <body>
-    <div class = "profileDropdown">
+    <div style="padding-left: 10px" class = "profileDropdown" id="profileDropdown">
         <div th:each="currentUser : ${currentUser}">
             <div class="user-action-item my-menu">
                 <a type="button" class="dropdown-button avatar avatar-26">
-                    <img th:if="${currentUser != null}" th:src="${currentUser.filepath}" height="32" width="32" title="profile">
+                    <img th:if="${currentUser != null}" th:src="${currentUser.filepath}"
+                         height="32" width="32" title="profile" style="border-radius: 50%">
                 </a>
+
                 <div class="my-menu-content">
                     <ul class="my-menu-list">
                         <li class="my-menu-item">
@@ -34,6 +37,8 @@
             </div>
         </div>
     </div>
+
     </body>
 </div>
+
 </html>

@@ -1,10 +1,12 @@
 package io.security.corespringsecurity.controller.kbo;
 
 import io.security.corespringsecurity.domain.dto.kbo.crawl.PlayerDto;
+import io.security.corespringsecurity.domain.entity.kbo.Players;
 import io.security.corespringsecurity.domain.entity.kbo.crawl.Player;
 import io.security.corespringsecurity.domain.entity.kbo.Teams;
 import io.security.corespringsecurity.service.kbo.ClubService;
 import io.security.corespringsecurity.service.kbo.PlayerService;
+import io.security.corespringsecurity.service.kbo.PlayersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,15 +25,16 @@ import java.util.UUID;
 public class PlayerContorller {
 
     @Autowired
-    private PlayerService playerService;
+    private PlayersService playersService;
 
+    @Autowired
+    private PlayerService playerService;
     @Autowired
     private ClubService clubService;
 
-
     @GetMapping("/player/search")
     public String playerSearch(Model model) {
-        List<Player> playerList = playerService.findAll();
+        List<Players> playerList = playersService.findAll();
         model.addAttribute("player", playerList);
         return "player/playerSearch";
     }
@@ -42,14 +45,17 @@ public class PlayerContorller {
                                     @RequestParam(value = "position", defaultValue = "All") String position) {
         // TODO: hitterService에서 정렬된 데이터를 가져오는 메서드 호출
         System.out.println("name 값은?" + name);
+        System.out.println("position 값은" + position);
+        System.out.println("팀 이름은? " + team);
         // 모델에 정렬된 데이터 추가
-        List<Player> sortedPaging = playerService.findByQuery(team, position, name);
+        List<Players> sortedPaging = playersService.findByQuery(team, position, name);
 
         // 검색 결과의 총합 계산
         int totalResult = sortedPaging.size();
+        System.out.println("sorted값은? " + sortedPaging);
         System.out.println("totalResults 값은? " + totalResult);
-
         model.addAttribute("player", sortedPaging);
+
         model.addAttribute("totalResults", totalResult); // Todo: 이부분은 작동을 안함. 타임리프에 값이 전달이 안된다. 이유 찾아보기.
         return "player/playerSearch";
     }

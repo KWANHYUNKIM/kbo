@@ -5,9 +5,9 @@
 <div class ="container p-3">
   <head th:replace="layout/header::userHead"></head> <!-- 헤더 -->
   <header th:replace="layout/topOverTop::topOverTop"></header>
-  <header th:replace="layout/top::header"></header>
+  <header th:replace="layout/top::header_main"></header>
 </div>
-<body>
+<body onload="updateGauge()">
 
 <div class="container">
   <div class="row">
@@ -15,9 +15,40 @@
       <div th:replace="settings/layout/settingSidebar ::sidebar"></div> <!-- 사이드 바 --> <!-- col-sm-3 -->
     </div>
   </div>
+  <div class="row p-3" style="margin-top: 20px; margin-bottom: 20px; border: 1px solid #ddd; padding: 15px; border-radius: 10px;">
+    <div class="container">
+      <div th:each="account : ${account}" style="text-align: left;">
+        <div class="container" style="padding: 30px">
+          <img th:src="${account.filepath}" class="img-button-main btn-secondary dropdown-toggle"
+               style="border-radius: 50%; display: inline; width: 120px;"/>
 
-  <div class="row">
-    <!-- Todo: 광고 -->
+          <div style="display: inline-block; position: relative; top: -60px; left: -95px;">
+            <img src="/images/icons/level.png" style="width: 60px; height: 60px;">
+            <p style="position: absolute; top: 15px; margin: 0; right: 23px; font-size: 22px;" th:text="${account.experience.level}"></p>
+          </div>
+
+          <p style="display: inline; margin-left: 20px; font-size: 36px" th:text="${account.username}"></p>
+          <button style="border: 1px; border-radius: 5px; font-size: 18px;" onclick="window.location.href='/settings/account'">나의계정</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="container" onload="updateGauge()">
+      <div th:each="account : ${account}">
+
+        <div style="width: 30%; background-color: #ebddfc; border-radius: 10px;">
+          <div id="gaugeBar" style="width: 0%; height: 20px; background-color: #c089ec; display: inline;"></div>
+            <span style="text-align: center; display: block"
+                  th:text="${account.experience.xp} + ' / ' + ${account.experience.xpRequired[account.experience.level]} + 'XP'"></span>
+        </div>
+
+        <p style="padding-top: 10px;">
+          다음 레벨까지
+          <span th:text="${account.experience.xpRequired[account.experience.level] - account.experience.xp}"></span>
+          남았어요!
+        </p>
+      </div>
+    </div>
 
   </div>
   <row class = "row p-3">
@@ -41,5 +72,21 @@
 
 </div>
 </body>
-<div th:replace="layout/footer::footer"></div>
+
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  function updateGauge() {
+    // Todo: 잘나옴 ㅎㅎㅎㅎㅎㅎㅎㅎ 디테일잡기
+    var xp = /*[[${account.experience.xp}]]*/ 0;
+
+    var xpRequired = /*[[${account.experience.xpRequired[account.experience.level]}]]*/ 0;
+
+    var gaugeValue = (xp / xpRequired) * 100;
+
+    // Set the width of the gauge bar
+    document.getElementById('gaugeBar').style.width = gaugeValue + "%";
+  }
+  /*]]>*/
+</script>
+
 </html>

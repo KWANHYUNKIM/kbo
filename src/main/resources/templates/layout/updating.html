@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<!-- Todo : Padding 작업  -->
+<head>
+  <title>메인 페이</title>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+
+
+<body>
+
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <head th:replace="layout/header::userHead"></head>
+      <header th:replace="layout/topOverTop::topOverTop"></header>
+      <header th:replace="layout/top::header_main"></header>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12" style="text-align: center; right: -100px;">
+      <img src="/images/updating/service_update.gif">
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

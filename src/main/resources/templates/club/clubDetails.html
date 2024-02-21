@@ -5,7 +5,7 @@
     $(document).ready(function(){
     });
 </script>
-<div th:replace="admin/common/top::header"></div>
+<div th:replace="layout/top::header_admin_management"></div>
 <div id="maininner"><!-- maininner (s)-->
     <div class="cc-tab-con">
         <div class="cc-tab-con">
@@ -15,23 +15,87 @@
             <a href="javascript:tabChange('4');" class="cc-tab-item">스케줄확인</a>
         </div>
     </div>
-<table class="table">
-    <thead>
-    <tr>
-        <th>팀이름</th>
-        <th>플레이어</th>
-        <!-- 필요에 따라 다른 선수 속성 추가 -->
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="team : ${team}">
-        <td th:text="${team.teamName}"></td>
-        <td th:utext="${players}"></td>
-        <!-- 필요에 따라 다른 선수 속성 추가 -->
-    </tr>
-    </tbody>
-</table>
 </div>
+<div class="row">
+    <div class="col-sm-6">
+        <table class="table" style="width: 800px; height: 300px;">
+            <thead>
+            <tr>
+                <th>팀이름</th>
+                <th>감독</th>
+                <th>코치</th>
+                <th>투수</th>
+                <th>포수</th>
+                <th>내야수</th>
+                <th>외야수</th>
+                <!-- 필요에 따라 다른 선수 속성 추가 -->
+            </tr>
+            </thead>
+            <ul th:each="team : ${team}">
+                <tr th:each="player, iterStat : ${team.players}">
+                    <td>
+                        <span th:if="${iterStat.index == 0}" th:text="${team.teamName}"></span>
+                        <span th:unless="${iterStat.index == 0}"> </span>
+                    </td>
+
+                    <td>
+                        <th:block th:with="formattedPosition=${#strings.substringBefore(player.position, '(') + #strings.substringAfter(player.position, ')')}">
+                            <span th:text="${player.name} + '(' + ${player.jerseyNumber} + ')'" th:if="${#strings.equals(formattedPosition, '감독')}"></span>
+                            <span th:unless="${#strings.equals(formattedPosition, '감독')}"> </span>
+                        </th:block>
+                    </td>
+                    <td>
+                        <th:block th:with="formattedPosition=${#strings.substringBefore(player.position, '(') + #strings.substringAfter(player.position, ')')}">
+                            <span th:text="${player.name} + '(' + ${player.jerseyNumber} + ')'" th:if="${#strings.equals(formattedPosition, '코치')}"></span>
+                            <span th:unless="${#strings.equals(formattedPosition, '코치')}"> </span>
+                        </th:block>
+                    </td>
+                    <td>
+                        <th:block th:with="formattedPosition=${#strings.substringBefore(player.position, '(') + #strings.substringAfter(player.position, ')')}">
+                            <span th:text="${player.name} + '(' + ${player.jerseyNumber} + ')'" th:if="${#strings.equals(formattedPosition, '투수')}"></span>
+                            <span th:unless="${#strings.equals(formattedPosition, '투수')}"> </span>
+                        </th:block>
+                    </td>
+                    <td>
+                        <th:block th:with="formattedPosition=${#strings.substringBefore(player.position, '(') + #strings.substringAfter(player.position, ')')}">
+                            <span th:text="${player.name} + '(' + ${player.jerseyNumber} + ')'" th:if="${#strings.equals(formattedPosition, '포수')}"></span>
+                            <span th:unless="${#strings.equals(formattedPosition, '포수')}"> </span>
+                        </th:block>
+                    </td>
+                    <td>
+                        <th:block th:with="formattedPosition=${#strings.substringBefore(player.position, '(') + #strings.substringAfter(player.position, ')')}">
+                            <span th:text="${player.name} + '(' + ${player.jerseyNumber} + ')'" th:if="${#strings.equals(formattedPosition, '내야수')}"></span>
+                            <span th:unless="${#strings.equals(formattedPosition, '내야수')}"> </span>
+                        </th:block>
+                    </td>
+                    <td>
+                        <th:block th:with="formattedPosition=${#strings.substringBefore(player.position, '(') + #strings.substringAfter(player.position, ')')}">
+                            <span th:text="${player.name} + '(' + ${player.jerseyNumber} + ')'" th:if="${#strings.equals(formattedPosition, '외야수')}"></span>
+                            <span th:unless="${#strings.equals(formattedPosition, '외야수')}"> </span>
+                        </th:block>
+                    </td>
+                </tr>
+            </ul>
+        </table>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <h1>확인</h1>
+        </div>
+    </div>
+</div>
+
+
 </body>
+
+<script>
+    // 선수 이름을 클릭할 때 호출되는 함수
+    function getPlayerData(playerId) {
+        // AJAX를 사용하여 서버로 해당 선수의 ID를 전송하고 데이터를 요청
+        // 서버로부터 받은 데이터를 처리하여 화면에 표시
+        alert(playerId);
+    }
+</script>
 
 </html>

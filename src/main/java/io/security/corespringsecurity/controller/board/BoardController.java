@@ -4,16 +4,13 @@ import io.security.corespringsecurity.domain.dto.board.BoardDto;
 import io.security.corespringsecurity.domain.dto.board.CommentDto;
 import io.security.corespringsecurity.domain.dto.board.ReplyDto;
 import io.security.corespringsecurity.domain.entity.Account;
-import io.security.corespringsecurity.domain.entity.board.Board;
-import io.security.corespringsecurity.domain.entity.board.Comment;
-import io.security.corespringsecurity.domain.entity.board.Like;
-import io.security.corespringsecurity.domain.entity.board.Reply;
-import io.security.corespringsecurity.service.board.BoardService;
-import io.security.corespringsecurity.service.board.CommentService;
-import io.security.corespringsecurity.service.board.LikeService;
-import io.security.corespringsecurity.service.board.ReplyService;
+import io.security.corespringsecurity.domain.entity.board.*;
+import io.security.corespringsecurity.domain.entity.profile.Notification;
+import io.security.corespringsecurity.service.board.*;
+import io.security.corespringsecurity.service.profile.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,9 +24,7 @@ import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Controller
 public class BoardController {
@@ -42,16 +37,30 @@ public class BoardController {
     @Autowired
     private LikeService likeService;
 
+    @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
+    private CategoryService categoryService;
+
+
     @GetMapping(value = "/members/board")
     public String boardForm(@ModelAttribute("boardForm") BoardDto form) {
         return "boards/createBoardForm";
     }
 
     @PostMapping(value = "/members/board")
-    public String create(Principal principal, @Valid BoardDto form, MultipartFile file, BindingResult result) throws IOException {
+    public String create(@AuthenticationPrincipal Principal principal,@Valid BoardDto form, MultipartFile file, BindingResult result, Model model) throws IOException {
+
         if (result.hasErrors()) {
             return "boards/createBoardForm";
         }
+
+        Account account = null;
+        if (principal instanceof UsernamePasswordAuthenticationToken) {
+            account = (Account) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+        }
+
         // 파일 저장
         String projectPath = System.getProperty("user.dir") + "//src//main//resources//static//images";
 
@@ -59,29 +68,92 @@ public class BoardController {
         UUID uuid = UUID.randomUUID();
 
         /*랜덤식별자_원래파일이름 = 저장될 파일이름 지정*/
-        String fileName = uuid + "_" + file.getOriginalFilename();
+//        String fileName = uuid + "_" + file.getOriginalFilename();
+        String fileName ="일단보류";
 
         /*빈 껍데기 생성*/
         /*File을 생성할건데, 이름은 "name" 으로할거고, projectPath 라는 경로에 담긴다는 뜻*/
         File saveFile = new File(projectPath, fileName);
 
         file.transferTo(saveFile);
+        Board board = new Board();
+        String categoryName = form.getCategory();
+        board.setAccount(account);
+
+        Category category = categoryService.findByCategoryName(categoryName);
+
+        if(category.getCategoryName().equals("STORY")){
+            board.setTitle("[사는 얘기] " +  form.getTitle());
+        }
+        else if(category.getCategoryName().equals("GATHERING")){
+            board.setTitle("[모임] " + form.getTitle());
+        }
+
+
+        board.setContent(form.getContent());
+
+        board.setFilename("fileName");
+        board.setFilepath("/images/" + "fileName");
+
+        board.setCategory(category);
+        boardService.createBoard(board);
+
+        return "redirect:/";
+    }
+
+    @GetMapping(value = "/members/board/article")
+    public String articleForm(@ModelAttribute("boardForm") BoardDto form) {
+        return "boards/createArticleForm";
+    }
+
+    @PostMapping(value = "/members/board/article")
+    public String createArticle(@AuthenticationPrincipal Principal principal,@Valid BoardDto form, MultipartFile file, BindingResult result, Model model) throws IOException {
+
+        if (result.hasErrors()) {
+            return "boards/createArticleForm";
+        }
 
         Account account = null;
-        Board board = new Board();
-
         if (principal instanceof UsernamePasswordAuthenticationToken) {
             account = (Account) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
-            board.setAccount(account);
         }
-//      System.out.println("FileName =" + fileName);
 
+        // 파일 저장
+        String projectPath = System.getProperty("user.dir") + "//src//main//resources//static//images";
 
-        board.setTitle(form.getTitle());
+        /*식별자 . 랜덤으로 이름 만들어줌*/
+        UUID uuid = UUID.randomUUID();
+
+        /*랜덤식별자_원래파일이름 = 저장될 파일이름 지정*/
+//        String fileName = uuid + "_" + file.getOriginalFilename();
+        String fileName ="일단보류";
+
+        /*빈 껍데기 생성*/
+        /*File을 생성할건데, 이름은 "name" 으로할거고, projectPath 라는 경로에 담긴다는 뜻*/
+        File saveFile = new File(projectPath, fileName);
+
+        file.transferTo(saveFile);
+        Board board = new Board();
+        String categoryName = form.getCategory();
+        board.setAccount(account);
+        Category category = categoryService.findByCategoryName(categoryName);
+
+        if(category.getCategoryName().equals("ARTICLE")){
+            board.setTitle("[오피셜] " +  form.getTitle());
+        }
+        else if(category.getCategoryName().equals("NEWS")){
+            board.setTitle("[소식] " + form.getTitle());
+        }
+        else if(category.getCategoryName().equals("BLOG")){
+            board.setTitle("[찌라시] " + form.getTitle());
+        }
+
+        // TODO- 파일 값 설정 해줘야함
         board.setContent(form.getContent());
-        board.setFilename(fileName);
-        board.setFilepath("/images/" + fileName);
+        board.setFilename("fileName");
+        board.setFilepath("/images/" + "fileName");
 
+        board.setCategory(category);
         boardService.createBoard(board);
 
         return "redirect:/";
@@ -89,18 +161,25 @@ public class BoardController {
 
     /**
      * 게시판 디테일
-     * Todo :
+     * todo :
      **/
 
     @GetMapping(value = "/boards/{boardId}/detail")
-    public String detailList(Model model, @PathVariable("boardId") Long boardId,
+    public String detailList(Principal principal,Model model, @PathVariable("boardId") Long boardId,
                              @ModelAttribute("commentForm") CommentDto form,
                              @AuthenticationPrincipal Authentication authentication,
                              @ModelAttribute("postForm") ReplyDto postForm) {
 
+        Account account = null;
+        if (principal instanceof UsernamePasswordAuthenticationToken) {
+            account = (Account) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+        }
+        model.addAttribute("account",account);
+
         List<Board> boards = boardService.findByboardId(boardId);
         List<Comment> comments = commentService.findCommentsByBoardId(boardId);
-        List<Like> likes = likeService.findByLikeAndUnlike(boardId);
+        List<Like> likes = likeService.findByBoard(boardId);
+
         if (likes.isEmpty()) {
             likes = null; // 또는 빈 리스트로 유지할 수도 있습니다.
         }
@@ -117,9 +196,13 @@ public class BoardController {
 
 
 
-        boolean isAuthenticated = authentication != null && authentication.isAuthenticated();
+
+        boolean isAuthenticated = authentication != null && authentication.isAuthenticated() && !(authentication
+                instanceof AnonymousAuthenticationToken);
+//        System.out.println("LIKES 값 확인 " + likes);
+
         model.addAttribute("isAuthenticated", isAuthenticated);
-        model.addAttribute("likes",likes);
+        model.addAttribute("likes", likes );
         model.addAttribute("boards", boards);
         model.addAttribute("commentForm", new CommentDto());
         model.addAttribute("postForm", new ReplyDto());
@@ -132,29 +215,78 @@ public class BoardController {
     public String createForm(Principal principal, @PathVariable Long boardId, @Valid @ModelAttribute CommentDto form) {
         Account account = null;
         Comment comment = new Comment();
+
         if (principal instanceof UsernamePasswordAuthenticationToken) {
             account = (Account) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
             comment.setAccount(account);
         }
         Board board = boardService.findByComment(boardId);  // 해당 boardId에 대한 게시물을 가져옴
+
+
         comment.setComment(form.getComment());
         comment.setBoard(board);  // Comment 엔티티의 board 속성에 Board 객체를 설정
 
+
+
         // 여기서 boardId를 사용하여 해당 게시물을 식별하여 댓글을 저장합니다.
         commentService.createComment(comment);
+
+        // 댓글을 남기면 노트가 된다.
+        Notification notification = new Notification();
+        notification.setMessage(account.getUsername() + "님이 댓글을 달아주었습니다");
+        notification.setBoard(board);
+        notification.setComment(comment);
+        notification.setCheck(false);
+        notification.setAccount(board.getAccount());
+        notificationService.saveNotification(notification);
 
         // 댓글이 속한 게시물의 세부 페이지로 리다이렉트합니다.
         return "redirect:/boards/" + boardId + "/detail";
     }
 
+    // Todo - article 분류
+    @GetMapping(value = "/boards/article/all")
+    public String articleList(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
+        List<String> categoryNames = Arrays.asList("ARTICLE", "NEWS", "BLOG");
 
+        List<Category> category = categoryService.findByCategoryNames(categoryNames);
+        Page<Board> paging = this.boardService.getListAll(page,category);
 
-    @GetMapping(value = "/boards/all")
-    public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
-        Page<Board> paging = this.boardService.getList(page);
         model.addAttribute("paging", paging);
 
+        return "boards/articleList";
+    }
+    // 전체
+    @GetMapping(value = "/boards/all")
+    public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
+        List<String> categoryNames = Arrays.asList("GATHERING", "STORY");
+
+        List<Category> categories = categoryService.findByCategoryNames(categoryNames);
+        Page<Board> allPagingResults = boardService.getListAll(page, categories);
+
+        model.addAttribute("paging", allPagingResults);
+
         return "boards/boardList";
+    }
+    // 사는 얘기
+    @GetMapping(value = "/boards/life/all")
+    public String lifeList(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
+        Category category = categoryService.findByCategoryName("STORY");
+        Page<Board> paging = this.boardService.getList(page,category);
+
+        model.addAttribute("paging", paging);
+
+        return "boards/lifeList";
+    }
+    // 모임
+    @GetMapping(value = "/boards/gathering/all")
+    public String gatheringList(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
+        Category category = categoryService.findByCategoryName("GATHERING");
+        Page<Board> paging = this.boardService.getList(page,category);
+
+        model.addAttribute("paging", paging);
+
+        return "boards/gatheringList";
     }
 
     @GetMapping("/boards/search")

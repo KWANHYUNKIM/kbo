@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+</head>
+
+<body>
+<div th:fragment="media-highlight">
+  <head>
+
+  </head>
+
+  <body>
+  <div class="container" style="padding-top: 20px; padding-bottom: 20px">
+    <div class="container" style="display: flex; align-items: center; justify-content: space-between;">
+      <p style="font-size: 16px; font-weight: bold; margin: 0;">하이라이트</p>
+      <img src="/images/home/icons/icon_plus_n.png" style="margin-left: auto;">
+    </div>
+
+    <div class="container">
+      <hr>
+    </div>
+  </div>
+  </body>
+</div>
+
+<div th:fragment="media-video">
+  <head>
+
+  </head>
+
+  <body>
+  <div class="container" style="padding-top: 20px; padding-bottom: 20px">
+    <div class="container" style="display: flex; align-items: center; justify-content: space-between;">
+      <p style="font-size: 16px; font-weight: bold; margin: 0;">비디오판독</p>
+      <img src="/images/home/icons/icon_plus_n.png" style="margin-left: auto;">
+    </div>
+
+    <div class="container">
+      <hr>
+    </div>
+  </div>
+  </body>
+</div>
+
+<div th:fragment="media-instagram">
+  <head>
+    <style>
+      .instagram-post {
+        position: relative;
+        display: block; /* 인라인 블록 대신 블록 레벨 요소로 변경 */
+        width: 150px; /* 이미지의 원래 너비 */
+        height: 250px; /* 이미지의 원래 높이 */
+      }
+
+      .instagram-post img {
+        width: 100%; /* 부모 요소에 꽉 채우도록 이미지 크기 조절 */
+        height: 100%; /* 부모 요소에 꽉 채우도록 이미지 크기 조절 */
+      }
+
+      .instagram-post:hover img {
+        opacity: 0.8; /* 이미지를 클릭할 때 어두운 효과를 줍니다. */
+      }
+
+      .instagram-post .description {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(0, 0, 0, 0.8); /* 설명 텍스트의 배경색 */
+        color: #fff; /* 설명 텍스트의 글자색 */
+        padding: 10px;
+        border-radius: 5px;
+        opacity: 0; /* 초기에는 투명합니다. */
+        transition: opacity 0.3s ease; /* 부드러운 페이드 인/아웃 효과를 줍니다. */
+        white-space: nowrap; /* 텍스트가 줄 바꿈되지 않도록 설정 */
+        overflow: hidden; /* 넘치는 텍스트를 숨김 */
+        text-overflow: ellipsis; /* 넘치는 텍스트를 생략 부호로 표시 */
+        max-width: 52ch; /* 최대 글자 수를 설정 */
+      }
+
+      .instagram-post:hover .description {
+        opacity: 1; /* 마우스 오버 시 투명도를 1로 변경하여 보이도록 합니다. */
+      }
+    </style>
+  </head>
+
+  <body>
+  <div class="container" style="padding-top: 20px; padding-bottom: 20px">
+    <div class="container" style="display: flex; align-items: center; justify-content: space-between;">
+      <p style="font-size: 16px; font-weight: bold; margin: 0;">INSTAGRAM</p>
+      <img src="/images/home/icons/icon_plus_n.png" style="margin-left: auto;">
+    </div>
+
+    <div class="container">
+      <hr>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row row-cols-5">
+
+      <div class="col">
+        <div class="container">
+          <!-- Instagram 포스트를 감싸는 div 요소에 instagram-post 클래스를 추가합니다. -->
+          <div class="instagram-post">
+            <a href="https://www.instagram.com/p/C2gzwSkyFiL/" target="_blank">
+              <img src="/images/instagram/hanwhaSpringCamp.png" style="width: 204px; height: 204px;">
+              <!-- 설명 텍스트를 출력하는 p 요소에 description 클래스를 추가합니다. -->
+              <p class="description">한화이글스 선수단이 2024 스프링캠프를 위해 1월 30일 인천공항을 통해 호주 멜버른으로 출국합니다.
+                1군 캠프에 합류하는 선수 명단과 연습경기 일정은 추후 안내드리겠습니다.</p>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="container">
+          <!-- Instagram 포스트를 감싸는 div 요소에 instagram-post 클래스를 추가합니다. -->
+          <div class="instagram-post">
+            <a href="https://www.instagram.com/p/C2gzwSkyFiL/" target="_blank">
+              <img src="/images/instagram/hanwhaSpringCamp.png"style="width: 204px; height: 204px;">
+              <!-- 설명 텍스트를 출력하는 p 요소에 description 클래스를 추가합니다. -->
+              <p class="description">한화이글스 선수단이 2024 스프링캠프를 위해 1월 30일 인천공항을 통해 호주 멜버른으로 출국합니다.
+                1군 캠프에 합류하는 선수 명단과 연습경기 일정은 추후 안내드리겠습니다.</p>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="container">
+          <!-- Instagram 포스트를 감싸는 div 요소에 instagram-post 클래스를 추가합니다. -->
+          <div class="instagram-post">
+            <a href="https://www.instagram.com/p/C2gzwSkyFiL/" target="_blank">
+              <img src="/images/instagram/hanwhaSpringCamp.png"style="width: 204px; height: 204px;">
+              <!-- 설명 텍스트를 출력하는 p 요소에 description 클래스를 추가합니다. -->
+              <p class="description">한화이글스 선수단이 2024 스프링캠프를 위해 1월 30일 인천공항을 통해 호주 멜버른으로 출국합니다.
+                1군 캠프에 합류하는 선수 명단과 연습경기 일정은 추후 안내드리겠습니다.</p>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="container">
+          <!-- Instagram 포스트를 감싸는 div 요소에 instagram-post 클래스를 추가합니다. -->
+          <div class="instagram-post">
+            <a href="https://www.instagram.com/p/C2gzwSkyFiL/" target="_blank">
+              <img src="/images/instagram/hanwhaSpringCamp.png"style="width: 204px; height: 204px;">
+              <!-- 설명 텍스트를 출력하는 p 요소에 description 클래스를 추가합니다. -->
+              <p class="description">한화이글스 선수단이 2024 스프링캠프를 위해 1월 30일 인천공항을 통해 호주 멜버른으로 출국합니다.
+                1군 캠프에 합류하는 선수 명단과 연습경기 일정은 추후 안내드리겠습니다.</p>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="container">
+          <!-- Instagram 포스트를 감싸는 div 요소에 instagram-post 클래스를 추가합니다. -->
+          <div class="instagram-post">
+            <a href="https://www.instagram.com/p/C2gzwSkyFiL/" target="_blank">
+              <img src="/images/instagram/hanwhaSpringCamp.png"style="width: 204px; height: 204px;">
+              <!-- 설명 텍스트를 출력하는 p 요소에 description 클래스를 추가합니다. -->
+              <p class="description">한화이글스 선수단이 2024 스프링캠프를 위해 1월 30일 인천공항을 통해 호주 멜버른으로 출국합니다.
+                1군 캠프에 합류하는 선수 명단과 연습경기 일정은 추후 안내드리겠습니다.</p>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  </body>
+</div>
+
+<div th:fragment="media-youtube">
+  <head>
+
+  </head>
+
+  <body>
+  <div class="container" style="padding-top: 20px; padding-bottom: 20px">
+    <div class="container" style="display: flex; align-items: center; justify-content: space-between;">
+      <p style="font-size: 16px; font-weight: bold; margin: 0;">YOUTUBE</p>
+      <img src="/images/home/icons/icon_plus_n.png" style="margin-left: auto;">
+    </div>
+
+    <div class="container">
+      <hr>
+    </div>
+  </div>
+
+  <div class="container" style="padding-top: 20px; padding-bottom: 20px">
+    <div class="row row-cols-5">
+
+      <div class="col">
+        <div class="container">
+          <iframe width="200" height="150" src="https://www.youtube.com/embed/cBE_B2XlhVY" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class ="container">
+          <p>'가상의 주자를 잡아라' 투수조 내야수조 함께한 PFP 훈련에 총 27명 출연ㄷㄷ</p>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="container">
+          <iframe width="200" height="150" src="https://www.youtube.com/embed/cBE_B2XlhVY" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class ="container">
+          <p>'가상의 주자를 잡아라' 투수조 내야수조 함께한 PFP 훈련에 총 27명 출연ㄷㄷ</p>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="container">
+          <iframe width="200" height="150" src="https://www.youtube.com/embed/cBE_B2XlhVY" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class ="container">
+          <p>'가상의 주자를 잡아라' 투수조 내야수조 함께한 PFP 훈련에 총 27명 출연ㄷㄷ</p>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="container">
+          <iframe width="200" height="150" src="https://www.youtube.com/embed/cBE_B2XlhVY" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class ="container">
+          <p>'가상의 주자를 잡아라' 투수조 내야수조 함께한 PFP 훈련에 총 27명 출연ㄷㄷ</p>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="container">
+          <iframe width="200" height="150" src="https://www.youtube.com/embed/cBE_B2XlhVY" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class ="container">
+          <p>'가상의 주자를 잡아라' 투수조 내야수조 함께한 PFP 훈련에 총 27명 출연ㄷㄷ</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row row-cols-5">
+
+      <div class="col">
+        <div class="container">
+          <iframe width="200" height="150" src="https://www.youtube.com/embed/cBE_B2XlhVY" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class ="container">
+          <p>'가상의 주자를 잡아라' 투수조 내야수조 함께한 PFP 훈련에 총 27명 출연ㄷㄷ</p>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="container">
+          <iframe width="200" height="150" src="https://www.youtube.com/embed/cBE_B2XlhVY" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class ="container">
+          <p>'가상의 주자를 잡아라' 투수조 내야수조 함께한 PFP 훈련에 총 27명 출연ㄷㄷ</p>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="container">
+          <iframe width="200" height="150" src="https://www.youtube.com/embed/cBE_B2XlhVY" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class ="container">
+          <p>'가상의 주자를 잡아라' 투수조 내야수조 함께한 PFP 훈련에 총 27명 출연ㄷㄷ</p>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="container">
+          <iframe width="200" height="150" src="https://www.youtube.com/embed/cBE_B2XlhVY" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class ="container">
+          <p>'가상의 주자를 잡아라' 투수조 내야수조 함께한 PFP 훈련에 총 27명 출연ㄷㄷ</p>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="container">
+          <iframe width="200" height="150" src="https://www.youtube.com/embed/cBE_B2XlhVY" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class ="container">
+          <p>'가상의 주자를 잡아라' 투수조 내야수조 함께한 PFP 훈련에 총 27명 출연ㄷㄷ</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  </body>
+</div>
+</body>
+
+
+</html>

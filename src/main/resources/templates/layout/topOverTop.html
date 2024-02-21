@@ -1,38 +1,147 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<!-- 패딩잡고 container화 시키고, search 변경, display fixed 하기  -->
 <head>
+    <style>
+        /* 부모 요소에 대한 스타일 추가 */
+        .notificationsContainer {
+            display: none;
+            position: absolute;
+            top: 100%; /* 알람을 아래로 내리기 위한 값, 필요에 따라 조절 가능 */
+            left: 0;
+            background-color: white; /* 알람 배경색 설정 */
+            border: 1px solid #ccc; /* 알람 테두리 설정 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가, 필요에 따라 조절 가능 */
+            z-index: 999; /* 다른 요소 위로 알람을 표시하기 위한 값, 필요에 따라 조절 가능 */
+        }
+
+        .notificationsContainer table {
+            width: 100%; /* 테이블 너비를 100%로 설정하여 부모 요소에 맞춤 */
+            border-collapse: collapse; /* 테이블 테두리를 합침 */
+        }
+
+        .notificationsContainer td {
+            padding: 8px; /* 셀 안의 내용과 테두리 간의 간격 조절, 필요에 따라 조절 가능 */
+            border-bottom: 1px solid #ccc; /* 각 알람 아이템 사이에 구분선 설정 */
+        }
+    </style>
+</head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications</title>
+    <!-- Thymeleaf에서 contextPath를 가져오기 위한 코드 -->
+    <script th:inline="javascript">
+        var contextPath = /*[[@{/}]]*/ '';
+    </script>
 </head>
 <nav class="navbar navbar-light bg-light">
     <div th:fragment="topOverTop">
+
         <div class ="container nav justify-content-end">
-            <a class="text-light" href="/">
-<!--                <img src="/images/baseball-logo.png" class="main-logo" alt="logo">-->
-            </a>
+
             <ul class ="navbar list-unstyled">
+                <li style="padding-left: 30px; text-align: left;">
+                    <a>커뮤니티</a>
+                </li>
+
+                <li style="padding-left: 30px; text-align: left;">
+                    <a>구단소식</a>
+                </li>
+
+                <li style="padding-left: 30px; text-align: left;">
+                    <a>경기일정</a>
+                </li>
+
+                <li style="padding-left: 30px; text-align: left;">
+                    <a>승부예측</a>
+                </li>
+            </ul>
+
+            <ul class ="navbar list-unstyled">
+
                 <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link text-dark" th:href="@{/login}">로그인</a></li>
                 <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link text-dark" th:href="@{/users}">회원가입</a></li>
 
-                <nav class = "navbar-nav justify-content-center">
-                    <form class="d-flex">
-                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn-search " type="submit">Search</button>
-                    </form>
-                </nav>
 
-                <a class="nav-link text-dark" sec:authorize="isAuthenticated()" th:href="@{/}">
-                    <img src="/images/topOverTop/bookmark.png" height="18" width="18" title="북마크" class="nav-item" sec:authorize="isAuthenticated()">
+                <div class = "navbar-nav justify-content-center">
+                    <div class="container" style="justify-content: space-between; display: flex;">
+                        <form th:action="@{/boards/search}" method="GET" >
+                            <input style="width: 200px; height: 30px; border-radius: 15px; border-color: #e3dfdf" type="text" id="query" name="query" placeholder="커뮤니티 내에서 검색">
+                            <button style="border: none; background: none; position: relative" type="submit">
+                                <img src="/images/icons/search.png" alt="Search" style="width: 23px; height: 23px; position: relative;">
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div th:each="account : ${account}">     <!-- bookMark icons -->
+                    <a class="nav-link text-dark" sec:authorize="isAuthenticated()" th:href="@{/users/{userId}/scraped(userId=${account.id})}">
+                        <img src="/images/icons/bookmark.png" height="18" width="18" title="북마크" class="nav-item" sec:authorize="isAuthenticated()">
+                    </a>
+                </div>
+
+                <!-- alarm icons -->
+                <a href="#" onclick="toggleNotifications()" title="알람" sec:authorize="isAuthenticated()">
+                    <div id="notificationIconContainer">
+                        <img id="notificationIcon" src="/images/icons/bell.png" height="18" width="18" title="알람" class="nav-item"/>
+                        <span id="notificationCount"  th:if="${falseNotificationCounts >= 1}"
+                              style="position: absolute; top: 15px; right: 53px; width: 8px; height: 8px;
+                              border-radius: 50%; background-color: rgb(255, 0, 0, 0.95); display: inline-block;"></span>
+
+                    </div>
                 </a>
-                <a class="nav-link text-dark" sec:authorize="isAuthenticated()" th:href="@{/}">
-                    <img src="/images/topOverTop/alarm-ball.png" height="18" width="18" title="알람" class="nav-item" sec:authorize="isAuthenticated()">
-                </a>
+                <!-- style="visibility: hidden; position: absolute; top: 100%; left: 0;
+                    background-color: white; border: 1px solid #ccc; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                    z-index: 999;" -->
+
+                <div id="notificationsContainer" style="display: none; position: absolute; width: 100%; height: 200px; overflow: auto;
+                top: 130px;">
+                    <table class="table" th:each="notification, loop : ${notifications}"
+                           style="position: relative; width: 100%; z-index: 999; border-radius: 0.1px; border-color:black;
+                           background-color: white;
+                           ">
+                        <tbody>
+                        <tr class="" th:each="notification, loop : ${notifications}"
+                            style="margin-top: 20px; position: relative;"
+                            th:style="'top: calc(20px * ' + ${loop.index} + ');'">
+                            <td class="" th:text="${notification.message}" style="padding: 20px; width: 200px;"></td>
+                            <!-- Add additional logic to display details based on notification type (like, comment, etc.) -->
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
 
                 <div th:replace="/home/profileDropdown"></div>
                 <script th:src="@{/js/profileDropdown.js}"></script>
+
+                <script th:inline="javascript">
+                    function toggleNotifications() {
+                        var notificationsContainer = document.getElementById('notificationsContainer');
+                        notificationsContainer.style.display = (notificationsContainer.style.display === 'none' || notificationsContainer.style.display === '') ? 'block' : 'none';
+
+                        // Ajax 호출
+                        $.ajax({
+                            type: "POST",
+                            url: "/notifications",  // 해당 URL을 알맞게 수정하세요.
+                            success: function(response) {
+                                // Ajax 호출이 성공하면 이 부분이 실행됩니다.
+                                console.log("Ajax 호출 성공");
+                                // 추가적인 로직을 여기에 작성하세요.
+                            },
+                            error: function(error) {
+                                // Ajax 호출이 실패하면 이 부분이 실행됩니다.
+                                console.error("Ajax 호출 실패", error);
+                            }
+                        });
+                    }
+                </script>
             </ul>
         </div>
     </div>
 </nav>
+
 </html>
 
 

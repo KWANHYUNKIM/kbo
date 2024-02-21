@@ -7,4 +7,6 @@ import java.util.List;
 public interface LocationService {
 
     List<Location> findAll();
+
+    List<Location> findByLocation(String location);
 }

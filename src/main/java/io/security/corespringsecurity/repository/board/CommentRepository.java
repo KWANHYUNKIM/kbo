@@ -23,6 +23,7 @@ public interface CommentRepository extends JpaRepository<Comment,Long> {
     List<Reply> findByReply(@Param("commentId") Long commentId);
 
 
-
+    @Query("SELECT r FROM Comment r WHERE r.account.id = :userId")
+    List<Comment> findByUserId(@Param("userId") Long userId);
 
 }

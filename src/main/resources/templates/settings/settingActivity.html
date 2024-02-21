@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<!-- Todo : 3개로 레이아웃을 나눠서 보여주는걸로 변경!  -->
+
+<head>
+  <style>
+    .btn-activity{
+      font-size: 14px;
+      padding-right: 20px;
+      cursor: pointer;
+      display: inline;
+      text-decoration: none;
+
+    }
+    .btn-activity {
+      cursor: pointer;
+      font-size: 14px;
+      padding-right: 20px;
+      text-decoration: none; /* 초기에는 밑줄을 없앰 */
+      color: black; /* 폰트 색상은 기본적으로 검은색 */
+    }
+
+    .btn-activity:hover {
+      text-decoration: underline lightskyblue; /* 마우스를 올렸을 때 밑줄 파란색으로 표시 */
+      color: lightskyblue; /* 폰트 색상을 파란색으로 변경 */
+      text-underline-offset: 35px; /* 밑줄 위치를 2px 아래로 내림 */
+      text-decoration-thickness: 3.5px;
+    }
+
+    .btn-activity:active {
+      text-decoration: underline lightskyblue; /* 클릭한 상태에서도 밑줄 유지 */
+      color: lightskyblue; /* 클릭한 상태에서도 폰트 색상 유지 */
+      text-underline-offset: 35px; /* 밑줄 위치를 2px 아래로 내림 */
+      text-decoration-thickness: 3.5px;
+    }
+  </style>
+</head>
+
+
+<div class ="container p-3">
+  <head th:replace="layout/header::userHead"></head> <!-- 헤더 -->
+  <header th:replace="layout/topOverTop::topOverTop"></header>
+  <header th:replace="layout/top::header_main"></header>
+</div>
+<body>
+
+<div class="container">
+  <div class="row">
+    <div class ="col-sm-3">
+      <div th:replace="settings/layout/settingSidebar ::sidebar"></div> <!-- 사이드 바 --> <!-- col-sm-3 -->
+    </div>
+  </div>
+
+  <div class="row p-3" style="margin-top: 20px; margin-bottom: 20px; border: 1px solid #ddd; padding: 15px; border-radius: 10px;">
+    <div th:each="account : ${account}" style="text-align: right;">
+      <div class="container" style="padding: 30px">
+        <img th:src="${account.filepath}" class="img-button-main btn-secondary dropdown-toggle"
+             style="border-radius: 50%; display: inline; width: 120px;"/>
+        <p style="display: inline; margin-left: 20px; font-size: 36px" th:text="${account.username}"></p>
+        <button style="border: 1px; border-radius: 5px; font-size: 18px;" onclick="window.location.href='/settings/account'">나의계정</button>
+      </div>
+    </div>
+      <div class="container" style="padding: 20px;">
+        <hr>
+      </div>
+
+      <div class="container" style="padding: 20px;" th:each="account : ${account}">
+        <a class="btn-activity"   th:href="@{/users/{userId}/activity(userId=${account.id})}">
+          최근 활동
+        </a>
+        <a class="btn-activity"   th:href="@{/users/{userId}/questions(userId=${account.id})}">
+          Q&A
+        </a>
+        <a class="btn-activity"   th:href="@{/users/{userId}/articles(userId=${account.id})}">
+          게시물
+        </a>
+        <a class="btn-activity"   th:href="@{/users/{userId}/scraped(userId=${account.id})}">
+          스크랩
+        </a>
+      </div>
+  </div>
+
+  <div class = "row">
+    <div class="container col-lg-12">
+
+      <div th:each="bookmark : ${bookmarks}">
+        <a th:href="@{'/boards/' + ${bookmark.board.id} + '/detail'}" style="text-decoration: none; color: #007bff;">
+          <div style="border: 1px solid #ddd; padding: 10px; margin: 10px; border-radius: 5px;">
+            <p style="font-size: 1.2em; margin-bottom: 5px;">카테고리의 게시물을 스크랩하였습니다.</p>
+            <p style="font-weight: bold; margin: 0;" th:text="${bookmark.board.title}"></p>
+          </div>
+        </a>
+      </div>
+
+      <div th:each="comments : ${comments}">
+        <a th:href="@{'/boards/' + ${comments.board.id} + '/detail'}" style="text-decoration: none; color: #007bff;">
+          <div style="border: 1px solid #ddd; padding: 10px; margin: 10px; border-radius: 5px;">
+            <p style="font-size: 1.2em; margin-bottom: 5px;">
+              <span th:text="${comments.board.account.username}"></span> 질문에 답변을 달았습니다.</p>
+            <p style="font-weight: bold; margin: 0;" th:text="${comments.board.title}"></p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class = "row ">
+    <!-- banner#1 -->
+    <div class="col-8 col-sm-6 mx-auto">
+
+    </div>
+    <!-- banner#2 -->
+    <div class="col-8 col-sm-6 mx-auto">
+    </div>
+  </div>
+</div>
+</div>
+</body>
+<!--<div th:replace="layout/footer::footer"></div>-->
+</html>

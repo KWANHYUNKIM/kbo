@@ -2,9 +2,11 @@ package io.security.corespringsecurity.controller.setting;
 
 import io.security.corespringsecurity.domain.entity.Account;
 import io.security.corespringsecurity.domain.entity.board.Bookmark;
+import io.security.corespringsecurity.domain.entity.board.Comment;
 import io.security.corespringsecurity.domain.entity.profile.ImageEntity;
 import io.security.corespringsecurity.service.UserService;
 import io.security.corespringsecurity.service.board.BookmarkService;
+import io.security.corespringsecurity.service.board.CommentService;
 import io.security.corespringsecurity.service.board.ImageService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,8 @@ public class settingController {
     private ImageService imageService;
     @Autowired
     private BookmarkService bookmarkService;
+    @Autowired
+    private CommentService commentService;
 
     @GetMapping(value = "/settings/profile")
     public String getSettingProfile(Model model, @AuthenticationPrincipal Account account) {
@@ -54,15 +58,49 @@ public class settingController {
     }
 
     @GetMapping(value = "/settings/account")
-    public String getSettingAccount(Model model){
+    public String getSettingAccount(Model model, @AuthenticationPrincipal Account account){
+
+        model.addAttribute("account",account);
+
         return "settings/settingAccount";
     }
 
+    // 활동
     @GetMapping(value = "/users/{userId}/activity")
     public String getSettingActivity(@PathVariable Long userId, Model model) {
-        List<Bookmark> bookmarks = bookmarkService.getBookmarksByUserId(userId);
-
+        List<Account> accounts = userService.findByUser(userId);
+        List<Comment> comments = commentService.findByUserId(userId);
         // 모델에 bookmark 목록을 추가
+        model.addAttribute("account", accounts);
+        model.addAttribute("comments",comments);
+        return "settings/settingActivity";
+    }
+
+    @GetMapping(value = "/users/{userId}/questions")
+    public String getSettingQuestions(@PathVariable Long userId, Model model) {
+        List<Account> accounts = userService.findByUser(userId);
+        List<Comment> comments = commentService.findByUserId(userId);
+        // 모델에 bookmark 목록을 추가
+        model.addAttribute("account", accounts);
+        model.addAttribute("comments",comments);
+        return "settings/settingActivity";
+    }
+
+    @GetMapping(value = "/users/{userId}/articles")
+    public String getSettingArticles(@PathVariable Long userId, Model model) {
+        List<Account> accounts = userService.findByUser(userId);
+        List<Comment> comments = commentService.findByUserId(userId);
+        // 모델에 bookmark 목록을 추가
+        model.addAttribute("account", accounts);
+        model.addAttribute("comments",comments);
+        return "settings/settingActivity";
+    }
+
+    @GetMapping(value = "/users/{userId}/scraped")
+    public String getSettingBookMark( @PathVariable Long userId, Model model){
+        List<Account> accounts = userService.findByUser(userId);
+        List<Bookmark> bookmarks = bookmarkService.getBookmarksByUserId(userId);
+        model.addAttribute("account", accounts);
         model.addAttribute("bookmarks", bookmarks);
 
         return "settings/settingActivity";

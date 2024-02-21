@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+
+<div th:fragment="pitcherTable">
+  <div class = "row p-3">
+    <div class="col-12">
+      <p>2023 성적</p>
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+          <th>팀명</th>
+          <th>ERA</th>
+          <th>G</th>
+          <th>CG</th>
+          <th>SHO</th>
+          <th>W</th>
+          <th>L</th>
+          <th>SV</th>
+          <th>HLD</th>
+          <th>WPCT</th>
+          <th>TBF</th>
+          <th>NP</th>
+          <th>IP</th>
+          <th>H</th>
+          <th>2B</th>
+          <th>3B</th>
+          <th>HR</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class = "row p-3">
+    <div class="col-12">
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+          <th>SAC</th>
+          <th>SF</th>
+          <th>BB</th>
+          <th>IBB</th>
+          <th>SO</th>
+          <th>WP</th>
+          <th>BK</th>
+          <th>R</th>
+          <th>ER</th>
+          <th>BSV</th>
+          <th>WHIP</th>
+          <th>AVG</th>
+          <th>QS</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- 각 row에 해당하는 데이터를 삽입하면 됩니다. -->
+
+        <!-- 추가적인 데이터를 필요에 따라 삽입하면 됩니다. -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class = "row p-3">
+    <div class="col-12">
+      <table class="table table-bordered">
+        <p>최근 10경기</p>
+        <thead>
+        <tr>
+          <th>일자</th>
+          <th>상대</th>
+          <th>결과</th>
+          <th>ERA</th>
+          <th>TBF</th>
+          <th>IP</th>
+          <th>H</th>
+          <th>HR</th>
+          <th>BB</th>
+          <th>HBP</th>
+          <th>SO</th>
+          <th>R</th>
+          <th>ER</th>
+          <th>AVG</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- 각 row에 해당하는 데이터를 삽입하면 됩니다. -->
+
+        <!-- 추가적인 데이터를 필요에 따라 삽입하면 됩니다. -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!--  -->
+  <div class = "row p-3">
+    <div class="col-12">
+      <p>연도별 TOP 10</p>
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+          <th>연도</th>
+          <th>항목</th>
+          <th>기록</th>
+          <th>순위</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- 각 row에 해당하는 데이터를 삽입하면 됩니다. -->
+        <tr>
+          <td>2022</td>
+          <td>타율</td>
+          <td>0.350</td>
+          <td>1</td>
+        </tr>
+        <!-- 추가적인 데이터를 필요에 따라 삽입하면 됩니다. -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div th:fragment="overallPitcherTable">
+  <div class = "row p-3">
+    <div class="col-12">
+      <h2>KBO 정규시즌 통계</h2>
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+          <th>연도</th>
+          <th>팀명</th>
+          <th>ERA</th>
+          <th>G</th>
+          <th>CG</th>
+          <th>SHO</th>
+          <th>W</th>
+          <th>L</th>
+          <th>SV</th>
+          <th>HLD</th>
+          <th>WPCT</th>
+          <th>TBF</th>
+          <th>IP</th>
+          <th>H</th>
+          <th>HR</th>
+          <th>BB</th>
+          <th>HBP</th>
+          <th>SO</th>
+          <th>R</th>
+          <th>ER</th>
+        </tr>
+        </thead>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div th:fragment="dailyRecordPitcherTable">
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <th>연도</th>
+      <th>상대</th>
+      <th>구분</th>
+      <th>결과</th>
+      <th>ERA1</th>
+      <th>TBF</th>
+      <th>IP</th>
+      <th>H</th>
+      <th>HR</th>
+      <th>BB</th>
+      <th>HBP</th>
+      <th>SO</th>
+      <th>R</th>
+      <th>ER</th>
+      <th>ERA2</th>
+    </tr>
+    </thead>
+  </table>
+</div>
+<div th:fragment="registedPitcherTable">
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <th>팀</th>
+      <th>연도</th>
+      <th>선수 등록일수</th>
+      <th>대표팀</th>
+    </tr>
+    </thead>
+  </table>
+</div>
+<div th:fragment="gameRecordsPitcherTable">
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <th>구분</th>
+      <th>G</th>
+      <th>ERA</th>
+      <th>W</th>
+      <th>L</th>
+      <th>SV</th>
+      <th>HLD</th>
+      <th>WPCT</th>
+      <th>TBF</th>
+      <th>IP</th>
+      <th>HR</th>
+      <th>BB</th>
+      <th>HBP</th>
+      <th>SO</th>
+      <th>R</th>
+      <th>ER</th>
+      <th>AVG</th>
+    </tr>
+    </thead>
+  </table>
+</div>
+<div th:fragment="situationalRecordsPitcherTable">
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <th>구분</th>
+      <th>H</th>
+      <th>2B</th>
+      <th>3B</th>
+      <th>HR</th>
+      <th>BB</th>
+      <th>HBP</th>
+      <th>SO</th>
+      <th>WP</th>
+      <th>BK</th>
+      <th>AVG</th>
+    </tr>
+    </thead>
+  </table>
+</div>
+
+<div th:fragment="HitterTable">
+  <div class = "row p-3">
+    <div class="col-12">
+      <p>2023 성적</p>
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+          <th>팀명</th>
+          <th>PA</th>
+          <th>AB</th>
+          <th>R</th>
+          <th>H</th>
+          <th>2B</th>
+          <th>3B</th>
+          <th>HR</th>
+          <th>RBI</th>
+          <th>SB</th>
+          <th>CS</th>
+          <th>BB</th>
+          <th>HBP</th>
+          <th>SO</th>
+          <th>GDP</th>
+          <th>AVG</th>
+        </tr>
+
+        </thead>
+        <tbody>
+        <tr th:each="record, loop : ${totalRecordsList}" th:if="${!totalRecordsList.isEmpty()}">
+          <td th:text="${record[14]}"></td>
+          <td th:text="${record[0]}"></td>
+          <td th:text="${record[1]}"></td>
+          <td th:text="${record[2]}"></td>
+          <td th:text="${record[3]}"></td>
+          <td th:text="${record[4]}"></td>
+          <td th:text="${record[5]}"></td>
+          <td th:text="${record[6]}"></td>
+          <td th:text="${record[7]}"></td>
+          <td th:text="${record[8]}"></td>
+          <td th:text="${record[9]}"></td>
+          <td th:text="${record[10]}"></td>
+          <td th:text="${record[11]}"></td>
+          <td th:text="${record[12]}"></td>
+          <td th:text="${record[13]}"></td>
+          <td th:text="${record[15]}"></td>
+        </tr>
+
+        <tr th:if="${totalRecordsList.isEmpty()}">
+          <td colspan="16">기록이 없습니다.</td>
+        </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class = "row p-3">
+    <div class="col-12">
+      <table class="table table-bordered">
+        <p>최근 10경기</p>
+        <thead>
+        <tr>
+          <th>월</th>
+          <th>상대</th>
+          <th>AVG1</th>
+          <th>PA</th>
+          <th>AB</th>
+          <th>R</th>
+          <th>H</th>
+          <th>2B</th>
+          <th>3B</th>
+          <th>HR</th>
+          <th>RBI</th>
+          <th>SB</th>
+          <th>CS</th>
+          <th>BB</th>
+          <th>HBP</th>
+          <th>SO</th>
+          <th>GDP</th>
+          <th>AVG2</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- 각 row에 해당하는 데이터를 삽입하면 됩니다. -->
+        <tr th:each="findRecent10Games, loop : ${findRecent10Games}">
+          <td th:text="${findRecent10Games.playerRecordHitter.date}"></td>
+          <td th:text="${findRecent10Games.playerRecordHitter.opponent}"></td>
+          <td th:text="${findRecent10Games.playerRecordHitter.avg1}" th:style="${findRecent10Games.playerRecordHitter.avg1 >= 0.3 ? 'font-weight: bold; color: red;' : ''}"></td>
+          <td th:text="${findRecent10Games.playerRecordHitter.pa}"></td>
+          <td th:text="${findRecent10Games.playerRecordHitter.ab}"></td>
+          <td th:text="${findRecent10Games.playerRecordHitter.r}"></td>
+          <td th:text="${findRecent10Games.playerRecordHitter.h}"></td>
+          <td th:text="${findRecent10Games.playerRecordHitter.doubles}"></td>
+          <td th:text="${findRecent10Games.playerRecordHitter.triples}"></td>
+          <td th:text="${findRecent10Games.playerRecordHitter.hr}" th:style="${findRecent10Games.playerRecordHitter.hr >= 1 ? 'font-weight: bold; color: green;' : ''}"></td>
+          <td th:text="${findRecent10Games.playerRecordHitter.rbi}"></td>
+          <td th:text="${findRecent10Games.playerRecordHitter.sb}"></td>
+          <td th:text="${findRecent10Games.playerRecordHitter.cs}"></td>
+          <td th:text="${findRecent10Games.playerRecordHitter.bb}"></td>
+          <td th:text="${findRecent10Games.playerRecordHitter.hbp}"></td>
+          <td th:text="${findRecent10Games.playerRecordHitter.so}"></td>
+          <td th:text="${findRecent10Games.playerRecordHitter.gdp}"></td>
+          <td th:text="${findRecent10Games.playerRecordHitter.avg2}" th:style="${findRecent10Games.playerRecordHitter.avg2 >= 0.3 ? 'font-weight: bold; color: blue;' : ''}"></td>
+        </tr>
+        <!-- 추가적인 데이터를 필요에 따라 삽입하면 됩니다. -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!--  -->
+  <div class = "row p-3">
+    <div class="col-12">
+      <p>연도별 TOP 10</p>
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+          <th>연도</th>
+          <th>항목</th>
+          <th>기록</th>
+          <th>순위</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- 각 row에 해당하는 데이터를 삽입하면 됩니다. -->
+<!--        <tr>-->
+<!--          <td>2022</td>-->
+<!--          <td>타율</td>-->
+<!--          <td>0.350</td>-->
+<!--          <td>1</td>-->
+<!--        </tr>-->
+        <!-- 추가적인 데이터를 필요에 따라 삽입하면 됩니다. -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div th:fragment="overallTable">
+  <div class = "row p-3">
+    <div class="col-12">
+      <p>KBO 정규시즌</p>
+      <div class="container"></div>
+      <table class="table table-bordered" >
+        <thead>
+        <tr>
+          <th>연도</th>
+          <th>팀명</th>
+          <th>ERA</th>
+          <th>G</th>
+          <th>CG</th>
+          <th>SHO</th>
+          <th>W</th>
+          <th>L</th>
+          <th>SV</th>
+          <th>HLD</th>
+          <th>WPCT</th>
+          <th>TBF</th>
+          <th>IP</th>
+          <th>H</th>
+          <th>HR</th>
+          <th>BB</th>
+          <th>HBP</th>
+          <th>SO</th>
+          <th>R</th>
+          <th>ER</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>통산</td>
+          <td>한화</td>
+          <td>3.65</td>
+          <td>207</td>
+          <td>0</td>
+          <td>0</td>
+          <td>8</td>
+          <td>14</td>
+          <td>13</td>
+          <td>46</td>
+          <td>0.364</td>
+          <td>893</td>
+          <td>207</td>
+          <td>171</td>
+          <td>17</td>
+          <td>92</td>
+          <td>17</td>
+          <td>193</td>
+          <td>89</td>
+          <td>84</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div th:fragment="registedTable">
+  <div class = "row p-3">
+    <div class="col-12">
+      <p>등록일수</p>
+      <table class="table table-bordered" >
+        <thead>
+        <tr>
+          <th>팀</th>
+          <th>연도</th>
+          <th>선수 등록일수</th>
+          <th>대표팀</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>한화</td>
+          <td>2020</td>
+          <td>12</td>
+          <td>-</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div th:fragment="dailyRecordTable">
+  <div class = "row p-3">
+    <div class="col-12">
+      <p>일자별기록</p>
+
+      <div class="container">
+        <!-- Todo: 년도 2022.. 2021.. 2023 , KBO 정규시즌 -->
+      </div>
+
+      <table class="table table-bordered" >
+        <thead>
+        <tr>
+          <th>월</th>
+          <th>상대</th>
+          <th>AVG1</th>
+          <th>PA</th>
+          <th>AB</th>
+          <th>R</th>
+          <th>H</th>
+          <th>2B</th>
+          <th>3B</th>
+          <th>HR</th>
+          <th>RBI</th>
+          <th>SB</th>
+          <th>CS</th>
+          <th>BB</th>
+          <th>HBP</th>
+          <th>SO</th>
+          <th>GDP</th>
+          <th>AVG2</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="records, loop : ${records}">
+          <td th:text="${records.playerRecordHitter.date}"></td>
+          <td th:text="${records.playerRecordHitter.opponent}"></td>
+          <td th:text="${records.playerRecordHitter.avg1}" th:style="${records.playerRecordHitter.avg1 >= 0.3 ? 'font-weight: bold; color: red;' : ''}"></td>
+          <td th:text="${records.playerRecordHitter.pa}"></td>
+          <td th:text="${records.playerRecordHitter.ab}"></td>
+          <td th:text="${records.playerRecordHitter.r}"></td>
+          <td th:text="${records.playerRecordHitter.h}"></td>
+          <td th:text="${records.playerRecordHitter.doubles}"></td>
+          <td th:text="${records.playerRecordHitter.triples}"></td>
+          <td th:text="${records.playerRecordHitter.hr}"></td>
+          <td th:text="${records.playerRecordHitter.rbi}"></td>
+          <td th:text="${records.playerRecordHitter.sb}"></td>
+          <td th:text="${records.playerRecordHitter.cs}"></td>
+          <td th:text="${records.playerRecordHitter.bb}"></td>
+          <td th:text="${records.playerRecordHitter.hbp}"></td>
+          <td th:text="${records.playerRecordHitter.so}"></td>
+          <td th:text="${records.playerRecordHitter.gdp}"></td>
+          <td th:text="${records.playerRecordHitter.avg2}" th:style="${records.playerRecordHitter.avg2 >= 0.3 ? 'font-weight: bold; color: blue;' : ''}"></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div th:fragment="gameRecordsTable">
+  <div class = "row p-3">
+    <div class="col-12">
+      <p>경기별성적</p> <!-- Todo: 연도 넣기, ex) 2023 경기별성적 -->
+
+      <div class="container">
+        <!-- Todo: 년도 2022.. 2021.. 2023 , KBO 정규시즌 -->
+      </div>
+
+      <table class="table table-bordered">
+        <p>상대팀별</p>
+        <thead>
+        <tr>
+          <th>구분</th>
+          <th>G</th>
+          <th>AVG</th>
+          <th>PA</th>
+          <th>AB</th>
+          <th>R</th>
+          <th>H</th>
+          <th>2B</th>
+          <th>3B</th>
+          <th>HR</th>
+          <th>RBI</th>
+          <th>SB</th>
+          <th>CS</th>
+          <th>BB</th>
+          <th>HBP</th>
+          <th>SO</th>
+          <th>GDP</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>한화</td>
+          <td>2020</td>
+          <td>12</td>
+          <td>-</td>
+        </tr>
+        </tbody>
+      </table>
+
+      <table class="table table-bordered">
+        <p>구장별</p>
+        <thead>
+        <tr>
+          <th>구분</th>
+          <th>G</th>
+          <th>AVG</th>
+          <th>PA</th>
+          <th>AB</th>
+          <th>R</th>
+          <th>H</th>
+          <th>2B</th>
+          <th>3B</th>
+          <th>HR</th>
+          <th>RBI</th>
+          <th>SB</th>
+          <th>CS</th>
+          <th>BB</th>
+          <th>HBP</th>
+          <th>SO</th>
+          <th>GDP</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>한화</td>
+          <td>2020</td>
+          <td>12</td>
+          <td>-</td>
+        </tr>
+        </tbody>
+      </table>
+
+      <table class="table table-bordered">
+        <p>월별</p>
+        <thead>
+        <tr>
+          <th>구분</th>
+          <th>G</th>
+          <th>AVG</th>
+          <th>PA</th>
+          <th>AB</th>
+          <th>R</th>
+          <th>H</th>
+          <th>2B</th>
+          <th>3B</th>
+          <th>HR</th>
+          <th>RBI</th>
+          <th>SB</th>
+          <th>CS</th>
+          <th>BB</th>
+          <th>HBP</th>
+          <th>SO</th>
+          <th>GDP</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>한화</td>
+          <td>2020</td>
+          <td>12</td>
+          <td>-</td>
+        </tr>
+        </tbody>
+      </table>
+
+      <table class="table table-bordered">
+        <p>요일별</p>
+        <thead>
+        <tr>
+          <th>구분</th>
+          <th>G</th>
+          <th>AVG</th>
+          <th>PA</th>
+          <th>AB</th>
+          <th>R</th>
+          <th>H</th>
+          <th>2B</th>
+          <th>3B</th>
+          <th>HR</th>
+          <th>RBI</th>
+          <th>SB</th>
+          <th>CS</th>
+          <th>BB</th>
+          <th>HBP</th>
+          <th>SO</th>
+          <th>GDP</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>한화</td>
+          <td>2020</td>
+          <td>12</td>
+          <td>-</td>
+        </tr>
+        </tbody>
+      </table>
+
+      <table class="table table-bordered">
+        <p>홈/방문별</p>
+        <thead>
+        <tr>
+          <th>구분</th>
+          <th>G</th>
+          <th>AVG</th>
+          <th>PA</th>
+          <th>AB</th>
+          <th>R</th>
+          <th>H</th>
+          <th>2B</th>
+          <th>3B</th>
+          <th>HR</th>
+          <th>RBI</th>
+          <th>SB</th>
+          <th>CS</th>
+          <th>BB</th>
+          <th>HBP</th>
+          <th>SO</th>
+          <th>GDP</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>한화</td>
+          <td>2020</td>
+          <td>12</td>
+          <td>-</td>
+        </tr>
+        </tbody>
+      </table>
+
+      <table class="table table-bordered">
+        <p>주/야간별</p>
+        <thead>
+        <tr>
+          <th>구분</th>
+          <th>G</th>
+          <th>AVG</th>
+          <th>PA</th>
+          <th>AB</th>
+          <th>R</th>
+          <th>H</th>
+          <th>2B</th>
+          <th>3B</th>
+          <th>HR</th>
+          <th>RBI</th>
+          <th>SB</th>
+          <th>CS</th>
+          <th>BB</th>
+          <th>HBP</th>
+          <th>SO</th>
+          <th>GDP</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>한화</td>
+          <td>2020</td>
+          <td>12</td>
+          <td>-</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div th:fragment="situationalRecordsTable">
+  <table class="table">
+    <thead>
+      <th>구분</th>
+      <th>AVG</th>
+      <th>AB</th>
+      <th>H</th>
+      <th>2B</th>
+      <th>3B</th>
+      <th>HR</th>
+      <th>RBI</th>
+      <th>BB</th>
+      <th>HBP</th>
+      <th>SO</th>
+      <th>GDP</th>
+    </tr>
+    </thead>
+    <tbody>
+ <!-- th:each="record : ${detailsHitterList.DetailsRecordHitter}" -->
+ <tr th:each="playerRecord : ${detailsHitterList}">
+   <td th:text="${playerRecord.detailsRecordHitter.category}"></td>
+   <td th:text="${playerRecord.detailsRecordHitter.AVG}"></td>
+   <td th:text="${playerRecord.detailsRecordHitter.AB}"></td>
+   <td th:text="${playerRecord.detailsRecordHitter.H}"></td>
+   <td th:text="${playerRecord.detailsRecordHitter.doubleHit}"></td>
+   <td th:text="${playerRecord.detailsRecordHitter.tripleHit}"></td>
+   <td th:text="${playerRecord.detailsRecordHitter.HR}"></td>
+   <td th:text="${playerRecord.detailsRecordHitter.RBI}"></td>
+   <td th:text="${playerRecord.detailsRecordHitter.BB}"></td>
+   <td th:text="${playerRecord.detailsRecordHitter.HBP}"></td>
+   <td th:text="${playerRecord.detailsRecordHitter.SO}"></td>
+   <td th:text="${playerRecord.detailsRecordHitter.GDP}"></td>
+ </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

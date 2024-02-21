@@ -1,28 +1,33 @@
 package io.security.corespringsecurity.controller.club;
 
+import io.security.corespringsecurity.domain.dto.kbo.games.EntranceDto;
 import io.security.corespringsecurity.domain.dto.kbo.games.ScheduleDto;
 import io.security.corespringsecurity.domain.dto.kbo.crawl.TeamDto;
 import io.security.corespringsecurity.domain.dto.kbo.games.TeamsDto;
+import io.security.corespringsecurity.domain.entity.auth.Role;
+import io.security.corespringsecurity.domain.entity.kbo.PlayerRecord;
 import io.security.corespringsecurity.domain.entity.kbo.Players;
 import io.security.corespringsecurity.domain.entity.kbo.Teams;
+import io.security.corespringsecurity.domain.entity.kbo.games.Entrance;
 import io.security.corespringsecurity.domain.entity.schedule.Location;
 import io.security.corespringsecurity.domain.entity.schedule.Schedule;
 import io.security.corespringsecurity.service.kbo.ClubService;
 import io.security.corespringsecurity.service.kbo.LocationService;
+import io.security.corespringsecurity.service.kbo.PlayersService;
 import io.security.corespringsecurity.service.kbo.ScheduleService;
+import io.security.corespringsecurity.service.kbo.games.EntranceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.File;
-import java.util.List;
-import java.util.UUID;
+import java.security.Principal;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -37,9 +42,17 @@ public class clubManagementController {
     @Autowired
     ScheduleService scheduleService;
 
+    @Autowired
+    PlayersService playersService;
+
+    @Autowired
+    EntranceService entranceService;
 
     @GetMapping(value = "/club")
-    public String clubManagement() throws Exception{
+    public String clubManagement(Model model, Principal principal) throws Exception{
+        String auth = getCurrentUserRole();
+
+        System.out.println("권한값은? " + auth);
 
         return "club/home";
     }
@@ -82,9 +95,11 @@ public class clubManagementController {
         System.out.println("teamName= " + teamName);
 
         Teams team = clubService.findByTeamName(teamName);
-//        String players = team.getPlayers().toString();
-//        System.out.println("players 값은?" + players);
-//        System.out.println("teams 값은? " + team);
+
+//        Players player = playersService.findById(playerId);
+//        List<PlayerRecord> playerRecords = player.getPlayerRecord();
+
+
         if (team != null) {
             // 구단에 속한 선수 목록을 가져오기
             List<Players> playersList = team.getPlayers();
@@ -133,13 +148,100 @@ public class clubManagementController {
         return "redirect:/club";
 
     }
-
     @GetMapping("/admin/club/postedSchedule")
     public String postSchedule(Model model){
         List<Schedule> scheduleList = scheduleService.findAll();
         model.addAttribute("scheduleLists",scheduleList);
         return "club/showSchedule";
     }
+    @GetMapping("admin/club/entrance/posted/{entranceId}/home")
+    public String postHomeEntrance(Model model, @PathVariable String entranceId , @ModelAttribute("entranceForm") EntranceDto form){
+
+        String date = entranceId.substring(0,8);
+        String[] teams = {"LG", "KT", "SSG", "NC", "두산", "KIA", "롯데", "삼성", "한화", "키움"};
+        HashSet<String> matchingTeams = new HashSet<>();
+
+        for (String team : teams) {
+            if (entranceId.contains(team)) {
+                matchingTeams.add(team);
+            }
+        }
+
+        String[] teamArray = matchingTeams.toArray(new String[0]);
+        String awayTeam = teamArray[0];
+        String homeTeam = teamArray.length > 1 ? teamArray[1] : null;
+
+        // 그 날짜의 야구 하는 팀 스케줄 표을 표현 가능
+        List<Schedule> scheduleDetails = scheduleService.findByDateAndTeam(date, awayTeam, homeTeam);
+        model.addAttribute("entranceId",entranceId);
+        model.addAttribute("scheduleDetails",scheduleDetails);
+
+        return "club/postEntrance";
+    }
+
+    @GetMapping("admin/club/entrance/posted/{entranceId}/away")
+    public String postAwayEntrance(Model model, @PathVariable String entranceId , @ModelAttribute("entranceForm") EntranceDto form){
+        System.out.println("entranceId 값은? " + entranceId);
+
+        String date = entranceId.substring(0,8);
+        String[] teams = {"LG", "KT", "SSG", "NC", "두산", "KIA", "롯데", "삼성", "한화", "키움"};
+        HashSet<String> matchingTeams = new HashSet<>();
+
+        for (String team : teams) {
+            if (entranceId.contains(team)) {
+                matchingTeams.add(team);
+            }
+        }
+
+        String[] teamArray = matchingTeams.toArray(new String[0]);
+        String awayTeam = teamArray[0];
+        String homeTeam = teamArray.length > 1 ? teamArray[1] : null;
+
+        // 그 날짜의 야구 하는 팀 스케줄 표을 표현 가능
+        List<Schedule> scheduleDetails = scheduleService.findByDateAndTeam(date, awayTeam, homeTeam);
+        model.addAttribute("entranceId",entranceId);
+        model.addAttribute("scheduleDetails",scheduleDetails);
+
+        return "club/postAwayEntrance";
+    }
+
+    @PostMapping("/admin/club/entrance/createdEntrance")
+    public String createEntrance(@ModelAttribute("entranceForm") EntranceDto form) {
+
+        Entrance entrance = new Entrance();
+//        System.out.println("entryCandidates 값?" + entryCandidates);
+        entrance.setTeams(form.getTeams());
+        entrance.setSchedule(form.getSchedule());
+        entrance.setGameNumber(form.getGameNumber());
+
+//         entryCandidates를 이용하여 Players를 찾아내어 설정
+//        List<Players> selectedPlayers = playersService.findByIdIn(entryCandidates);
+//        entrance.setPlayer(selectedPlayers);
+
+        entranceService.save(entrance);
+
+        return "club/postEntrance";
+    }
+
+
+    @PostMapping("/admin/club/deleteSelectedSchedules")
+    @ResponseBody
+    public Map<String, String> deleteSelectedSchedules(@RequestBody Map<String, List<Long>> requestBody) {
+        Map<String, String> response = new HashMap<>();
+
+        List<Long> scheduleIds = requestBody.get("scheduleIds");
+        if (scheduleIds != null && !scheduleIds.isEmpty()) {
+            scheduleIds.forEach(scheduleId -> scheduleService.deleteSchedule(scheduleId));
+            response.put("status", "success");
+            response.put("message", "Selected schedules deleted successfully.");
+        } else {
+            response.put("status", "error");
+            response.put("message", "No schedule selected for deletion.");
+        }
+
+        return response;
+    }
+
 
     @GetMapping("/admin/club/postedClub")
     public String showClubDetails(Model model){
@@ -147,5 +249,16 @@ public class clubManagementController {
         System.out.println("teamList value is " + teamsList);
         model.addAttribute("teamsList",teamsList);
         return "club/clubDetails";
+    }
+
+    // 현재 사용자의 권한을 가져오는 메서드
+    private String getCurrentUserRole() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            return authentication.getAuthorities().iterator().next().getAuthority();
+        }
+
+        return null;
     }
 }

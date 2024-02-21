@@ -10,8 +10,8 @@ import java.util.Optional;
 
 public interface PlayerRepository extends JpaRepository<Player,Long> {
 
-    @Query("SELECT p FROM Player p " +
-            "WHERE (:team = 'All' OR p.team = :team) " +
+    @Query("SELECT p FROM Players p " +
+            "WHERE (:team = 'All' OR p.teams.teamName = :team) " +
             "AND (:position = 'All' OR p.position = :position) " +
             "AND (:name = 'All' OR LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))) ")
     List<Player> findByQuery(@Param("team") String team, @Param("position") String position, @Param("name") String name);

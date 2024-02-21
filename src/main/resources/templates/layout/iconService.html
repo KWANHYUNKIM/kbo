@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+</head>
+<body>
+<div class="container" style="display: flex; flex-direction: row;">
+    <th:block th:each="i : ${#numbers.sequence(1, 11)}">
+        <div style="display: flex; flex-direction: column; align-items: center; margin-right: 30px;">
+            <img style="display: inline; padding: 9.5px; text-align: center; max-width: 100%; height: auto;"
+                 th:src="'images/home/icons/icon_service' + ${i} + '.png'">
+            <div class="container" style="font-size: 8px; text-align: center; font-weight: bold;">
+                <p th:if="${i == 1}">게임 센터</p>
+                <p th:if="${i == 2}">기록실</p>
+                <p th:if="${i == 3}">하이라이트</p>
+                <p th:if="${i == 4}">비디오 판독</p>
+                <p th:if="${i == 5}">팀순위</p>
+                <p th:if="${i == 6}">선수</p>
+                <p th:if="${i == 7}">평경기시간</p>
+                <p th:if="${i == 8}">마켓</p>
+                <p th:if="${i == 9}">클린베이스볼</p>
+                <p th:if="${i == 10}">야구박물관</p>
+                <p th:if="${i == 11}">증명서</p>
+            </div>
+        </div>
+    </th:block>
+</div>
+
+</body>
+
+</html>
+

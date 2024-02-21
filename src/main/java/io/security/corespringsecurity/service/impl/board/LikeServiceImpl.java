@@ -5,6 +5,7 @@ import com.google.common.base.Optional;
 import io.security.corespringsecurity.domain.entity.Account;
 import io.security.corespringsecurity.domain.entity.board.Board;
 import io.security.corespringsecurity.domain.entity.board.Like;
+import io.security.corespringsecurity.domain.entity.board.ReactionType;
 import io.security.corespringsecurity.repository.board.LikeRepository;
 import io.security.corespringsecurity.service.board.LikeService;
 import lombok.RequiredArgsConstructor;
@@ -31,12 +32,17 @@ public class LikeServiceImpl implements LikeService {
     }
 
     @Override
-    public Like existsByBoard(Long boardId) {
+    public Like findByBoardAndType(Long boardId) {
         return likeRepository.existsByBoard(boardId);
     }
 
     @Override
-    public List<Like> findByLikeAndUnlike(Long board) {
-        return likeRepository.findByLikeAndUnlike(board);
+    public List<Like> findByBoard(Long board) {
+        return likeRepository.findByBoard(board);
+    }
+
+    @Override
+    public int getLikeCount(Long boardId) {
+        return likeRepository.getLikeCount(boardId);
     }
 }

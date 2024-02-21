@@ -1,10 +1,214 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+  <style>
+    /* 직사각형 스타일 */
+    .rectangle {
+      width: 200px;
+      height: 150px;
+      background-color: white;
+      border: 1px solid black;
+    }
+    .profile {
+      width: auto;
+      height: 200px;
+      background-color: white;
+      border: 0.1px solid black;
+      text-align: left; /* 가로로 가운데 정렬을 위한 설정 */
+    }
 
+    .profile-details p {
+      padding-top: 5px;
+      padding-left: 10px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .profile-details a {
+      font-size: 12px;
+
+    }
+  </style>
+</head>
+<div class ="container p-3">
+  <head th:replace="layout/header::userHead"></head> <!-- 헤더 -->
+  <header th:replace="layout/top::header_main"></header>
+</div>
+
+<body>
+<div class ="container">
+
+  <div class="row">
+    <div class="container" th:each="player : ${players}">
+      <div class="container">
+        <h1 style="font-weight: bold;">기록실</h1>
+      </div>
+
+      <div class="container" style="padding-top: 20px">
+        <img style="display: inline; height: 40px; width: 40px;"  th:src="${player.teams.filepath}">
+        <h1 style="display: inline; font-size: 14px; font-weight: bold;" th:text="${player.teams.teamName}"></h1>
+      </div>
+
+      <div class ="container" style="padding-top: 20px;">
+        <div class="profile profile-details">
+          <div class="container" style="padding: 20px; display: flex;">
+            <img style="height: 150px; width: 100px; border: 0.1px solid black;"
+                 th:src="${player.filepath}">
+            <div class="container" style="display: inline-block">
+              <p>선수명: <a th:text="${player.name}"></a></p>
+              <p>생년월일: <a th:text="${player.birthDate}"></a></p>
+              <p>신장/체중: <a th:text="${player.weight}"></a></p>
+              <p>입단 계약금: <a th:text="${player.signingBonus}"></a></p>
+              <p>지명순위: <a th:text="${player.draftRank}"></a></p>
+            </div>
+
+            <div class="container" style="display: inline-block">
+              <p>등번호: No. <a th:text="${player.jerseyNumber}"></a></p>
+              <p>포지션: <a th:text="${player.position}"></a></p>
+              <p>경력: <a th:text="${player.careerHistory}"></a></p>
+              <p>연봉: <a th:text="${player.annualSalary}"></a></p>
+              <p>입단년도: <a th:text="${player.debutYear}"></a></p>
+            </div>
+          </div>
+
+          <div class="container" style="display: flex;">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class = "row p-3">
+    <div class="col-12"th:each="player : ${players}">
+      <a class="btn btn-light btn-lg text-dark"
+         th:href="@{'/record/player/hitterDetail/' + ${player.id}}" id="hitterButton">타자</a>
+
+      <!-- 투수 버튼 -->
+      <a class="btn btn-light btn-lg text-dark"
+         th:href="@{'/record/player/pitcherDetail/' + ${player.id}}" id="pitcherButton">투수</a>
+    </div>
+  </div>
+
+  <div class = "row p-3">
+    <div class="col-12">
+      <button id="btnPitcherDefault" class="btn btn-light btn-lg text-dark">기본기록</button>
+      <button id="btnPitcherOverall" class="btn btn-light btn-lg text-dark">통산기록</button>
+      <button id="btnDailyPitcherRecord" class="btn btn-light btn-lg text-dark">일자별기록</button>
+      <button id="btnGamePitcherRecords" class="btn btn-light btn-lg text-dark">경기별기록</button>
+      <button id ="btnSituationalPitcherRecords"class="btn btn-light btn-lg text-dark">상황별기록</button>
+      <button id="btnPitcherRegi" class="btn btn-light btn-lg text-dark">등록일수</button>
+      <button class="btn btn-light btn-lg text-dark">KBO 퓨처스리 기록 보기 ></button>
+    </div>
+  </div>
+
+  <div id="pitcherTable" class = "container">
+    <div th:replace="/kbo/recordTable ::pitcherTable"></div>
+  </div>
+
+  <div id="overallPitcherTable" class = "container">
+    <div th:replace="/kbo/recordTable ::overallPitcherTable"></div>
+  </div>
+
+  <div id="dailyRecordPitcherTable" class = "container">
+    <div th:replace="/kbo/recordTable :: dailyRecordPitcherTable"></div>
+  </div>
+
+  <div id="registedPitcherTable" class = "container">
+    <div th:replace="/kbo/recordTable :: registedPitcherTable"></div>
+  </div>
+
+  <div id="gameRecordsPitcherTable" class="container">
+    <div th:replace="/kbo/recordTable :: gameRecordsPitcherTable"></div>
+  </div>
+
+  <div id="situationalRecordsPitcherTable" class="container">
+    <div th:replace="/kbo/recordTable :: situationalRecordsPitcherTable"></div>
+  </div>
+</div>
 </body>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    // 초기에 기본기록만 보이도록 설정
+    $("#registedPitcherTable").hide();
+    $("#dailyRecordPitcherTable").hide();
+    $("#gameRecordsPitcherTable").hide();
+    $("#situationalRecordsPitcherTable").hide();
+    $("#overallPitcherTable").hide();
+
+    $("#pitcherTable").show();
+
+  });
+    // 각 버튼에 대한 클릭 이벤트 처리
+    $("#btnPitcherDefault").click(function () {
+      console.log("기본기록 버튼 클릭됨");
+      $("#registedPitcherTable").hide();
+      $("#dailyRecordPitcherTable").hide();
+      $("#gameRecordsPitcherTable").hide();
+      $("#situationalRecordsPitcherTable").hide();
+      $("#overallPitcherTable").hide();
+
+      $("#pitcherTable").show();
+
+      // 다른 테이블 숨기기 로직 추가
+    });
+
+    $("#btnPitcherOverall").click(function () {
+      $("#registedPitcherTable").hide();
+      $("#dailyRecordPitcherTable").hide();
+      $("#gameRecordsPitcherTable").hide();
+      $("#situationalRecordsPitcherTable").hide();
+      $("#pitcherTable").hide();
+
+      $("#overallPitcherTable").show();
+
+
+      // 다른 테이블 숨기기 로직 추가
+    });
+
+    $("#btnPitcherRegi").click(function () {
+      $("#dailyRecordPitcherTable").hide();
+      $("#gameRecordsPitcherTable").hide();
+      $("#situationalRecordsPitcherTable").hide();
+      $("#pitcherTable").hide();
+      $("#overallPitcherTable").hide();
+
+      $("#registedPitcherTable").show();
+
+    });
+    $("#btnDailyPitcherRecord").click(function () {
+      $("#registedPitcherTable").hide();
+      $("#gameRecordsPitcherTable").hide();
+      $("#situationalRecordsPitcherTable").hide();
+      $("#pitcherTable").hide();
+      $("#overallPitcherTable").hide();
+
+      $("#dailyRecordPitcherTable").show();
+
+    });
+
+    $("#btnGamePitcherRecords").click(function () {
+      $("#registedPitcherTable").hide();
+      $("#dailyRecordPitcherTable").hide();
+      $("#situationalRecordsPitcherTable").hide();
+      $("#pitcherTable").hide();
+      $("#overallPitcherTable").hide();
+
+      $("#gameRecordsPitcherTable").show();
+
+
+    });
+    $("#btnSituationalPitcherRecords").click(function () {
+      $("#registedPitcherTable").hide();
+      $("#dailyRecordPitcherTable").hide();
+      $("#gameRecordsPitcherTable").hide();
+      $("#pitcherTable").hide();
+      $("#overallPitcherTable").hide();
+
+      $("#situationalRecordsPitcherTable").show();
+
+    });
+</script>
+
 </html>

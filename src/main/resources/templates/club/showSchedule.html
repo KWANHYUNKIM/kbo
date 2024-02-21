@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html  xmlns:th="http://www.thymeleaf.org">
 <head th:replace="club/head :: adminHead"></head>
 <body>
@@ -5,7 +6,7 @@
   $(document).ready(function(){
   });
 </script>
-<div th:replace="admin/common/top::header"></div>
+<div th:replace="layout/top::header_admin_management"></div>
 <div id="maininner"><!-- maininner (s)-->
   <div class="cc-tab-con">
     <a href="javascript:tabChange('1');" class="cc-tab-item">구단생성</a>		<!--// on : 현재 위치 //-->
@@ -13,9 +14,11 @@
     <a href="javascript:tabChange('3');" class="cc-tab-item">스케줄생성</a>
     <a href="javascript:void(0);" class="cc-tab-item on">스케줄확인</a>
 
-  </div>
+</div>
+
   <div class="tbl_wrp">
     <h2>Schedule List</h2>
+    <button onclick="deleteSelectedSchedules()">Delete Selected Schedules</button>
     <table class="table">
       <thead>
       <tr>
@@ -24,6 +27,9 @@
         <th>위치</th>
         <th>홈</th>
         <th>어웨이</th>
+        <th>엔트리작성 (홈)</th>
+        <th>엔트리작성 (어웨이)</th>
+        <th>Delete</th>
         <!-- Add more table headers based on your Schedule entity fields -->
       </tr>
       </thead>
@@ -35,12 +41,70 @@
         <td th:text="${schedule.location.locationName}"></td>
         <td th:text="${schedule.homeTeam.teamName}"></td>
         <td th:text="${schedule.awayTeam.teamName}"></td>
+        <td>
+          <button th:attr="data-url=@{/admin/club/entrance/posted/{entranceId}/home}",
+                  th:data-entranceid="${schedule.date + schedule.awayTeam.teamName + schedule.homeTeam.teamName}"
+                  onclick="redirectToEntry(this.getAttribute('data-url'), this.getAttribute('data-entranceid'))">
+            엔트리작성 (홈)
+          </button>
+        </td>
+        <td>
+          <button th:attr="data-url=@{/admin/club/entrance/posted/{entranceId}/away}",
+                  th:data-entranceid="${schedule.date + schedule.awayTeam.teamName + schedule.homeTeam.teamName}"
+                  onclick="redirectToEntry(this.getAttribute('data-url'), this.getAttribute('data-entranceid'))">
+            엔트리작성 (어웨이)
+          </button>
+        </td>
+
+      </button></td>
+        <td>
+          <input type="checkbox" class="schedule-checkbox" th:value="${schedule.id}" />
+        </td>
         <!-- Add more table cells based on your Schedule entity fields -->
       </tr>
       </tbody>
     </table>
   </div>
-  </div>
-</div>
 </body>
+
+<script>
+  function redirectToEntry(urlPattern, entranceId) {
+    var url = urlPattern.replace('{entranceId}', entranceId);
+
+    // 새로운 페이지로 이동
+    window.open(url, '_blank', 'width=400,height=300,top=200,left=200');
+
+  }
+</script>
+
+<script>
+  function deleteSelectedSchedules() {
+    // 선택된 항목들의 ID를 가져오는 로직을 작성
+    var selectedScheduleIds = [];
+    var checkboxes = document.querySelectorAll('.schedule-checkbox:checked');
+    checkboxes.forEach(function(checkbox) {
+      selectedScheduleIds.push(checkbox.value);
+    });
+
+    // AJAX를 사용하여 선택된 항목들을 서버로 전송
+    if (selectedScheduleIds.length > 0) {
+      fetch('/admin/club/deleteSelectedSchedules', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ scheduleIds: selectedScheduleIds })
+      })
+              .then(response => response.json())
+              .then(data => {
+                console.log('Deleted schedules:', data);
+                // 삭제 후 필요한 동작 수행
+                window.location.reload(); // 예: 페이지 새로고침
+              })
+              .catch(error => {
+                console.error('Error deleting schedules:', error);
+              });
+    }
+  }
+</script>
 </html>

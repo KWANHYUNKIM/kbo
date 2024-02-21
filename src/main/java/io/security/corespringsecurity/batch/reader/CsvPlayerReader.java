@@ -1,6 +1,7 @@
 package io.security.corespringsecurity.batch.reader;
 
 import io.security.corespringsecurity.domain.dto.kbo.crawl.PlayerDto;
+import io.security.corespringsecurity.domain.dto.kbo.games.PlayersDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
@@ -12,21 +13,21 @@ import org.springframework.core.io.ClassPathResource;
 @Configuration
 @RequiredArgsConstructor
 public class CsvPlayerReader {
-    public FlatFileItemReader<PlayerDto> csvPlayerReader() {
-        FlatFileItemReader<PlayerDto> flatFileItemReader = new FlatFileItemReader<>();
+    public FlatFileItemReader<PlayersDto> csvPlayerReader() {
+        FlatFileItemReader<PlayersDto> flatFileItemReader = new FlatFileItemReader<>();
         flatFileItemReader.setResource(new ClassPathResource("/csv/registedPlayer.csv"));
         flatFileItemReader.setEncoding("UTF-8");
 
         // DelimitedLineTokenizer 설정
         DelimitedLineTokenizer delimitedLineTokenizer = new DelimitedLineTokenizer(",");
-        delimitedLineTokenizer.setNames("jerseyNumber", "name", "team", "position", "birthDate", "height", "weight" , "careerHistory");
+        delimitedLineTokenizer.setNames("jerseyNumber", "name", "teams", "position", "birthDate", "height", "weight" , "careerHistory","signingBonus","annualSalary","draftRank","debutYear","filepath","filename","players_id");
 
         // BeanWrapperFieldSetMapper 설정
-        BeanWrapperFieldSetMapper<PlayerDto> beanWrapperFieldSetMapper = new BeanWrapperFieldSetMapper<>();
-        beanWrapperFieldSetMapper.setTargetType(PlayerDto.class);
+        BeanWrapperFieldSetMapper<PlayersDto> beanWrapperFieldSetMapper = new BeanWrapperFieldSetMapper<>();
+        beanWrapperFieldSetMapper.setTargetType(PlayersDto.class);
 
         // DefaultLineMapper 설정
-        DefaultLineMapper<PlayerDto> defaultLineMapper = new DefaultLineMapper<>();
+        DefaultLineMapper<PlayersDto> defaultLineMapper = new DefaultLineMapper<>();
         defaultLineMapper.setLineTokenizer(delimitedLineTokenizer);
         defaultLineMapper.setFieldSetMapper(beanWrapperFieldSetMapper);
 

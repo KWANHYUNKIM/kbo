@@ -1,7 +1,7 @@
 package io.security.corespringsecurity.repository.board;
 
 import io.security.corespringsecurity.domain.entity.board.Board;
-import io.security.corespringsecurity.domain.entity.kbo.Hitter;
+import io.security.corespringsecurity.domain.entity.board.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,8 +9,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,4 +58,11 @@ public interface BoardRepository extends JpaRepository<Board,Long>  {
             save(board);
         }
     }
-}
+    @Query("SELECT b FROM Board b WHERE b.category.categoryName IN :categoryNames ORDER BY b.createdDate DESC")
+    Page<Board> findByCategoryNamesOrderByCreatedDateDesc(Pageable pageable, @Param("categoryNames") List<String> categoryNames);
+
+    @Query("SELECT b FROM Board b WHERE b.category IN :categories ORDER BY b.createdDate DESC")
+    Page<Board> getListAll(@Param("categories") List<Category> categories, Pageable pageable);
+
+    @Query("SELECT b FROM Board b WHERE b.category = :category ORDER BY b.createdDate DESC")
+    Page<Board> getList(@Param("category") Category category, Pageable pageable);}

@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">>
+<div class ="container p-3">
+  <head th:replace="layout/header::userHead"></head> <!-- 헤더 -->
+  <head th:replace="club/head :: gameRecordButton"></head>
+  <header th:replace="layout/top::header_main"></header>
+</div>
+<head>
+  <style>
+    .clickable {
+      font-size: 20px;
+      padding-right: 60px;
+      background-color: white;
+      cursor: pointer;
+      color: black;
+    }
+
+    .team-container {
+      position: relative;
+      display: inline-block;
+      margin-right: 20px;
+    }
+
+    .homebar-container {
+      top : 40px;
+      right: -10px;
+      width: 90px;
+      height: 90px;
+      background-color: #f2f2f2;
+      border-radius: 5px;
+      overflow: hidden;
+      position: relative;
+    }
+    .bar-container {
+      top : 40px;
+      right: -10px;
+      width: 90px;
+      height: 90px;
+      background-color: #f2f2f2;
+      border-radius: 5px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .bar {
+      align-content: center;
+      transition: width 0.5s ease-in-out;
+      top: 0;
+      left:0;
+    }
+
+    .bar-image {
+      position: absolute;
+      top: 0;
+      left: 28%;
+    }
+
+    .score {
+      position: absolute;
+      top: 70%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #FFFFFF;
+    }
+
+  </style>
+</head>
+<body>
+<div class="container-fluid">
+<div class="row p-3">
+  <div class="col-sm-2" style="align-content: center;">
+    <div class="container">
+      <div id="schedule" class="row justify-content-center">
+        <div th:if="${not #lists.isEmpty(scheduleList)}" th:each="schedule, loop : ${scheduleList}"
+             style="margin-top: 0px; margin-left: 20px; margin-bottom: 25px">
+          <div th:class="'g-col-4' + ${loop.index}" style="border: 0.1px solid #000; border-radius: 10px; height: 150px; cursor: pointer"
+               th:onclick="|location.href='@{/game/{scheduleId}(scheduleId=${schedule.date + schedule.awayTeam.teamName + schedule.homeTeam.teamName})}/reply'|">
+
+          <div class="text-center container" style="padding-top: 10px;">
+              <p style="font-weight: bold; display: inline;" th:text="${schedule.location.locationName}"></p>
+              <p style="display: inline">|</p>
+              <p style="font-weight: bold; display: inline" th:text="${schedule.time}"></p>
+              <!--          <p style="font-weight: bold; display: inline" th:text="${schedule.awayTeam.teamName}"></p>-->
+            </div>
+            <div class="text-center container">
+              <div th:id="'background' + ${loop.index}" style="position: relative; width: 70px; height: 20px; background-color: #6dbef1; border-radius: 37.5px/75px; margin: 20px auto;">
+                <p th:id="'upcomingGame' + ${loop.index}" style="color: #fff; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: bold;">경기예정</p>
+              </div>
+
+              <div th:id="'resultBackground' + ${loop.index}" style="position: relative; width: 70px; height: 20px; background-color: #000000; border-radius: 37.5px/75px; margin: 20px auto;">
+                <p th:id="'resultGame' + ${loop.index}" style="color: #fff; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: bold;">경기종료</p>
+              </div>
+            </div>
+            <div class="text-center container">
+              <img style="display: inline;" th:src="${schedule.awayTeam.filepath}" alt="Away Team Logo">
+              <p style="display: inline; font-weight: 700; font-size: 24px;">vs</p>
+              <img style="display: inline" th:src="${schedule.homeTeam.filepath}" alt="Home Team Logo">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6">
+    <div th:if="${not #lists.isEmpty(scheduleDetails)}" th:each="scheduleDetails, loop : ${scheduleDetails}">
+      <div class="container d-flex justify-content-center"
+           style="border: 0.1px solid #000; border-radius: 10px; height: 150px;
+           width: 1100px; background-color: #02253f">
+        <div class="col-sm-3" style="margin-top: 30px;  display: inline;">
+          <div class="container">
+            <p style="font-size: 32px; color: #FFFFFF; display: inline" th:text="${scheduleDetails.awayTeam.teamName}"></p>
+            <img style="display: inline;"  th:src="${scheduleDetails.awayTeam.filepath}" alt="Away Team Logo">
+            <p th:if="${scheduleDetails.gameBoard != null}";  style="font-size: 52px; color: #FFFFFF; display: inline; padding-left: 20px;"  th:text="${scheduleDetails.gameBoard.awayTeamR}"></p>
+          </div>
+        </div>
+
+        <div class="col-sm-3" style="margin-top: 50px; right: -80px; display: inline;">
+          <!-- Todo: 경기전 border-radius , border-color 설정 -->
+          <div class="container">
+            <p style="color: #FFFFFF;">경기전</p>
+            <p id="formattedDate" style="color: #FFFFFF;"></p>
+            <p style="color: #FFFFFF;" th:text="${scheduleDetails.time}"></p>
+          </div>
+        </div>
+        <div class="col-sm-3" style="margin-top: 30px;display: inline;">
+          <div class="container">
+            <p th:if="${scheduleDetails.gameBoard != null}";  style="font-size: 52px; color: #FFFFFF; display: inline; padding-right: 20px;" th:text="${scheduleDetails.gameBoard.homeTeamR}"></p>
+            <img style="display: inline;"  th:src="${scheduleDetails.homeTeam.filepath}" alt="Home Team Logo">
+            <p style="font-size: 32px; color: #FFFFFF; display: inline" th:text="${scheduleDetails.homeTeam.teamName}"></p>
+          </div>
+        </div>
+      </div>
+      <!-- TOdo: 가운데 정렬  -->
+      <div class="container d-flex justify-content-center">
+        <table class="table table-hover h-200 w-200" th:if="${scheduleDetails.gameBoard != null}">
+          <thead>
+          <tr>
+            <th scope="col">TEAM</th>
+            <th scope="col">1</th>
+            <th scope="col">2</th>
+            <th scope="col">3</th>
+            <th scope="col">4</th>
+            <th scope="col">5</th>
+            <th scope="col">6</th>
+            <th scope="col">7</th>
+            <th scope="col">8</th>
+            <th scope="col">9</th>
+            <th scope="col">10</th>
+            <th scope="col">11</th>
+            <th scope="col">12</th>
+            <th scope="col">R</th>
+            <th scope="col">H</th>
+            <th scope="col">E</th>
+            <th scope="col">B</th>
+          </tr>
+          </thead>
+
+          <!-- 어웨이 팀 점수 행 -->
+          <tbody>
+          <tr>
+            <th scope="row" th:text="${scheduleDetails.awayTeam != null ? scheduleDetails.awayTeam.teamName : ''}"></th>
+            <!-- 이닝별 점수 출력 -->
+            <th:block th:each="inning : ${scheduleDetails.gameBoard.inningScores}">
+              <td th:text="${inning.awayTeamScore}"></td>
+            </th:block>
+
+            <!-- R, H, E, B 값 출력 -->
+            <td class="point" style="color: red;" th:text="${scheduleDetails.gameBoard.awayTeamR}">-</td>
+            <td class="hit" th:text="${scheduleDetails.gameBoard.awayTeamH}">-</td>
+            <td class="error" th:text="${scheduleDetails.gameBoard.awayTeamE}">-</td>
+            <td class="base" th:text="${scheduleDetails.gameBoard.awayTeamB}">-</td>
+          </tr>
+
+          <!-- 홈 팀 점수 행 -->
+          <tr>
+            <th scope="row" th:text="${scheduleDetails.homeTeam != null ? scheduleDetails.homeTeam.teamName : ''}"></th>
+            <!-- 이닝별 점수 출력 -->
+            <th:block th:each="inning : ${scheduleDetails.gameBoard.inningScores}">
+              <td th:text="${inning.homeTeamScore}"></td>
+            </th:block>
+            <!-- R, H, E, B 값 출력 -->
+            <td class="point" style="color: red;" th:text="${scheduleDetails.gameBoard.homeTeamR}">-</td>
+            <td class="hit" th:text="${scheduleDetails.gameBoard.homeTeamH}">-</td>
+            <td class="error" th:text="${scheduleDetails.gameBoard.homeTeamE}">-</td>
+            <td class="base" th:text="${scheduleDetails.gameBoard.homeTeamB}">-</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="" style="display: flex; justify-content: center; text-align: center; align-items: center;">
+      <div class="cc-tab-con" style="align-content: center; text-align: center; margin-right: -310px; ">
+        <a id="btnDefault" class="clickable" onclick="handleClick(this)">전력</a>
+        <a id="btnLineup" class="clickable" onclick="handleClick(this)">라인업</a>
+        <a id="btnBoardcast" class="clickable" onclick="handleClick(this)">중계</a>
+        <a id="btnVideo" class="clickable" onclick="handleClick(this)">영상</a>
+        <a id="btnRecord" class="clickable" onclick="handleClick(this)">기록</a>
+        <a id="btnOpenTalk" class="clickable" onclick="handleClick(this)">오픈톡</a>
+        <hr style="width: 1000px;">
+      </div>
+    </div>
+
+    <div id="strategyTable" class="container" style="display: flex; justify-content: center; text-align: center; align-items: center;">
+      <div th:if="${not #lists.isEmpty(scheduleDetails)}" th:each="scheduleDetails, loop : ${scheduleDetails}">
+        <div class="container d-flex justify-content-center" th:if="${scheduleDetails.gameBoard != null}";>
+          <div class="container" style="display: inline-block">
+            <p th:text="${scheduleDetails.awayTeam.teamName}"></p>
+            <p th:text="${scheduleDetails.gameBoard.awayTeamResult}"></p>
+          </div>
+
+          <div class="container" style="display: inline-block">
+            <p>VS</p>
+          </div>
+
+          <div class="container" style="display: inline-block">
+            <p th:text="${scheduleDetails.homeTeam.teamName}"></p>
+            <p th:text="${scheduleDetails.gameBoard.homeTeamResult}"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div id="lineupTable" class="container" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+      <h3>lineUp</h3>
+      <div th:if="${#lists.isEmpty(entrancePlayer)}">
+        출전 선수 명단이 확정되면 업데이트됩니다.
+
+        <div th:if="${not #lists.isEmpty(entrancePlayer)}" th:each="entrancePlayer, loop : ${entrancePlayer}">
+          <div th:each="player : ${entrancePlayer.player}">
+            <img style="height: 125px; width: 75px; border: 0.1px; padding-top: 10px; solid: black; display: block; display: inline"
+                 th:src="${player.filepath}">
+            <p th:text="${player.name}" style="display: inline"></p>
+            <p th:text="${player.position}" style="display: inline"></p>
+            </img>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div id="boardCastTable" class="container" style="display: flex; justify-content: center; text-align: center; align-items: center;">
+      <h1> boardcast</h1>
+    </div>
+
+
+
+    <div id="videoTable" class="container" style="display: flex; justify-content: center; text-align: center; align-items: center;">
+      <h1> video</h1>
+    </div>
+
+    <div id="recordTable" class="container" style="display: flex; justify-content: center; text-align: center; align-items: center;">
+      <div th:if="${not #lists.isEmpty(scheduleDetails)}" th:each="scheduleDetails, loop : ${scheduleDetails}">
+        <div class="container d-flex justify-content-center" th:if="${scheduleDetails.gameBoard != null}";>
+
+          <div class="container">
+            <!-- Todo : 득표로 보여줘야함 -->
+            <h1>베스트 플레이어 결과</h1>
+          </div>
+        </div>
+
+        <div class="container">
+          <!-- Todo: 승리, 패전, 세이브 사진 + 사진 + '승리 , 패전 , 세이브 '  -->
+        </div>
+
+        <div class="container">
+          <!-- Todo: 기록을 시각화  -->
+        </div>
+
+        <div class="container">
+          <div class="game-details">
+            <!-- Game Winning Hit -->
+            <div th:if="${scheduleDetails.gameBoard.gameHighlights.gameWinningHit != null}">
+              <p style="font-size: 20px; font-weight: bold;" th:text="${'결승타: ' + scheduleDetails.gameBoard.gameHighlights.gameWinningHit}"></p>
+            </div>
+
+            <hr>
+            <!-- Other Game Details -->
+            <div th:if="${scheduleDetails.gameBoard.gameHighlights.baseRunningOut != null}">
+              <p th:text="${'주루사: ' + scheduleDetails.gameBoard.gameHighlights.baseRunningOut}"></p>
+            </div>
+
+            <div th:if="${scheduleDetails.gameBoard.gameHighlights.doubleHit != null}">
+              <p th:text="${'2루타: ' + scheduleDetails.gameBoard.gameHighlights.doubleHit}"></p>
+            </div>
+
+            <div th:if="${scheduleDetails.gameBoard.gameHighlights.doublePlay != null}">
+              <p th:text="${'더블플레이: ' + scheduleDetails.gameBoard.gameHighlights.doublePlay}"></p>
+            </div>
+
+            <div th:if="${scheduleDetails.gameBoard.gameHighlights.error != null}">
+              <p th:text="${'에러: ' + scheduleDetails.gameBoard.gameHighlights.error}"></p>
+            </div>
+
+            <div th:if="${scheduleDetails.gameBoard.gameHighlights.homeRun != null}">
+              <p th:text="${'홈런: ' + scheduleDetails.gameBoard.gameHighlights.homeRun}"></p>
+            </div>
+
+            <div th:if="${scheduleDetails.gameBoard.gameHighlights.pickOff != null}">
+              <p th:text="${'견제사: ' + scheduleDetails.gameBoard.gameHighlights.pickOff}"></p>
+            </div>
+
+            <div th:if="${scheduleDetails.gameBoard.gameHighlights.stolenBase != null}">
+              <p th:text="${'도루: ' + scheduleDetails.gameBoard.gameHighlights.stolenBase}"></p>
+            </div>
+
+            <div th:if="${scheduleDetails.gameBoard.gameHighlights.triple != null}">
+              <p th:text="${'3루타: ' + scheduleDetails.gameBoard.gameHighlights.triple}"></p>
+            </div>
+
+            <div th:if="${scheduleDetails.gameBoard.gameHighlights.wildPitch != null}">
+              <p th:text="${'폭투: ' + scheduleDetails.gameBoard.gameHighlights.wildPitch}"></p>
+            </div>
+
+            <hr>
+
+            <div th:if="${scheduleDetails.gameBoard.gameHighlights.umpire != null}">
+              <p th:text="${'심판: ' + scheduleDetails.gameBoard.gameHighlights.umpire}"></p>
+            </div>
+            <!-- Add more fields as needed -->
+          </div>
+        </div>
+
+        <div class="container" th:each="scheduleHitter, loop : ${scheduleDetails}">
+          <!-- Away Team Stats -->
+          <div th:text="${loop.index}"></div>
+          <div class="container">
+            <div th:if ="${scheduleHitter.gameBoard != null}">
+              <img style="display: inline;" th:src="${scheduleHitter.awayTeam.filepath}" alt="Away Team Logo">
+              <h2 style="display: inline" th:text="${scheduleHitter.awayTeam.teamName}"></h2>
+                  <table class="table table-hover h-200 w-200">
+                  <thead>
+                  <tr>
+                  <th></th>
+                  <th></th>
+                  <th>선수명</th>
+                  <th>1</th>
+                  <th>2</th>
+                  <th>3</th>
+                  <th>4</th>
+                  <th>5</th>
+                  <th>6</th>
+                  <th>7</th>
+                  <th>8</th>
+                  <th>타수</th>
+                  <th>안타</th>
+                  <th>타점</th>
+                  <th>득점</th>
+                  <th>타율</th>
+                  </tr>
+                </thead>
+                <tbody>
+                <tr th:each="hitterStat : ${scheduleHitter.gameBoard.teamStats}">
+                <div th:if="${hitterStat.teamType == 'away'}">
+                  <td th:text="${hitterStat.battingOrder}"></td>
+                  <td th:text="${hitterStat.defensivePosition}"></td>
+                  <td th:text="${hitterStat.playerName}"></td>
+                  <td th:each="inningResult : ${hitterStat.inningHitterResults}" th:text="${inningResult.result}"></td>
+                  <td th:text="${hitterStat.atBats}"></td>
+                  <td th:text="${hitterStat.runs}"></td>
+                  <td th:text="${hitterStat.hits}"></td>
+                  <td th:text="${hitterStat.runsBattedIn}"></td>
+                  <td th:text="${hitterStat.battingAverage}"></td>
+                </div>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+          <div class="container">
+            <div th:if="${scheduleHitter.gameBoard != null}">
+              <img style="display: inline;" th:src="${scheduleHitter.homeTeam.filepath}" alt="Away Team Logo">
+              <h2 style="display: inline" th:text="${scheduleHitter.homeTeam.teamName}"></h2>
+              <table class="table table-hover h-200 w-200">
+                <thead>
+                <tr>
+                  <th></th>
+                  <th></th>
+                  <th>선수명</th>
+                  <th>1</th>
+                  <th>2</th>
+                  <th>3</th>
+                  <th>4</th>
+                  <th>5</th>
+                  <th>6</th>
+                  <th>7</th>
+                  <th>8</th>
+                  <th>타수</th>
+                  <th>안타</th>
+                  <th>타점</th>
+                  <th>득점</th>
+                  <th>타율</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="hitterStat : ${scheduleHitter.gameBoard.teamStats}">
+                  <div th:if="${hitterStat.teamType == 'home'}">
+                    <td th:text="${hitterStat.battingOrder}"></td>
+                    <td th:text="${hitterStat.defensivePosition}"></td>
+                    <td th:text="${hitterStat.playerName}"></td>
+                    <td th:each="inningResult : ${hitterStat.inningHitterResults}" th:text="${inningResult.result}"></td>
+                    <td th:text="${hitterStat.atBats}"></td>
+                    <td th:text="${hitterStat.runs}"></td>
+                    <td th:text="${hitterStat.hits}"></td>
+                    <td th:text="${hitterStat.runsBattedIn}"></td>
+                    <td th:text="${hitterStat.battingAverage}"></td>
+                  </div>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="container">
+          <div class="container" th:each="scheduleHitter, loop : ${scheduleDetails}">
+            <!-- Away Team Stats -->
+            <div th:text="${loop.index}"></div>
+            <div class="container">
+              <div th:if ="${scheduleHitter.gameBoard != null}">
+                <img style="display: inline;" th:src="${scheduleHitter.awayTeam.filepath}" alt="Away Team Logo">
+                <h2 style="display: inline" th:text="${scheduleHitter.awayTeam.teamName}"></h2>
+                <table class="table table-hover h-200 w-200">
+                  <thead>
+                  <tr>
+                    <th>선수명</th>
+                    <th>등판</th>
+                    <th>결과</th>
+                    <th>승</th>
+                    <th>패</th>
+                    <th>세</th>
+                    <th>이닝</th>
+                    <th>타자</th>
+                    <th>투구수</th>
+                    <th>타수</th>
+                    <th>피안타</th>
+                    <th>홈런</th>
+                    <th>4사구</th>
+                    <th>삼진</th>
+                    <th>실점</th>
+                    <th>자책</th>
+                    <th>평균자책점</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <div th:each="pitcherStats : ${scheduleHitter.gameBoard.PitcherStats}">
+                    <div th:if="${pitcherStats.teamType == 'away'}">
+                      <tr>
+                        <td th:text="${pitcherStats.playerName}"></td> <!-- 선수 -->
+                        <td th:text="${pitcherStats.appearances}"></td> <!-- 등판 -->
+                        <td th:text="${pitcherStats.result}"></td> <!-- 결과 -->
+                        <td th:text="${pitcherStats.wins}"></td> <!-- 승 -->
+                        <td th:text="${pitcherStats.losses}"></td> <!-- 패 -->
+                        <td th:text="${pitcherStats.saves}"></td> <!-- 세 -->
+                        <td th:text="${pitcherStats.inningsPitched}"></td> <!-- 이 -->
+                        <td th:text="${pitcherStats.battersFaced}"></td> <!-- 타자 -->
+                        <td th:text="${pitcherStats.pitchesThrown}"></td> <!-- 투구 -->
+                        <td th:text="${pitcherStats.atBats}"></td> <!-- 타수 -->
+                        <td th:text="${pitcherStats.hitsAllowed}"></td> <!-- 타수 -->
+                        <td th:text="${pitcherStats.homeRunsAllowed}"></td> <!-- 피홈런 -->
+                        <td th:text="${pitcherStats.walks}"></td> <!-- 사구 -->
+                        <td th:text="${pitcherStats.strikeouts}"></td> <!-- 삼진 -->
+                        <td th:text="${pitcherStats.earnedRuns}"></td>
+                        <td th:text="${pitcherStats.runsAllowed}"></td>
+                        <td th:text="${pitcherStats.earnedRunAverage}"></td>
+                      </tr>
+                    </div>
+                  </div>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <!--  Todo : 테이블값 하나 비어있음. -->
+            <div class="container" th:each="scheduleHitter, loop : ${scheduleDetails}">
+              <!-- Away Team Stats -->
+              <div th:text="${loop.index}"></div>
+              <div class="container">
+                <div th:if ="${scheduleHitter.gameBoard != null}">
+                  <img style="display: inline;" th:src="${scheduleHitter.homeTeam.filepath}" alt="Away Team Logo">
+                  <h2 style="display: inline" th:text="${scheduleHitter.homeTeam.teamName}"></h2>
+                  <table class="table table-hover h-200 w-200">
+                    <thead>
+                    <tr>
+                      <th>선수명</th>
+                      <th>등판</th>
+                      <th>결과</th>
+                      <th>승</th>
+                      <th>패</th>
+                      <th>세</th>
+                      <th>이닝</th>
+                      <th>타자</th>
+                      <th>투구수</th>
+                      <th>타수</th>
+                      <th>피안타</th>
+                      <th>홈런</th>
+                      <th>4사구</th>
+                      <th>삼진</th>
+                      <th>실점</th>
+                      <th>자책</th>
+                      <th>평균자책점</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <div th:each="pitcherStats : ${scheduleHitter.gameBoard.PitcherStats}">
+                      <div th:if="${pitcherStats.teamType == 'home'}">
+                        <tr>
+                          <td th:text="${pitcherStats.playerName}"></td> <!-- 선수 -->
+                          <td th:text="${pitcherStats.appearances}"></td> <!-- 등판 -->
+                          <td th:text="${pitcherStats.result}"></td> <!-- 결과 -->
+                          <td th:text="${pitcherStats.wins}"></td> <!-- 승 -->
+                          <td th:text="${pitcherStats.losses}"></td> <!-- 패 -->
+                          <td th:text="${pitcherStats.saves}"></td> <!-- 세 -->
+                          <td th:text="${pitcherStats.inningsPitched}"></td> <!-- 이 -->
+                          <td th:text="${pitcherStats.battersFaced}"></td> <!-- 타자 -->
+                          <td th:text="${pitcherStats.pitchesThrown}"></td> <!-- 투구 -->
+                          <td th:text="${pitcherStats.atBats}"></td> <!-- 타수 -->
+                          <td th:text="${pitcherStats.hitsAllowed}"></td> <!-- 타수 -->
+                          <td th:text="${pitcherStats.homeRunsAllowed}"></td> <!-- 피홈런 -->
+                          <td th:text="${pitcherStats.walks}"></td> <!-- 사구 -->
+                          <td th:text="${pitcherStats.strikeouts}"></td> <!-- 삼진 -->
+                          <td th:text="${pitcherStats.earnedRuns}"></td>
+                          <td th:text="${pitcherStats.runsAllowed}"></td>
+                          <td th:text="${pitcherStats.earnedRunAverage}"></td>
+                        </tr>
+                      </div>
+                    </div>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <div id="openTalkTable" class="container" style="display: flex; justify-content: center; text-align: center; align-items: center;">
+      <h1>opentalk</h1>
+    </div>
+
+  </div>
+
+  <div class="col-sm-2">
+  </div>
+
+  <div class="col-sm-2">
+    <div class="container" style="border: 0.1px solid #000; border-radius: 10px;
+    height: 150px; padding-bottom: 10px; padding-top: 10px; margin-bottom: 40px;">
+      <h1 style="font-weight: bold; font-size: 16px;">티켓 발급</h1>
+    </div>
+
+    <div class="container" style="border: 0.1px solid #000; border-radius: 10px;
+    height: 150px; padding-bottom: 10px; padding-top: 10px; margin-bottom: 40px;">
+
+      <div class="" th:if="${not #lists.isEmpty(scheduleDetails)}" th:each="scheduleDetails, loop : ${scheduleDetails}" style="display: flex;">
+        <div class="team-container" style="display: inline-block;">
+          <div class="bar-container" style="background-color: #000000;" th:data-schedule-id="${scheduleDetails.id}">
+            <div class="bar" id="homeBar" th:style="'height:' + (${scheduleDetails.homeTeamCheerScore} * 10) + '%;'">
+              <img class="bar-image" style="width: 40px; height: 40px;" th:src="${scheduleDetails.homeTeam.filepath}" alt="Home Team Logo">
+              <p class="score" id="homeScore" style="color: #FFFFFF" th:text="${scheduleDetails.homeTeamCheerScore}"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="team-container" style="display: inline-block">
+          <div class="bar-container" style="background-color: #011e36;" th:data-schedule-id="${scheduleDetails.id}">
+            <div class="bar" id="awayBar" th:style="'height:' + (${scheduleDetails.awayTeamCheerScore} * 10) + '%;'">
+              <img class="bar-image" style="width: 40px; height: 40px; " th:src="${scheduleDetails.awayTeam.filepath}" alt="Away Team Logo">
+              <p class="score" id="awayScore" style="color: #FFFFFF" th:text="${scheduleDetails.awayTeamCheerScore}"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="container" style="border: 0.1px solid #000; border-radius: 10px;
+      height: auto; padding-bottom: 10px; padding-top: 10px; margin-bottom: 40px;">
+      <h1 style="font-weight: bold; font-size: 16px;">응원 오픈톡</h1>
+      <div class="container">
+        <hr>
+      </div>
+      <div class="container">
+        <!-- 로그인을 하지 않았을때, -->
+        <!-- Todo: css 수정  -->
+        <div class="container" sec:authorize="!isAuthenticated()">
+          <div class="container rectangle-1" style="padding-top: 30px;">
+            <p style="border: 0.1px solid #000; height: 50px; width: 220px; right: -150px;">
+              댓글을 작성하려면 <a th:href="@{/login}">로그인</a>이 필요합니다.
+            </p>
+          </div>
+        </div>
+        <!-- 로그인을 했을때 -->
+        <div class="container" sec:authorize="isAuthenticated()"
+             th:if="${not #lists.isEmpty(scheduleDetails)}" th:each="scheduleDetails, loop : ${scheduleDetails}">
+          <div class ="container rectangle-1">
+            <div style="display: flex;">
+              <div class="container login-comment-box" style="padding: 10px;">
+                <form role="form" th:action="@{'/members/game/' + ${scheduleDetails.id} + '/comment'}" th:object="${commentForm}" method="post">
+                  <textarea type="text" class="form-control"
+                            placeholder="메세지를 입력해주세요." name="comment" style="width: 150px;"></textarea>
+                  <button class="btn btn-primary" type="submit">댓글 쓰기</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="container" th:each="scheduleDetails, loop : ${scheduleDetails}">
+          <div class="container" th:each="comments, loop : ${scheduleDetails.gameComments}">
+            <div th:class="'comments' + ${loop.index}" style="border: 0.1px solid #000; border-radius: 10px;
+               height: auto; padding-bottom: 10px; margin-bottom: 10px;">
+              <div class="container">
+                <h10 th:text="${comments.account.username}"></h10>
+                <h10 th:text="${comments.createdDate}"></h10>
+              </div>
+
+              <div class="container">
+                <h10 th:text="${comments.comment}"></h10>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+</body>
+</html>
+
+<script>
+  var homeScore = parseInt(document.getElementById('homeScore').innerText);
+  var awayScore = parseInt(document.getElementById('awayScore').innerText);
+  var scheduleId = document.querySelector('.bar-container').getAttribute('data-schedule-id');
+
+
+  document.getElementById('homeScore').addEventListener('click', function() {
+    homeScore++;
+    updateScores(homeScore, awayScore);
+    saveData(scheduleId, homeScore, awayScore);
+  });
+
+  document.getElementById('awayScore').addEventListener('click', function() {
+    awayScore++;
+    updateScores(homeScore, awayScore);
+    saveData(scheduleId, homeScore, awayScore);
+  });
+
+  function updateScores(home, away) {
+    var total = home + away;
+    var homePercentage = (home / total) * 100;
+    var awayPercentage = (away / total) * 100;
+
+    document.getElementById('homeScore').innerText = home;
+    document.getElementById('awayScore').innerText = away;
+
+    document.getElementById('homeBar').style.height = homePercentage + '%';
+    document.getElementById('awayBar').style.height = awayPercentage + '%';
+  }
+
+  function saveData(scheduleId, homeScore, awayScore) {
+    // 서버로 데이터를 전송하여 저장하는 AJAX 요청
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/api/save-score/' + scheduleId + '?homeScore=' + homeScore + '&awayScore=' + awayScore, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        // console.log('Data saved successfully.');
+      }
+    };
+    xhr.send();
+  }
+</script>
+
+<script>
+  function handleClick(element) {
+    // Remove 'clicked' class from all elements
+    var elements = document.querySelectorAll('.clickable');
+    elements.forEach(function (el) {
+      el.classList.remove('clicked');
+    });
+
+    // Add 'clicked' class to the clicked element
+    element.classList.add('clicked');
+  }
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    // 초기에 기본기록만 보이도록 설정
+    $("#strategyTable").hide();
+    $("#lineupTable").hide();
+    $("#boardCastTable").hide();
+    $("#videoTable").hide();
+    $("#recordTable").hide();
+    $("#openTalkTable").hide();
+
+    // 각 버튼에 대한 클릭 이벤트 처리
+    $("#btnDefault").click(function () {
+      $("#strategyTable").show();
+      $("#lineupTable").hide();
+      $("#boardCastTable").hide();
+      $("#videoTable").hide();
+      $("#recordTable").hide();
+      $("#openTalkTable").hide();
+
+      // 다른 테이블 숨기기 로직 추가
+    });
+
+    $("#btnLineup").click(function () {
+      $("#strategyTable").hide();
+      $("#lineupTable").show();
+      $("#boardCastTable").hide();
+      $("#videoTable").hide();
+      $("#recordTable").hide();
+      $("#openTalkTable").hide();
+
+    });
+    $("#btnOpenTalk").click(function () {
+      $("#strategyTable").hide();
+      $("#lineupTable").hide();
+      $("#boardCastTable").hide();
+      $("#videoTable").hide();
+      $("#recordTable").hide();
+      $("#openTalkTable").show();
+    });
+    $("#btnBoardcast").click(function () {
+      $("#strategyTable").hide();
+      $("#lineupTable").hide();
+      $("#boardCastTable").show();
+      $("#videoTable").hide();
+      $("#recordTable").hide();
+      $("#openTalkTable").hide();
+    });
+    $("#btnVideo").click(function () {
+      $("#strategyTable").hide();
+      $("#lineupTable").hide();
+      $("#boardCastTable").hide();
+      $("#videoTable").show();
+      $("#recordTable").hide();
+      $("#openTalkTable").hide();
+
+    });
+    $("#btnRecord").click(function () {
+      $("#strategyTable").hide();
+      $("#lineupTable").hide();
+      $("#boardCastTable").hide();
+      $("#videoTable").hide();
+      $("#recordTable").show();
+      $("#openTalkTable").hide();
+
+
+    });
+  });
+</script>
+
+
+<script>
+  // TODO: JSP 로 바꿔줘야한다.
+  var dateValue = "20240302";
+
+
+  // 날짜 형식 변환 함수
+  function formatDate(inputDate) {
+    var year = inputDate.substring(0, 4);
+    var month = inputDate.substring(4, 6);
+    var day = inputDate.substring(6, 8);
+
+    return month + '.' + day;
+  }
+
+  // id가 "formattedDate"인 요소에 날짜 형식 변환 후 출력
+  var formattedDate = formatDate(dateValue);
+  document.getElementById("formattedDate").innerText = "변환된 날짜: " + formattedDate;
+
+</script>
+
+
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  $(document).ready(function() {
+
+    var schedules = [
+      {
+        date: "20220401",
+        time: "14:00"
+      }
+    ];
+    console.log(schedules);
+
+    var scheduleListSize = /*[[${scheduleList.size()}]]*/'0';
+
+    // alert(scheduleListSize);
+    // 현재 시간을 얻어오는 함수
+    function getCurrentTime() {
+      var now = new Date();
+      var hours = now.getHours();
+      var minutes = now.getMinutes();
+      return hours + ":" + (minutes < 10 ? "0" : "") + minutes;
+    }
+
+    // 경기 상태 확인 및 텍스트 변경 함수
+    function updateGameStatus(schedules) {
+      // alert(schedules);
+
+      if (schedules && schedules.length > 0) {
+        for (var i = 0; i < scheduleListSize; i++) {
+          var currentDate = new Date();
+          var scheduleDateStr = schedules[0].date.substr(0, 4) + '-' + schedules[0].date.substr(4, 2) + '-' + schedules[0].date.substr(6, 2);
+          var scheduleDate = new Date(scheduleDateStr + " " + schedules[0].time);
+
+          var timeDifference = currentDate - scheduleDate;
+          var hoursDifference = timeDifference / (1000 * 60 * 60);
+
+          // 각 container에 대한 동적인 ID 생성
+          var backgroundId = 'background' + i;
+          var upcomingGameId = 'upcomingGame' + i;
+          var bottomId = 'bottom' + i;
+
+          var resultBackgroundId = 'resultBackground' + i;
+          var resultGameId = 'resultGame' + i;
+          var resultId = 'result' + i;
+
+          // 경기예정인 경우
+          if (hoursDifference > 0) {
+            $('#' + upcomingGameId).show();
+            $('#' + backgroundId).show();
+            $('#' + bottomId).show();
+
+            $('#' + resultBackgroundId).hide();
+            $('#' + resultId).hide();
+            $('#' + resultGameId).hide();
+          }
+          // 경기종료인 경우
+          else {
+            $('#' + resultBackgroundId).show();
+            $('#' + resultGameId).show();
+            $('#' + resultId).show();
+
+
+            $('#' + upcomingGameId).hide();
+            $('#' + backgroundId).hide();
+            $('#' + bottomId).hide();
+          }
+        }
+      } else {
+        // schedules이 null 또는 빈 배열인 경우에 대한 처리
+        console.log("일정이 없습니다.");
+      }
+    }
+// 초기 실행
+    updateGameStatus(schedules);
+
+// 1분마다 경기 상태 업데이트
+    setInterval(function() {
+      updateGameStatus(schedules);
+    }, 1);
+  });
+  /*]]>*/
+</script>

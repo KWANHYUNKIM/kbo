@@ -17,6 +17,13 @@
 
 
   <script th:inline="javascript">
+    $(document).ready(function() {
+      // #teamYearFilter 요소의 변경사항을 감지하고 applyYearFilter 함수를 호출
+      $('#teamYearFilter').change(function() {
+        applyYearFilter();
+      });
+    });
+
     function applyYearFilter() {
       var selectedYear = $("#teamYearFilter").val();
 
@@ -26,7 +33,7 @@
         url: "/record/teamRanking",
         data: { years: selectedYear },
         success: function(data) {
-          // 서버에서 받은 데이터로 화면 업데이트 등 필요한 동작 수행
+          // 서버에서 받은 데이터로 화면 업데이트
           $('.table').html($(data).find('.table').html());
         },
         error: function(error) {

@@ -23,10 +23,15 @@ public class Like {
     @JoinColumn(name = "board_id")
     private Board board;
 
-    private int likes;
+    private int likes; // 좋아요
 
-    private int unlikes;
+    private int fan; // 팬이에요
 
+    private int sad; // 슬퍼요
 
+    private int angry; // 화나요
+
+    private int follow; // 후속기사원해요
 
 }
+

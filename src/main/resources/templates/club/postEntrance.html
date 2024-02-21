@@ -1,0 +1,59 @@
+<html  xmlns:th="http://www.thymeleaf.org">
+<head th:replace="club/head :: adminHead"></head>
+<body>
+<script type="text/javascript">
+    $(document).ready(function(){
+    });
+</script>
+<div th:replace="layout/top::header_admin_management"></div>
+<div id="maininner"><!-- maininner (s)-->
+
+    <div class="tbl_wrp">
+        <form role="form" action=/admin/club/entrance/createdEntrance th:object="${entranceForm}" method="post" enctype="multipart/form-data">
+            <div th:if="${not #lists.isEmpty(scheduleDetails)}" th:each="scheduleDetails, loop : ${scheduleDetails}">
+
+
+
+                <div class="form-group">
+                    <label th:for="homeTeam">홈팀</label>
+                    <select th:field="*{teams}" class="form-control">
+                        <option th:each="team : ${scheduleDetails.homeTeam}" th:value="${team.id}" th:text="${team.teamName}">Team Name</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label th:for="gameNumber">고유 번호</label>
+                    <select th:field="*{gameNumber}" class="form-control">
+                        <option th:value="${entranceId}" th:text="${entranceId}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label th:for="schedule">스케줄 ID</label>
+                    <select th:field="*{schedule}" class="form-control">
+                        <option th:value="${scheduleDetails.id}" th:text="${scheduleDetails.id}"></option>
+                    </select>
+                </div>
+
+<!--                <div class="form-group">-->
+<!--                    <label th:for="players">선수 선택</label>-->
+<!--                    <div th:each="player : ${scheduleDetails.homeTeam.players}">-->
+<!--                        <input type="checkbox" th:field="*{players}" th:value="${player.id}" />-->
+<!--                        <label th:text="${player.name}"></label>-->
+<!--                        <br/>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+
+

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications</title>
+    <!-- Thymeleaf에서 contextPath를 가져오기 위한 코드 -->
+    <script th:inline="javascript">
+        var contextPath = /*[[@{/}]]*/ '';
+    </script>
+</head>
+<body>
+
+<!-- 알림 아이콘 -->
+<a href="#" onclick="toggleNotifications()" title="알람" sec:authorize="isAuthenticated()">
+    <img src="/images/topOverTop/alarm-ball.png" height="18" width="18" title="알람" class="nav-item"/>
+</a>
+
+<!-- 알림 창 -->
+<div id="notificationsContainer" style="display: none;">
+    <h1>Notifications</h1>
+    <div th:if="${notifications.empty}">
+        <p>No notifications</p>
+    </div>
+    <div th:if="${not notifications.empty}">
+        <ul>
+            <li th:each="notification : ${notifications}">
+                <span th:text="${notification.message}"></span>
+                <!-- Add additional logic to display details based on notification type (like, comment, etc.) -->
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!-- JavaScript 코드 -->
+<script th:inline="javascript">
+    function toggleNotifications() {
+        var notificationsContainer = document.getElementById('notificationsContainer');
+        notificationsContainer.style.display = (notificationsContainer.style.display === 'none' || notificationsContainer.style.display === '') ? 'block' : 'none';
+    }
+</script>
+
+</body>
+</html>

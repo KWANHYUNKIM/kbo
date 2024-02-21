@@ -1,11 +1,89 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <div th:fragment="advertise">
-<head>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Slider</title>
+        <style>
+            .slider {
+                width: 640px;
+                height: 480px;
+                position: relative;
+                margin: 0 auto;
+                overflow: hidden;
+            }
 
+            .slider input[type=radio] {
+                display: none;
+            }
+
+            ul.imgs{
+                padding: 0;
+                margin: 0;
+            }
+            ul.imgs li{
+                position: absolute; /* 슬라이드가 겹쳐서 모여야 하므로 absolute 속성으로 배치 */
+                opacity: 0; /* 체크한 라디오박스 순서의 슬라이드만 표시되도록 기본 투명도 설정 */
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .bullets{
+                position: absolute;
+                left: 45%; /* 가로로 가운데 정렬 */
+                transform: translateX(-50%);
+                bottom: 20px; /* 슬라이드 밑에서 20px 간격 띄움 */
+                z-index: 2; /* 슬라이드 위에 보이도록 레이어 순위를 높임 */
+            }
+            .bullets label{
+                display: inline-block; /* 한 줄로 불릿 나열*/
+                border-radius: 50%; /* 원형 불릿으로 처리 */
+                background-color: rgba(0,0,0,0.55);
+                width: 10px; /* 불릿 너비 */
+                height: 10px; /* 불릿 높이 */
+                cursor: pointer;
+            }
+            .slider input[type=radio]:nth-child(1):checked~ul.imgs>li:nth-child(1){
+                opacity: 1;
+                transition: 1s;
+                z-index: 1;
+            }
+            .slider input[type=radio]:nth-child(2):checked~ul.imgs>li:nth-child(2){
+                opacity: 1;
+                transition: 1s;
+                z-index: 1;
+            }
+        </style>
+    </head>
 <body>
-    <img class="figure-img img-fluid rounded " src="images/ad/advertise.png" alt="광고 이미지">
+    <div class="slider">
+        <input type="radio" name="slide" id="slide1" checked>
+        <input type="radio" name="slide" id="slide2">
+
+        <ul id="imgholder" class="imgs">
+            <li><img src="images/ad/background.webp" alt="HEROES" width="550px;" height="500px;"></li>
+            <li><img src="images/ad/ad_2.png" alt="ad_2" width="550px;" height="500px;"></li>
+        </ul>
+
+        <div class="bullets">
+            <label for="slide1"></label>
+            <label for="slide2"></label>
+        </div>
+    </div>
+
+    <script>
+        // 자동으로 슬라이드 전환을 위한 함수
+        function autoSlide() {
+            var currentSlide = document.querySelector('input[name="slide"]:checked');
+            var nextSlide = currentSlide.nextElementSibling || document.querySelector('input[name="slide"]:first-of-type');
+            nextSlide.checked = true; // 다음 슬라이드로 체크 이동
+        }
+
+        // 1초마다 자동으로 슬라이드 전환 실행
+        setInterval(autoSlide, 10000); // 1초마다 슬라이드 전환
+    </script>
 </body>
 </div>
 </html>

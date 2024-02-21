@@ -16,4 +16,6 @@ public class BoardDto {
     private String content;
     private String filename;
     private String filepath;
+    private String category;
+
 }

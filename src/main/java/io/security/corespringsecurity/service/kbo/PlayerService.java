@@ -16,5 +16,4 @@ public interface PlayerService  {
     void save(Player player);
 
     Player editByPlayer(Long playerId, Player updatedBoard);
-
 }

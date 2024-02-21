@@ -3,6 +3,9 @@ package io.security.corespringsecurity.domain.entity.kbo;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder
@@ -12,10 +15,10 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "players")
-public class Players {
+public class Players implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "player_id")
     private long id;
 
     @Column(name = "jersey_number")
@@ -49,7 +52,7 @@ public class Players {
     private String draftRank;
 
     @Column(name = "debutyear")
-    private Integer debutYear;
+    private String debutYear;
 
     @Column(name = "filepath")
     private String filepath; // 파일 경로
@@ -60,6 +63,9 @@ public class Players {
     @ManyToOne
     @JoinColumn(name = "teams_id")
     private Teams teams;
+
+    @OneToMany(mappedBy = "players")
+    private List<PlayerRecord> playerRecord;
 
     public void setTeam(Teams teams){
         this.teams = teams;

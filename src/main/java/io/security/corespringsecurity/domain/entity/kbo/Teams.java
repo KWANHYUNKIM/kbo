@@ -28,9 +28,6 @@ public class Teams {
     private String filepath;
 
     @OneToMany(mappedBy = "teams")
-    private List<Staff> staffs = new ArrayList<Staff>();
-
-    @OneToMany(mappedBy = "teams")
     private List<Players> players = new ArrayList<Players>();
 
 
