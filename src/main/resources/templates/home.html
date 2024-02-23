@@ -24,7 +24,7 @@
     <div class = "row p-3">
         <!-- 광고 -->
         <div class="col-md-6 order-md-1">
-            <div th:replace="/home/advertise :: advertise"></div>
+            <div th:replace="home/advertise :: advertise"></div>
         </div>
         <!-- 팀순위 -->
         <div class="col-md-6 order-md-2">
@@ -45,31 +45,29 @@
             <div th:replace="layout/iconService"></div>
         </div>
     </div>
-x
+
     <div class = "row">
         <div class="col-8 col-sm-6 mx-auto">
             <div th:replace="home/article :: article-1"></div>
-            <div th:replace="/home/recentBoardTop5 :: newsTop5"></div>
+            <div th:replace="home/recentBoardTop5 :: newsTop5"></div>
 
         </div>
         <div class="col-8 col-sm-6 mx-auto">
             <div th:replace="home/article :: article-2"></div>
-            <div th:replace="/home/recentBoardTop5 :: articleTop5"></div>
-
-
+            <div th:replace="home/recentBoardTop5 :: articleTop5"></div>
         </div>
     </div>
 
     <div class = "row">
         <!-- banner#1 -->
         <div class="col-8 col-sm-6 mx-auto">
-            <div th:replace="/home/banner_1 :: banner-1"></div>
-            <div th:replace="/home/recentBoardTop5 :: rumorTop5"></div>
+            <div th:replace="home/banner_1 :: banner-1"></div>
+            <div th:replace="home/recentBoardTop5 :: rumorTop5"></div>
         </div>
         <!-- banner#2 -->
         <div class="col-8 col-sm-6 mx-auto">
-            <div th:replace="/home/banner_2 :: banner-2"></div>
-            <div th:replace="/home/recentBoardTop5 :: communityTop5"></div>
+            <div th:replace="home/banner_2 :: banner-2"></div>
+            <div th:replace="home/recentBoardTop5 :: communityTop5"></div>
         </div>
     </div>
 
@@ -81,31 +79,31 @@ x
 
     <div class = "row">
         <div class="col-12" style="padding-top: 20px; padding-bottom: 20px">
-            <div th:replace="/home/media :: media-highlight"></div>
+            <div th:replace="home/media :: media-highlight"></div>
         </div>
     </div>
 
     <div class = "row">
         <div class="col-12" style="padding-top: 20px; padding-bottom: 20px">
-            <div th:replace="/home/media :: media-video"></div>
+            <div th:replace="home/media :: media-video"></div>
         </div>
     </div>
 
     <div class = "row">
         <div class="col-12" style="padding-top: 20px; padding-bottom: 20px">
-            <div th:replace="/home/media :: media-instagram"></div>
+            <div th:replace="home/media :: media-instagram"></div>
         </div>
     </div>
 
     <div class = "row">
         <div class="col-12" style="padding-top: 20px; padding-bottom: 20px">
-            <div th:replace="/home/media :: media-youtube"></div>
+            <div th:replace="home/media :: media-youtube"></div>
         </div>
     </div>
 
 </div>
 <div class="container">
-    <div th:replace="/layout/footer"></div>
+    <div th:replace="layout/footer"></div>
 </div>
 
 </body>

@@ -34,10 +34,6 @@ public class Board extends BaseTimeEntity {
     @Lob // 대용량 데이터
     private String content;
 
-    private String filename; // 파일 이름
-
-    private String filepath; // 파일 경로
-
     @ManyToOne(fetch = FetchType.LAZY) // Many : Board , One : Member 한명의 유저가 여러개의 게시글 작성
     @JoinColumn(name = "account_id")
     private Account account;

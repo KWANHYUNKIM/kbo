@@ -22,5 +22,9 @@ public interface LikeRepository extends JpaRepository<Like,Long> {
     List<Like> findByBoard(@Param("boardId") Long boardId);
     @Query("SELECT COALESCE(SUM(l.likes), 0) FROM Like l WHERE l.board.id = :boardId")
     int getLikeCount(@Param("boardId") Long boardId);
+
+    @Query("SELECT l FROM Like l WHERE l.account = :account AND l.board = :board")
+    Like findByAccountAndBoard(@Param("account") Account account, @Param("board") Board board);
+
 }
 

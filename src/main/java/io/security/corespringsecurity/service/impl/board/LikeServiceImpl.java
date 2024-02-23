@@ -26,9 +26,14 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public void save(Like like) {
-        // 좋아요를 누른 기록이 없을 때만 저장
+        Like existingLike = likeRepository.findByAccountAndBoard(like.getAccount(), like.getBoard());
+        if (existingLike != null) {
+            // 기존 투표가 있으면 업데이트
+            likeRepository.delete(existingLike);
+        } else {
+            // 새로운 투표 추가
             likeRepository.save(like);
-
+        }
     }
 
     @Override

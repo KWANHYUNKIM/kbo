@@ -28,9 +28,7 @@
         <tbody>
         <tr style="font-size: 14px" th:each="teams : ${teams}">
             <td th:text="${teams.ranking}"></td>
-            <td>
-                <a th:href="@{'/teams/' + ${teams.teamName} + '/'}" th:text="${teams.teamName}"></a>
-            </td>
+            <td th:text="${teams.teamName}"></td>
             <td th:text="${teams.matches}"></td>
             <td th:text="${teams.win}"></td>
             <td th:text="${teams.loss}"></td>

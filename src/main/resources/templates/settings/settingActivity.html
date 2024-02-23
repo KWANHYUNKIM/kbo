@@ -45,11 +45,6 @@
 <body>
 
 <div class="container">
-  <div class="row">
-    <div class ="col-sm-3">
-      <div th:replace="settings/layout/settingSidebar ::sidebar"></div> <!-- 사이드 바 --> <!-- col-sm-3 -->
-    </div>
-  </div>
 
   <div class="row p-3" style="margin-top: 20px; margin-bottom: 20px; border: 1px solid #ddd; padding: 15px; border-radius: 10px;">
     <div th:each="account : ${account}" style="text-align: right;">

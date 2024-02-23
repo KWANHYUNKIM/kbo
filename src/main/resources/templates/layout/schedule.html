@@ -94,7 +94,7 @@
 <div class="calendar_main container" style="padding-top: 5px;">
   <div class="nav" style="text-align: center; display: flex; justify-content: center;">
     <img onclick="changeDateByDay(-1)" src="/images/home/btn_prev.png" style="padding-right: 5px; text-align: center; width: 25px; height: 25px;">
-    <h2 id="currentDateMain" style="text-align: center;">2024.03.23(토)</h2>
+    <h2 id="currentDateMain" style="text-align: center;"></h2>
     <img onclick="changeDateByDay(1)" src="/images/home/btn_next.png" style="padding-left: 5px; text-align: center; width: 25px; height: 25px;">
 
     <div id="calendarIcon" onclick="toggleCalendar()" style="height: 80px; width: 50px; font-size: 30px; margin-top: -10px;">
@@ -127,7 +127,7 @@
       <div class="g-col-4" th:data-date="${schedule.date}"
            th:data-time="${schedule.time}"
            th:data-gameboard="${schedule.gameBoard != null ? schedule.gameBoard.id : 'none'}">
-
+        <!-- 경기 contents -->
         <div class="text-center container">
           <p style="font-weight: bold; display: inline;" th:text="${schedule.location.locationName}"></p>
           <p style="display: inline">|</p>
@@ -299,10 +299,8 @@
                   </div>
                 </div>
               </div>
-
               </div>
             </div>
-
               <div class="container">
                 <table th:id="'baseballTable' + ${loop.index}" class="baseballTable"></table>
               </div>
@@ -329,6 +327,27 @@
 
 </body>
 
+<script>
+  function initDate(){
+    const currentDate = new Date();
+    // 날짜 옵션 설정
+    const dateOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    // 요일 옵션 설정
+    const dayOptions = { weekday: 'long' };
+
+    // 날짜 포매팅
+    const formattedDate = currentDate.toLocaleDateString('ko-KR', dateOptions);
+    // 요일 포매팅
+    const formattedDay = currentDate.toLocaleDateString('ko-KR', dayOptions);
+
+    // 최종 문자열 조합
+    const formattedDateForDisplay = `${formattedDate}${formattedDay}`;
+
+    // 텍스트 업데이트
+    document.getElementById('currentDateMain').textContent = formattedDateForDisplay.replace(/\./g, '.');
+  }
+  document.addEventListener('DOMContentLoaded', initDate);
+</script>
 
 <script th:inline="javascript">
 
@@ -389,7 +408,14 @@
 </script>
 
 <script>
-  let currentDate = new Date(2024, 2, 23); // Corrected the month to represent March (0-based)
+  let current = new Date();
+
+  let formattedYear = `${current.getFullYear()}`;
+  let formattedMonth = `${current.getMonth() + 1}`;
+  let formattedDay = `${current.getDay()}`;
+
+
+  let currentDate = new Date(formattedYear, formattedMonth, formattedDay); // Corrected the month to represent March (0-based)
 
   function populateYearDropdown() {
     const yearDropdown = document.getElementById('yearDropdown');
@@ -650,6 +676,53 @@
 
 
 </script>
+
+<!--<script th:inline="javascript">-->
+<!--  /*<![CDATA[*/-->
+<!--  // 서버 측에서 전달된 'dates' 리스트를 JavaScript 배열로 변환-->
+<!--  var scheduleDates = /*[[${scheduleDate}]]*/ [];-->
+
+<!--  // 현재 선택된 날짜를 추적하는 변수 (기본값으로 오늘 날짜 설정)-->
+<!--  var currentSelectedDate = new Date();-->
+
+<!--  // 가장 가까운 날짜를 찾는 함수-->
+<!--  function findClosestDate(direction) {-->
+<!--    // scheduleDates를 Date 객체로 변환-->
+<!--    let dates = scheduleDates.map(date => new Date(date));-->
+
+<!--    // 현재 날짜와 가장 가까운 날짜 찾기-->
+<!--    let closestDate = null;-->
+<!--    let closestDiff = Infinity;-->
+
+<!--    for (let i = 0; i < dates.length; i++) {-->
+<!--      let diff = dates[i] - currentSelectedDate;-->
+<!--      // direction에 따라 이전 또는 다음 날짜 탐색-->
+<!--      if (direction < 0 && diff < 0 && Math.abs(diff) < closestDiff) {-->
+<!--        // 이전 날짜 탐색-->
+<!--        closestDiff = Math.abs(diff);-->
+<!--        closestDate = dates[i];-->
+<!--      } else if (direction > 0 && diff > 0 && Math.abs(diff) < closestDiff) {-->
+<!--        // 다음 날짜 탐색-->
+<!--        closestDiff = Math.abs(diff);-->
+<!--        closestDate = dates[i];-->
+<!--      }-->
+<!--    }-->
+
+<!--    // 가장 가까운 날짜 업데이트 (찾았다면)-->
+<!--    if (closestDate !== null) {-->
+<!--      currentSelectedDate = closestDate;-->
+<!--      // 여기에 closestDate를 화면에 표시하는 로직 추가-->
+<!--      console.log('가장 가까운 날짜:', currentSelectedDate);-->
+<!--    }-->
+<!--  }-->
+
+<!--  // 이전/다음 버튼 클릭 핸들러-->
+<!--  function changeDateByDay(direction) {-->
+<!--    findClosestDate(direction);-->
+<!--  }-->
+<!--  /*]]>*/-->
+<!--</script>-->
+
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {

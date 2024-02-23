@@ -17,6 +17,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -49,8 +50,10 @@ public class BoardController {
         return "boards/createBoardForm";
     }
 
+    // @Valid , BindingResult 위치 확인 * @Valid 바로 뒤에 나와야함.
+
     @PostMapping(value = "/members/board")
-    public String create(@AuthenticationPrincipal Principal principal,@Valid BoardDto form, MultipartFile file, BindingResult result, Model model) throws IOException {
+    public String create(@Valid @ModelAttribute("boardForm") BoardDto form, BindingResult result, Model model , @AuthenticationPrincipal Principal principal){
 
         if (result.hasErrors()) {
             return "boards/createBoardForm";
@@ -61,21 +64,6 @@ public class BoardController {
             account = (Account) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
         }
 
-        // 파일 저장
-        String projectPath = System.getProperty("user.dir") + "//src//main//resources//static//images";
-
-        /*식별자 . 랜덤으로 이름 만들어줌*/
-        UUID uuid = UUID.randomUUID();
-
-        /*랜덤식별자_원래파일이름 = 저장될 파일이름 지정*/
-//        String fileName = uuid + "_" + file.getOriginalFilename();
-        String fileName ="일단보류";
-
-        /*빈 껍데기 생성*/
-        /*File을 생성할건데, 이름은 "name" 으로할거고, projectPath 라는 경로에 담긴다는 뜻*/
-        File saveFile = new File(projectPath, fileName);
-
-        file.transferTo(saveFile);
         Board board = new Board();
         String categoryName = form.getCategory();
         board.setAccount(account);
@@ -92,9 +80,6 @@ public class BoardController {
 
         board.setContent(form.getContent());
 
-        board.setFilename("fileName");
-        board.setFilepath("/images/" + "fileName");
-
         board.setCategory(category);
         boardService.createBoard(board);
 
@@ -107,7 +92,7 @@ public class BoardController {
     }
 
     @PostMapping(value = "/members/board/article")
-    public String createArticle(@AuthenticationPrincipal Principal principal,@Valid BoardDto form, MultipartFile file, BindingResult result, Model model) throws IOException {
+    public String createArticle(@Valid @ModelAttribute("boardForm") BoardDto form, BindingResult result, Model model , @AuthenticationPrincipal Principal principal){
 
         if (result.hasErrors()) {
             return "boards/createArticleForm";
@@ -118,21 +103,6 @@ public class BoardController {
             account = (Account) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
         }
 
-        // 파일 저장
-        String projectPath = System.getProperty("user.dir") + "//src//main//resources//static//images";
-
-        /*식별자 . 랜덤으로 이름 만들어줌*/
-        UUID uuid = UUID.randomUUID();
-
-        /*랜덤식별자_원래파일이름 = 저장될 파일이름 지정*/
-//        String fileName = uuid + "_" + file.getOriginalFilename();
-        String fileName ="일단보류";
-
-        /*빈 껍데기 생성*/
-        /*File을 생성할건데, 이름은 "name" 으로할거고, projectPath 라는 경로에 담긴다는 뜻*/
-        File saveFile = new File(projectPath, fileName);
-
-        file.transferTo(saveFile);
         Board board = new Board();
         String categoryName = form.getCategory();
         board.setAccount(account);
@@ -148,21 +118,12 @@ public class BoardController {
             board.setTitle("[찌라시] " + form.getTitle());
         }
 
-        // TODO- 파일 값 설정 해줘야함
         board.setContent(form.getContent());
-        board.setFilename("fileName");
-        board.setFilepath("/images/" + "fileName");
-
         board.setCategory(category);
         boardService.createBoard(board);
 
         return "redirect:/";
     }
-
-    /**
-     * 게시판 디테일
-     * todo :
-     **/
 
     @GetMapping(value = "/boards/{boardId}/detail")
     public String detailList(Principal principal,Model model, @PathVariable("boardId") Long boardId,

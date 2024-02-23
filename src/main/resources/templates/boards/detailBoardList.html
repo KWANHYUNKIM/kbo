@@ -70,11 +70,6 @@
 <body>
 
 <div class="container">
-    <div class="row">
-        <div class ="col-sm-3">
-            <div th:replace="layout/sidebar ::sidebar"></div> <!-- 사이드 바 --> <!-- col-sm-3 -->
-        </div>
-    </div>
     <!-- ad -->
     <div class = "row">
         <div class ="container">
@@ -124,13 +119,6 @@
                             수정하기
                         </a>
                     </li>
-<!--                    <li>-->
-<!--                        <a class="dropdown-item" style="text-align: right" th:if="${board.account.id == currentUser.id}"-->
-<!--                           th:href="@{/boards/delete/{boardId}(boardId=${board.id})}">-->
-<!--                            <span style="display: inline-block; vertical-align: middle;"><i class="fas fa-trash"></i></span>-->
-<!--                            삭제하기-->
-<!--                        </a>-->
-<!--                    </li>-->
                 </ul>
                 <!-- 즐겨찾기 -->
                 <div  th:if="${currentUser.id != null} "style="text-align: right; display: inline; margin-left: -50px;">
@@ -146,7 +134,7 @@
     <div class="row p-3 ">
         <div class="container" th:each="board : ${boards}">
             <p style="font-size:30px; font-weight: bold; padding-bottom: 30px" th:text="${board.title}"></p>
-            <p th:if="${board.content != null}" th:utext="${board.content}"></p>
+            <div th:if="${board.content != null}" th:utext="${board.content}"></div>
             <!-- Todo: 내용 및 컨텐츠 제작 -->
         </div>
     </div>
@@ -249,9 +237,6 @@
             <hr>
         </div>
     </div>
-
-
-
     <!-- 절취선 -->
     <row>
         <div class ="container">
@@ -682,6 +667,7 @@
     // console.log(createdDateString);
     /*[/]*/
 </script>
+
 <script src="/js/currentTime.js"></script>
 
 <script th:inline="javascript">

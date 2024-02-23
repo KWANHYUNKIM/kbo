@@ -20,10 +20,18 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     @Override
     public void addBookmark(Account account, Board board) {
-        Bookmark bookmark = new Bookmark();
-        bookmark.setAccount(account);
-        bookmark.setBoard(board);
-        bookmarkRepository.save(bookmark);
+        Bookmark bookmark = bookmarkRepository.findByAccountAndBoard(account, board);
+
+        if(bookmark != null){
+            bookmarkRepository.delete(bookmark);
+        }
+        else{
+            Bookmark book = new Bookmark();
+            book.setAccount(account);
+            book.setBoard(board);
+            bookmarkRepository.save(book);
+        }
+
     }
 
     @Override

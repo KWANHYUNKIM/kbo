@@ -7,14 +7,8 @@
 
 <body>
 <div class="container">
-    <div class="row">
-        <div class ="col-sm-3">
-            <div th:replace="layout/sidebar ::sidebar"></div> <!-- 사이드 바 --> <!-- col-sm-3 -->
-        </div>
-    </div>
         <div class="row">
             <div class="col-lg-12">
-            <!-- Todo : UI 제작 -->
             <form role="form" action="/members/board" th:object="${boardForm}" method="post" enctype="multipart/form-data">
 
                 <div class="form-group" style="padding-top: 15px">
@@ -28,37 +22,35 @@
                     <label th:for="topic">토픽</label>
                     <select class="form-control" id="topic" name="topic" th:field="*{category}"
                             th:class="${#fields.hasErrors('category')}? 'form-control fieldError' : 'form-control'">
-                        <option value="">토픽을 선택하세요.</option>
                         <option value="STORY">사는 얘기</option>
                         <option value="GATHERING">모임&동호회</option>
                     </select>
-                    <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Incorrect date</p>
                 </div>
 
                 <div class="form-group" style="padding-top: 15px;">
                     <label th:for="title">제목</label>
-                    <input type="text" th:field="*{title}" class="form-control" placeholder="타이틀을 입력하세요"
-                           th:class="${#fields.hasErrors('title')}? 'form-control fieldError' : 'form-control'">
-                    <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Incorrect date</p>
-                </div>
+                    <input type="text" th:field="*{title}" class="form-control" placeholder="제목을 입력하세요"
+                    th:class="${#fields.hasErrors('title')}? 'form-control fieldError' : 'form-control'">
 
+                    <p style="color: red;" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
+                </div>
+                <!-- Todo: 본문에서 어차피 사진넣을수있어서 제거 후 값은 filename으로 받아서 보여주기 -->
                 <div class="form-group" style="padding-top: 15px;">
                     <label th:for="content">본문</label>
                     <div>
                         <textarea type="text" class="form-control" th:field="*{content}"
                                   th:class="${#fields.hasErrors('content')}? 'form-control fieldError' : 'form-control'"
                                   placeholder="주제에 대한 생각을 자유롭게 댓글로 표현해 주세요. 여러분의 다양한 의견을 기다립니다."
-                                  id="tiny" name="comment"></textarea>
-                        <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}">Incorrect date</p>
+                                  id="tiny">
+                        </textarea>
+
+                        <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}" style="color: red"></p>
+
                     </div>
                 </div>
-                <div class="form-group" style="padding-top: 15px;">
-                    <!-- Todo: 본문에서 어차피 사진넣을수있어서 제거 후 값은 filename으로 받아서 보여주기 -->
-                    <div>
-                        <label th:for="file">업로드</label>
-                        <input type="file" class="form-control" name="file">
-                    </div>
-                    <div style="padding-top: 15px; text-align: right">
+
+                <div class="form-group" style="padding-top: 5px;">
+                    <div style="padding-top: 5px; text-align: right">
                         <button type="button" class="btn btn-primary" onclick="goBack()"
                                 style="background-color: white; color: black; border-color: #8a8a8a; width: 75px; height: 35px;
                                 border-radius: 10px;"
@@ -74,7 +66,7 @@
 
 <script>
     function goBack() {
-        history.back();
+        window.location.href = '/';
     }
 </script>
 

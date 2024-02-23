@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.security.Principal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 public class HomeController {
@@ -94,6 +95,16 @@ public class HomeController {
 
 		List<Team> team = teamRepository.findAll();
 		List<Teams> clubs =  clubService.findAll();
+
+		List<Schedule> findByScheduleAll = scheduleService.findAll();
+
+		List<String> dates = findByScheduleAll.stream()
+				.map(Schedule::getDate)
+				.distinct()
+				.collect(Collectors.toList());
+
+
+
 		List<Schedule> scheduleList = scheduleService.findByDate(date);
 
 
@@ -102,8 +113,8 @@ public class HomeController {
 
 		model.addAttribute("teamImage", teams);
 		model.addAttribute("comments", commentList);
-
-		model.addAttribute("scheduleList", scheduleList);
+		model.addAttribute("scheduleList",scheduleList);
+		model.addAttribute("scheduleDate", dates);
 		model.addAttribute("clubs", clubs);
 		model.addAttribute("teams", team);
 		model.addAttribute("communityTop5",top5Boards);
