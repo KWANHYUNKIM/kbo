@@ -10,8 +10,10 @@ import io.security.corespringsecurity.domain.entity.kbo.crawl.Team;
 import io.security.corespringsecurity.domain.entity.kbo.Teams;
 import io.security.corespringsecurity.domain.entity.profile.Notification;
 import io.security.corespringsecurity.domain.entity.schedule.Schedule;
+import io.security.corespringsecurity.domain.entity.video.Video;
 import io.security.corespringsecurity.repository.board.BoardRepository;
 import io.security.corespringsecurity.repository.kbo.crawl.TeamRepository;
+import io.security.corespringsecurity.service.VideoService;
 import io.security.corespringsecurity.service.board.BoardService;
 import io.security.corespringsecurity.service.board.CategoryService;
 import io.security.corespringsecurity.service.board.CommentService;
@@ -53,6 +55,8 @@ public class HomeController {
 	private CategoryService categoryService;
 	@Autowired
 	private BoardService boardService;
+	@Autowired
+	private VideoService videoService;
 
 	@GetMapping(value="/")
 	public String home(Model model, Principal principal, @RequestParam(name = "date" , defaultValue = "20240323") String date){
@@ -106,11 +110,15 @@ public class HomeController {
 
 
 		List<Schedule> scheduleList = scheduleService.findByDate(date);
+		List<Video> videoList = videoService.findAll();
 
+		List<Video> findByRecent5 = videoService.findByRecent5();
 
 		Set<Comment> commentList = new HashSet<>();
 		List<String> teams = Arrays.asList("HH", "HT", "KT", "LG", "LT", "NC", "OB", "SK", "SS", "WO");
 
+		model.addAttribute("videoList",videoList);
+		model.addAttribute("findByRecent5",findByRecent5);
 		model.addAttribute("teamImage", teams);
 		model.addAttribute("comments", commentList);
 		model.addAttribute("scheduleList",scheduleList);

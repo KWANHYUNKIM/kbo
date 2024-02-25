@@ -1,6 +1,7 @@
 package io.security.corespringsecurity;
 
 import io.security.corespringsecurity.scraping.KboScraping;
+import io.security.corespringsecurity.scraping.YoutubeScraping;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Component;
 
 
@@ -28,6 +30,12 @@ public class CoreSpringSecurityApplication {
 //    public CommandLineRunner commandLineRunner(KboScraping kboScraping) {
 //        return args -> {
 //            kboScraping.executeScraping();
+//        };
+//    }
+//    @Bean
+//    public CommandLineRunner commandLineRunner(YoutubeScraping youtubeScraping) {
+//        return args -> {
+//            youtubeScraping.executeScraping();
 //        };
 //    }
 }

@@ -27,6 +27,7 @@ public class Video {
 
     private String playUrl;
 
-    private String type; // youtube, kborc(비디오판독)
+    private String keyword;
 
+    private String type; // youtube, kborc(비디오판독)
 }

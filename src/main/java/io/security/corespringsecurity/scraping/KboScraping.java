@@ -1,8 +1,6 @@
 package io.security.corespringsecurity.scraping;
 
-import io.security.corespringsecurity.domain.entity.kbo.PlayerRecord;
-import io.security.corespringsecurity.domain.entity.kbo.PlayerRecordHitter;
-import io.security.corespringsecurity.domain.entity.kbo.Players;
+
 import io.security.corespringsecurity.domain.entity.kbo.Teams;
 import io.security.corespringsecurity.domain.entity.kbo.games.*;
 import io.security.corespringsecurity.domain.entity.schedule.Location;

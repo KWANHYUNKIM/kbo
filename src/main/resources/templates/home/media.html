@@ -179,14 +179,53 @@
 
 <div th:fragment="media-youtube">
   <head>
+    <style>
+      .youtube-video {
+        position: relative;
+        display: block; /* 블록 레벨 요소로 설정 */
+        width: 200px; /* 유튜브 썸네일의 너비 */
+        height: 150px; /* 유튜브 썸네일의 높이 */
+        margin-bottom: 20px; /* 각 비디오 간의 간격 조절 */
+      }
 
+      .youtube-video img {
+        width: 100%; /* 부모 요소에 맞게 이미지 크기 조절 */
+        height: 100%; /* 부모 요소에 맞게 이미지 높이 조절 */
+      }
+
+      .youtube-video:hover img {
+        opacity: 0.8; /* 호버 시 이미지 투명도 조절 */
+      }
+
+      .youtube-video .description {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(0, 0, 0, 0.8); /* 설명 배경색 */
+        color: #fff; /* 설명 글자색 */
+        padding: 10px;
+        border-radius: 5px;
+        opacity: 0; /* 초기 투명도 */
+        transition: opacity 0.3s ease; /* 페이드 인/아웃 효과 */
+        white-space: nowrap; /* 텍스트 줄 바꿈 방지 */
+        overflow: hidden; /* 넘치는 텍스트 숨김 */
+        text-overflow: ellipsis; /* 넘치는 텍스트 생략 부호로 표시 */
+        max-width: 90%; /* 최대 너비 설정 */
+      }
+
+      .youtube-video:hover .description {
+        opacity: 1; /* 호버 시 설명 표시 */
+      }
+    </style>
   </head>
 
   <body>
   <div class="container" style="padding-top: 20px; padding-bottom: 20px">
     <div class="container" style="display: flex; align-items: center; justify-content: space-between;">
       <p style="font-size: 16px; font-weight: bold; margin: 0;">YOUTUBE</p>
-      <img src="/images/home/icons/icon_plus_n.png" style="margin-left: auto;">
+      <img src="/images/home/icons/icon_plus_n.png" style="margin-left: auto; cursor: pointer" id="navigateToDetail">
+
     </div>
 
     <div class="container">
@@ -194,107 +233,28 @@
     </div>
   </div>
 
-  <div class="container" style="padding-top: 20px; padding-bottom: 20px">
+  <div class="container">
     <div class="row row-cols-5">
-
-      <div class="col">
-        <div class="container">
-          <iframe width="200" height="150" src="https://www.youtube.com/embed/cBE_B2XlhVY" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      <div class="col" th:each="video : ${findByRecent5}" >
+        <div class="container youtube-video">
+          <a th:href="${video.playUrl}" target="_blank">
+            <img th:src="${video.filepath}" width="300" height="150" alt="Video Thumbnail"/>
+          </a>
         </div>
         <div class ="container">
-          <p>'가상의 주자를 잡아라' 투수조 내야수조 함께한 PFP 훈련에 총 27명 출연ㄷㄷ</p>
-        </div>
-      </div>
-
-      <div class="col">
-        <div class="container">
-          <iframe width="200" height="150" src="https://www.youtube.com/embed/cBE_B2XlhVY" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
-        <div class ="container">
-          <p>'가상의 주자를 잡아라' 투수조 내야수조 함께한 PFP 훈련에 총 27명 출연ㄷㄷ</p>
-        </div>
-      </div>
-
-      <div class="col">
-        <div class="container">
-          <iframe width="200" height="150" src="https://www.youtube.com/embed/cBE_B2XlhVY" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
-        <div class ="container">
-          <p>'가상의 주자를 잡아라' 투수조 내야수조 함께한 PFP 훈련에 총 27명 출연ㄷㄷ</p>
-        </div>
-      </div>
-
-      <div class="col">
-        <div class="container">
-          <iframe width="200" height="150" src="https://www.youtube.com/embed/cBE_B2XlhVY" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
-        <div class ="container">
-          <p>'가상의 주자를 잡아라' 투수조 내야수조 함께한 PFP 훈련에 총 27명 출연ㄷㄷ</p>
-        </div>
-      </div>
-
-      <div class="col">
-        <div class="container">
-          <iframe width="200" height="150" src="https://www.youtube.com/embed/cBE_B2XlhVY" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
-        <div class ="container">
-          <p>'가상의 주자를 잡아라' 투수조 내야수조 함께한 PFP 훈련에 총 27명 출연ㄷㄷ</p>
+          <p th:text="${video.title}"></p>
         </div>
       </div>
     </div>
-
-    <div class="row row-cols-5">
-
-      <div class="col">
-        <div class="container">
-          <iframe width="200" height="150" src="https://www.youtube.com/embed/cBE_B2XlhVY" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
-        <div class ="container">
-          <p>'가상의 주자를 잡아라' 투수조 내야수조 함께한 PFP 훈련에 총 27명 출연ㄷㄷ</p>
-        </div>
-      </div>
-
-      <div class="col">
-        <div class="container">
-          <iframe width="200" height="150" src="https://www.youtube.com/embed/cBE_B2XlhVY" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
-        <div class ="container">
-          <p>'가상의 주자를 잡아라' 투수조 내야수조 함께한 PFP 훈련에 총 27명 출연ㄷㄷ</p>
-        </div>
-      </div>
-
-      <div class="col">
-        <div class="container">
-          <iframe width="200" height="150" src="https://www.youtube.com/embed/cBE_B2XlhVY" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
-        <div class ="container">
-          <p>'가상의 주자를 잡아라' 투수조 내야수조 함께한 PFP 훈련에 총 27명 출연ㄷㄷ</p>
-        </div>
-      </div>
-
-      <div class="col">
-        <div class="container">
-          <iframe width="200" height="150" src="https://www.youtube.com/embed/cBE_B2XlhVY" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
-        <div class ="container">
-          <p>'가상의 주자를 잡아라' 투수조 내야수조 함께한 PFP 훈련에 총 27명 출연ㄷㄷ</p>
-        </div>
-      </div>
-
-      <div class="col">
-        <div class="container">
-          <iframe width="200" height="150" src="https://www.youtube.com/embed/cBE_B2XlhVY" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
-        <div class ="container">
-          <p>'가상의 주자를 잡아라' 투수조 내야수조 함께한 PFP 훈련에 총 27명 출연ㄷㄷ</p>
-        </div>
-      </div>
-    </div>
-
   </div>
   </body>
+  <script>
+    document.getElementById('navigateToDetail').addEventListener('click', function() {
+      window.location.href = '/youtube/detail';
+    });
+  </script>
+
 </div>
 </body>
-
 
 </html>
