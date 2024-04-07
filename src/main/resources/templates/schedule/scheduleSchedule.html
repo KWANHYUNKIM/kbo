@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>schedule</title>
+    <style>
+        .tab-schedule {
+            list-style-type: none; /* 목록 앞의 점 제거 */
+            font-size: 16px;
+            padding: 0; /* 패딩 초기화 */
+            margin: 0; /* 마진 초기화 */
+            display: flex;
+        }
+
+        .tab-schedule li {
+            display: inline-block; /* 각 항목을 블록 요소로 만들어 수직 정렬 */
+            text-align: center; /* 텍스트 중앙 정렬 */
+            padding-left: 30px; /* 항목 사이의 간격 조정 */
+        }
+
+        .tab-schedule span {
+            color: black;
+            display: block; /* span을 블록 요소로 만들어 이미지와 텍스트가 각각의 줄에 표시되도록 함 */
+        }
+
+        .tab-schedule img {
+            width: 30px;
+            height: 30px;
+            margin: 0 auto; /* 이미지 중앙 정렬 */
+            display: block; /* 이미지를 블록 요소로 만들어 중앙 정렬 */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <head th:replace="layout/header::userHead"></head>
+            <header th:replace="layout/topOverTop::topOverTop"></header>
+            <header th:replace="layout/top::header_main"></header>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="container" style="text-align: center; font-weight: bold; font-size: 16px; margin-top: 20px;">
+        <div class="col-12">
+            <div class="calendar">
+                <div class="nav" style="display: flex; justify-content: center; align-items: center;">
+                    <img onclick="adjustMonth(-1)" src="/images/home/btn_prev.png" style="cursor: pointer; margin-right: 5px; width: 25px; height: 25px;">
+                    <div style="display: flex; align-items: center;">
+                        <select id="yearDropdown" onchange="changeYear()">
+                            <!-- 연도 옵션: 2001년부터 2024년까지 -->
+                            <script>
+                                for (let year = 2001; year <= 2024; year++) {
+                                    document.write('<option value="' + year + '">' + year + '</option>');
+                                }
+                            </script>
+                        </select>
+
+                        <select id="monthDropdown" onchange="changeMonth()">
+                            <!-- 월 옵션: 1월부터 12월까지 -->
+                            <script>
+                                for (let month = 1; month <= 12; month++) {
+                                    document.write('<option value="' + month + '">' + month + '</option>');
+                                }
+                            </script>
+                        </select>
+                    </div>
+                    <img onclick="adjustMonth(1)" src="/images/home/btn_next.png" style="cursor: pointer; margin-left: 5px; width: 25px; height: 25px;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="container" style="padding-top: 30px;">
+        <hr>
+        <ul class="tab-schedule">
+            <li class="all on" data-value=""><a href="#none"><span>전체</span></a></li>
+            <li class="" data-value="LG"><a href="#none"><img src="//lgcxydabfbch3774324.cdn.ntruss.com/KBO_IMAGE/emblem/regular/2024/initial_LG.png" alt="LG"><span>LG</span></a></li>
+            <li class="" data-value="KT"><a href="#none"><img src="//lgcxydabfbch3774324.cdn.ntruss.com/KBO_IMAGE/emblem/regular/2024/initial_KT.png" alt="kt"><span>KT</span></a></li>
+            <li class="" data-value="SK"><a href="#none"><img src="//lgcxydabfbch3774324.cdn.ntruss.com/KBO_IMAGE/emblem/regular/2024/initial_SK.png" alt="SSG"><span>SSG</span></a></li>
+            <li class="" data-value="NC"><a href="#none"><img src="//lgcxydabfbch3774324.cdn.ntruss.com/KBO_IMAGE/emblem/regular/2024/initial_NC.png" alt="NC"><span>NC</span></a></li>
+            <li class="" data-value="OB"><a href="#none"><img src="//lgcxydabfbch3774324.cdn.ntruss.com/KBO_IMAGE/emblem/regular/2024/initial_OB.png" alt="두산"><span>두산</span></a></li>
+            <li class="" data-value="HT"><a href="#none"><img src="//lgcxydabfbch3774324.cdn.ntruss.com/KBO_IMAGE/emblem/regular/2024/initial_HT.png" alt="KIA"><span>KIA</span></a></li>
+            <li class="" data-value="LT"><a href="#none"><img src="//lgcxydabfbch3774324.cdn.ntruss.com/KBO_IMAGE/emblem/regular/2024/initial_LT.png" alt="롯데"><span>롯데</span></a></li>
+            <li class="" data-value="SS"><a href="#none"><img src="//lgcxydabfbch3774324.cdn.ntruss.com/KBO_IMAGE/emblem/regular/2024/initial_SS.png" alt="삼성"><span>삼성</span></a></li>
+            <li class="" data-value="HH"><a href="#none"><img src="//lgcxydabfbch3774324.cdn.ntruss.com/KBO_IMAGE/emblem/regular/2024/initial_HH.png" alt="한화"><span>한화</span></a></li>
+            <li class="" data-value="WO"><a href="#none"><img src="//lgcxydabfbch3774324.cdn.ntruss.com/KBO_IMAGE/emblem/regular/2024/initial_WO.png" alt="키움"><span>키움</span></a></li>
+        </ul>
+        <hr>
+    </div>
+</div>
+
+<div class="row">
+    <div id="scheduleData"  class="container" style="">
+        <table class="table">
+            <thead>
+            <tr>
+                <th class="center-aligned">날짜</th>
+                <th class="center-aligned">시간</th>
+                <th class="center-aligned">어웨이 팀</th>
+                <th class="center-aligned">홈 팀</th>
+                <th class="center-aligned">구장</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="schedule, stat : ${scheduleList}">
+                <td th:if="${stat.first || !schedule.date.equals(scheduleList[stat.index - 1].date)}"
+                    th:rowspan="${rowspanMap[schedule.date]}"
+                    class="center-aligned" th:text="${schedule.date}"></td>
+                <td class="center-aligned" th:text="${schedule.time}">시간</td>
+                <td class="center-aligned" th:text="${schedule.awayTeam.teamName}">어웨이 팀</td>
+                <td class="center-aligned" th:text="${schedule.homeTeam.teamName}">홈 팀</td>
+                <td class="center-aligned" th:text="${schedule.location.locationName}">구장</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+
+<script>
+    function adjustMonth(offset) {
+        const monthDropdown = document.getElementById('monthDropdown');
+        let month = parseInt(monthDropdown.value);
+        let year = parseInt(document.getElementById('yearDropdown').value);
+
+        // 월을 조정합니다. offset을 기반으로 이전 또는 다음 월로 변경
+        month += offset;
+
+        // 월이 범위를 벗어날 경우 년도 조정
+        if (month < 1) {
+            month = 12;
+            year -= 1; // 이전 년도로
+        } else if (month > 12) {
+            month = 1;
+            year += 1; // 다음 년도로
+        }
+
+        // 년도와 월을 업데이트
+        document.getElementById('yearDropdown').value = year;
+        monthDropdown.value = month;
+
+        // 스케줄 업데이트
+        updateSchedule(year, month);
+    }
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeYearDropdown();
+        initializeMonthDropdown();
+        const currentYear = new Date().getFullYear();
+        const currentMonth = new Date().getMonth() + 1; // JavaScript의 getMonth()는 0부터 시작하므로 1을 더해줍니다.
+        document.getElementById('yearDropdown').value = currentYear;
+        document.getElementById('monthDropdown').value = currentMonth;
+        updateSchedule(currentYear, currentMonth); // 페이지 로드 시 현재 연도와 월에 해당하는 스케줄을 불러옵니다.
+    });
+
+    function initializeYearDropdown() {
+        const startYear = 2001;
+        const endYear = 2024;
+        const yearDropdown = document.getElementById('yearDropdown');
+        for (let year = startYear; year <= endYear; year++) {
+            let option = new Option(year, year);
+            yearDropdown.options.add(option);
+        }
+    }
+
+    function initializeMonthDropdown() {
+        const monthDropdown = document.getElementById('monthDropdown');
+        for (let month = 1; month <= 12; month++) {
+            let option = new Option(month, month);
+            monthDropdown.options.add(option);
+        }
+    }
+    function changeYear() {
+        const year = document.getElementById('yearDropdown').value;
+        const month = document.getElementById('monthDropdown').value;
+        updateSchedule(year, month);
+    }
+
+    function changeMonth() {
+        const year = document.getElementById('yearDropdown').value;
+        const month = document.getElementById('monthDropdown').value;
+        updateSchedule(year, month);
+    }
+
+    function updateSchedule(year, month) {
+        $.ajax({
+            url: '/schedule/schedule',
+            type: 'GET',
+            data: {
+                'year': year,
+                'month': month
+            },
+            success: function(response) {
+
+                $('#scheduleData').html($(response).find('#scheduleData').html());
+            },
+            error: function(error) {
+                console.log('Error:', error);
+            }
+        });
+    }
+</script>
+</html>

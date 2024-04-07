@@ -6,6 +6,7 @@ logs
 build
 !.mvn/wrapper/maven-wrapper.jar
 /src/main/resources/maxmind/
+!.out/artifacts/corespringsecurity_jar/corespringsecurity.jar
 
 ### STS ###
 .apt_generated

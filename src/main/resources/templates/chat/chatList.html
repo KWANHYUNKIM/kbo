@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+        .chat-menu-content {
+            display: none;
+            position: absolute;
+            width: 400px;
+            top: 100%;
+            left: 70px;
+            height: 300px;
+            max-height: 300px; /* 최대 높이 설정 */
+            overflow-y: auto; /* 세로 스크롤바 자동 생성 */
+            margin-bottom: 10px;
+            background-color: white;
+            font-size: 12px;
+            border: 1px solid #dbdbdb;
+            border-radius: 5px;
+            z-index: 1000;
+        }
+
+        .chat-menu-content a {
+            color: black;
+            text-decoration: none;
+        }
+
+        .chat-menu-content p {
+            font-size: 16px;
+            font-weight: bold;
+            text-align: left;
+            margin: 0; /* 왼쪽 여백 제거 */
+        }
+
+        .chat-menu-content img {
+            width: 30px;
+            height: 30px;
+            float: right;
+            cursor: pointer;
+            margin-left: auto; /* 왼쪽 여백 제거 */
+        }
+
+        .chat-menu-content.is-active {
+            display: block;
+        }
+
+        .chat-menu-content::before,
+        .chat-menu-content::after {
+            position: absolute;
+            left: 83%;
+            transform: translateX(-50%);
+            top: -24px;
+            display: block;
+            width: 0;
+            height: 0;
+            border-top: 12px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 12px solid transparent;
+            border-left: 10px solid transparent;
+            content: '';
+        }
+
+        .chat-menu-content::before {
+            border-bottom-color: #e0e2e7;
+        }
+        .chat-menu-content::after {
+            top: -22px;
+            border-bottom-color: #fff;
+        }
+
+        .chat-menu-item {
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            height: 35px;
+        }
+
+        .chat-menu-item i {
+            position: relative;
+            top: 2px;
+            width: 14px;
+            height: 14px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        .chat-menu-item:nth-last-child(2) {
+            margin-bottom: 5px;
+        }
+
+        .chat-menu-item:last-child {
+            padding: 10px 15px 0 15px;
+            border-top: 1px solid #dbdbdb;
+        }
+
+        .hidden-menu {
+            display: none;
+            position: absolute;
+            top: 20%;
+            left: 200px;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .hidden-menu a {
+            color: black;
+            padding: 14px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .hidden-menu a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .second-layout {
+            display: flex;
+            float: left;
+        }
+
+        .second-layout p {
+            text-align: left;
+            font-size: 16px;
+        }
+        .third-layout-ad{
+            padding-bottom: 50px;
+            background-color: #d7d7d7;
+        }
+
+    </style>
+</head>
+
+<body>
+<div style="padding-left: 10px" class="chatDropdown" id="chatDropdown">
+    <div class="user-action-item chat-menu">
+
+        <a id="toggleButton" style="border: none; background: none; position: relative" type="button">
+            <img src="/images/icons/talking.png" alt="talking" style="width: 23px; height: 23px; position: relative">
+        </a>
+
+            <div id="chatMenuContent" class="chat-menu-content">
+
+            <div class="container first-layout" style="padding-bottom: 10px;">
+                <p style="font-size: 16px; font-weight: bold; text-align: left;">오픈톡</p>
+                <img src="/images/icons/talkroom.png" alt="talkRoom" id="menuToggle">
+
+                <div class="hidden-menu" id="hiddenMenu">
+                    <a href="#">친구톡 만들기</a>
+                    <hr>
+                    <a href="/members/chat" target="_blank">오픈톡 만들기</a>
+                </div>
+            </div>
+
+            <div class="container second-layout">
+                <p>전체</p>
+                <p>상담∙문의</p>
+            </div>
+            <!-- Todo:  ad 추가 -->
+           <div class="container third-layout-ad"></div>
+
+            <div class="container four-layout-roomList">
+                <div th:if="${not #lists.isEmpty(roomList)}">
+                    <ul class="chat-menu-list">
+                        <div th:each="room : ${roomList}" class="chat-menu-item">
+                            <li class="chat-menu-item">
+                                <i class="far fa-user-circle"></i>
+                                <img style="border-radius: 50%;" th:src="*{room.filepath}">
+
+                                <a th:href="@{/chat/chatRoom/{roomId}(roomId=${room.roomId})}"
+                                   th:text="${room.name}"></a>
+                            </li>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    document.getElementById("menuToggle").onclick = function() {
+        var menu = document.getElementById("hiddenMenu");
+        if (menu.style.display === "block") {
+            menu.style.display = "none";
+        } else {
+            menu.style.display = "block";
+        }
+    }
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const chatMenuContent = document.getElementById('chatMenuContent');
+        const toggleButton = document.getElementById('toggleButton');
+
+        const handleToggle = () => {
+            chatMenuContent.style.display = chatMenuContent.style.display === 'none' ? 'block' : 'none';
+        };
+
+        toggleButton.addEventListener('click', handleToggle);
+
+        // Clicking outside the chat menu content will close it
+        window.addEventListener('click', function(event) {
+            if (!toggleButton.contains(event.target) && !chatMenuContent.contains(event.target)) {
+                chatMenuContent.style.display = 'none';
+            }
+        });
+    });
+</script>
+
+</html>

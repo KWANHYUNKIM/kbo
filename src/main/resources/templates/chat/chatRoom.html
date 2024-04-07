@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<input type="text" placeholder="보낼 메세지를 입력하세요." class="content">
+<button type="button" value="전송" class="sendBtn" onclick="sendMsg()">전송</button>
+<button type="button" value="방나가기" class="quit" onclick="quit()">방 나가기 </button>
+<div>
+    <span>메세지</span>
+    <div class="msgArea"></div>
+</div>
+</body>
+
+<script th:inline="javascript">
+    /* roomId를 JavaScript 변수로 설정 */
+    var roomId = [[${room?.roomId}]];
+
+    function enterRoom(socket){
+        console.log(roomId);
+
+        var enterMsg={"type" : "ENTER", "roomId": roomId, "sender": "chee", "msg": ""};
+        socket.send(JSON.stringify(enterMsg));
+    }
+
+    /* WebSocket URL에 roomId 추가 */
+    let socket = new WebSocket(`ws://localhost:8080/ws/chat/${roomId}`);
+
+    socket.onopen = function (e) {
+        console.log('open server!');
+        enterRoom(socket);
+    };
+    socket.onclose=function(e){
+        console.log('disconnet');
+    }
+
+    socket.onerror = function (e){
+        console.log(e);
+    }
+
+    socket.onmessage = function (e) {
+        console.log(e.data);
+        let msgArea = document.querySelector('.msgArea');
+        let newMsg = document.createElement('div');
+        newMsg.innerText = e.data;
+        msgArea.append(newMsg);
+    }
+
+    function sendMsg() {
+        if (socket.readyState === WebSocket.OPEN) {
+            let content = document.querySelector('.content').value;
+            var talkMsg = {"type": "TALK", "roomId": roomId, "sender": "chee", "message": content};
+
+            socket.send(JSON.stringify(talkMsg));
+
+            let msgArea = document.querySelector('.msgArea');
+            let newMsg = document.createElement('div');
+            newMsg.innerText = "You: " + content;
+            msgArea.append(newMsg);
+        } else {
+            console.log("WebSocket is not open:", socket.readyState);
+        }
+    }
+
+    function quit(){
+        var quitMsg={"type" : "QUIT", "roomId": roomId, "sender": "chee", "msg": ""};
+        socket.send(JSON.stringify(quitMsg));
+        socket.close();
+        location.href="/chat/chatList";
+    }
+</script>
+
+</html>
