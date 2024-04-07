@@ -29,9 +29,6 @@ public class ReplyController {
     @Autowired
     private ReplyService replyService;
 
-    @Autowired
-    private BoardService boardService;
-
 
     @PostMapping("/members/boards/{boardId}/comments/{commentId}/replies")
     public String createForm(Principal principal, @PathVariable Long boardId, @PathVariable Long commentId, @Valid @ModelAttribute ReplyDto form) {

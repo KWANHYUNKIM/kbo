@@ -16,17 +16,53 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class ScheduleController {
 
     @Autowired
     private ScheduleService scheduleService;
+
+    @GetMapping(value = "/schedule/schedule")
+    public String scheduleSchedule(  @RequestParam(name = "year", defaultValue = "2024") int year,
+                                     @RequestParam(name = "month", defaultValue = "3") int month,
+                                     Model model ){
+
+        // 월의 시작 날짜와 끝 날짜를 계산
+        LocalDate startOfMonth = LocalDate.of(year, month, 1);
+        LocalDate endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.lengthOfMonth());
+
+        // 날짜 포맷을 'yyyyMMdd'로 설정
+        String startDate = startOfMonth.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String endDate = endOfMonth.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+
+        List<Schedule> scheduleList = scheduleService.findByDateRange(startDate, endDate);
+
+        Map<String, Integer> rowspanMap = new HashMap<>();
+
+        for (Schedule schedule : scheduleList) {
+            String date = schedule.getDate();
+            if (!rowspanMap.containsKey(date)) {
+                rowspanMap.put(date, getRowspan(scheduleList, date));
+            }
+        }
+
+
+        model.addAttribute("scheduleList",scheduleList);
+        model.addAttribute("rowspanMap", rowspanMap);
+
+        return "schedule/scheduleSchedule";
+    }
+
+
 
     @GetMapping(value = "/schedule/weather")
     public String scheduleWeather(){
@@ -35,7 +71,9 @@ public class ScheduleController {
     }
     @GetMapping(value = "/schedule/scoreboard")
 
-    public String scheduleScoreBoard( @RequestParam(name = "date" , defaultValue = "20240323") String date, Model model){
+    public String scheduleScoreBoard(@RequestParam(name = "date" , defaultValue = "20230401") String date, Model model){
+
+        // 월의 시작 날짜와 끝 날짜를 계산
 
         List<Schedule> scheduleList = scheduleService.findByDate(date);
         model.addAttribute("scheduleList", scheduleList);
@@ -45,10 +83,13 @@ public class ScheduleController {
 
     @GetMapping (value = "/api/schedule")
     public String getSchedule(@RequestParam("date") String date, Model model) {
-        System.out.println("data 값은?" + date);
         List<Schedule> schedule = scheduleService.findByDate(date);
-        System.out.println("schedule 값은" + schedule);
         model.addAttribute("scheduleList", schedule);
         return "home";
     }
+
+    public static int getRowspan(List<Schedule> scheduleList, String date) {
+        return (int) scheduleList.stream().filter(schedule -> schedule.getDate().equals(date)).count();
+    }
+
 }

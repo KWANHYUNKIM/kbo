@@ -603,9 +603,8 @@
           <div class ="container rectangle-1">
             <div style="display: flex;">
               <div class="container login-comment-box" style="padding: 10px;">
-                <form role="form" th:action="@{'/members/game/' + ${scheduleDetails.id} + '/comment'}" th:object="${commentForm}" method="post">
-                  <textarea type="text" class="form-control"
-                            placeholder="메세지를 입력해주세요." name="comment" style="width: 150px;"></textarea>
+                <form role="form" id="commentForm" th:data-schedule-id="${scheduleDetails.id}" method="post">
+                  <textarea type="text" class="form-control" placeholder="메세지를 입력해주세요." name="comment" style="width: 150px;"></textarea>
                   <button class="btn btn-primary" type="submit">댓글 쓰기</button>
                 </form>
               </div>
@@ -615,13 +614,11 @@
 
         <div class="container" th:each="scheduleDetails, loop : ${scheduleDetails}">
           <div class="container" th:each="comments, loop : ${scheduleDetails.gameComments}">
-            <div th:class="'comments' + ${loop.index}" style="border: 0.1px solid #000; border-radius: 10px;
-               height: auto; padding-bottom: 10px; margin-bottom: 10px;">
+            <div th:class="'comments' + ${loop.index}" style="border: 0.1px solid #000; border-radius: 10px; height: auto; padding-bottom: 10px; margin-bottom: 10px;">
               <div class="container">
                 <h10 th:text="${comments.account.username}"></h10>
                 <h10 th:text="${comments.createdDate}"></h10>
               </div>
-
               <div class="container">
                 <h10 th:text="${comments.comment}"></h10>
               </div>
@@ -636,6 +633,64 @@
 
 </body>
 </html>
+
+<script>
+  $(document).ready(function() {
+    $('#commentForm').submit(function(event) {
+      // 폼 제출 방지
+      event.preventDefault();
+
+      // 폼 데이터 가져오기
+      var formData = $(this).serialize();
+
+      // 스케줄 ID 가져오기
+      var scheduleId = $(this).data('schedule-id');
+
+      // AJAX 요청
+      $.ajax({
+        type: 'POST',
+        url: '/members/game/' + scheduleId + '/comment',
+        data: formData,
+        success: function(response) {
+        },
+
+        error: function(xhr, status, error) {
+          // 오류 시 처리
+          alert('댓글 작성 중 오류가 발생했습니다.');
+          console.error(xhr.responseText);
+        }
+      });
+    });
+  });
+</script>
+
+<script>
+  function refreshComments(scheduleId) {
+    console.log(scheduleId);
+    $.ajax({
+      type: "GET",
+      url: '/members/game/' + scheduleId + '/comment',
+      success: function(data) {
+        $('#commentContainer').html($(data).find('#commentContainer').html());
+      },
+      error: function(xhr, status, error) {
+        console.error("Error fetching comments:", error);
+      }
+    });
+  }
+
+  // 페이지 로드될 때 댓글 자동 새로고침 시작
+  $(document).ready(function() {
+    // 스케줄 ID를 어떻게 설정할지에 따라 달라질 수 있음
+    var scheduleId = $(this).data('schedule-id');
+
+    // 5초마다 refreshComments 함수 호출
+    setInterval(function() {
+      refreshComments(scheduleId);
+    }, 50000);
+  });
+</script>
+
 
 <script>
   var homeScore = parseInt(document.getElementById('homeScore').innerText);

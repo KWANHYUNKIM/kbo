@@ -36,7 +36,6 @@
     font-size: 14px; /* 원하는 폰트 크기 설정 */
 
   }
-
 </style>
 
 
@@ -53,7 +52,7 @@
   <div class="container p-3">
     <div class="row">
       <div class="col-sm-3">
-        <div th:replace="settings/layout/settingSidebar ::sidebar"></div> <!-- 사이드 바 --> <!-- col-sm-3 -->
+<!--        <div th:replace="settings/layout/settingSidebar ::sidebar"></div> &lt;!&ndash; 사이드 바 &ndash;&gt; &lt;!&ndash; col-sm-3 &ndash;&gt;-->
       </div>
     </div>
   <div class="container profile">
@@ -77,16 +76,16 @@
               <label th:for="profileImage">프로필</label>
 
               <div class="dropdown">
-              <img style="border-radius: 50%;" th:src="*{filepath}" class="img-button-main btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"/>
+                <img style="border-radius: 50%;" th:src="*{filepath}" class="img-button-main btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"/>
                 <div class="change-text">변경</div> <!-- 변경 문구를 나타낼 요소 -->
 
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <!-- 이미지 목록을 반복하면서 각 이미지에 대한 선택 옵션 생성 -->
-              <a class="dropdown-item" href="javascript:void(0)" th:each="image : ${images}" th:data-imagepath="${image.filepath}" onclick="selectImage(this)">
-              <img th:src="${image.filepath}" class="dropdown-image" alt="프로필 이미지">
-              </a>
-              </div>
+                  <!-- 이미지 목록을 반복하면서 각 이미지에 대한 선택 옵션 생성 -->
+                  <a class="dropdown-item" href="javascript:void(0)" th:each="image : ${images}" th:data-imagepath="${image.filepath}" onclick="selectImage(this)">
+                    <img th:src="${image.filepath}" class="dropdown-image" alt="프로필 이미지">
+                  </a>
+                </div>
               </div>
           </div>
           <!-- 선택한 이미지의 경로를 서버로 전송할 hidden input -->
@@ -119,8 +118,6 @@
   // 마우스 오버 이벤트
   document.querySelector('.img-button-main').addEventListener('mouseover', function() {
     // 마우스 오버 시 밝기 감소
-    this.style.filter =
-
     this.style.filter = 'brightness(40%)';
 
     // 변경 문구 표시

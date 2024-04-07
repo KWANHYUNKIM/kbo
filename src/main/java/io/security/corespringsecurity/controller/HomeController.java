@@ -21,6 +21,8 @@ import io.security.corespringsecurity.service.board.LikeService;
 import io.security.corespringsecurity.service.kbo.ClubService;
 import io.security.corespringsecurity.service.kbo.ScheduleService;
 import io.security.corespringsecurity.service.profile.NotificationService;
+import io.security.corespringsecurity.socket.entity.ChatRoom;
+import io.security.corespringsecurity.socket.service.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -57,6 +59,8 @@ public class HomeController {
 	private BoardService boardService;
 	@Autowired
 	private VideoService videoService;
+	@Autowired
+	private ChatService chatService;
 
 	@GetMapping(value="/")
 	public String home(Model model, Principal principal, @RequestParam(name = "date" , defaultValue = "20240323") String date){
@@ -117,6 +121,9 @@ public class HomeController {
 		Set<Comment> commentList = new HashSet<>();
 		List<String> teams = Arrays.asList("HH", "HT", "KT", "LG", "LT", "NC", "OB", "SK", "SS", "WO");
 
+		List<ChatRoom> roomList = chatService.findAllRoom();
+
+
 		model.addAttribute("videoList",videoList);
 		model.addAttribute("findByRecent5",findByRecent5);
 		model.addAttribute("teamImage", teams);
@@ -126,6 +133,8 @@ public class HomeController {
 		model.addAttribute("clubs", clubs);
 		model.addAttribute("teams", team);
 		model.addAttribute("communityTop5",top5Boards);
+		model.addAttribute("roomList",roomList);
+
 		return "home";
 	}
 

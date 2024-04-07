@@ -48,7 +48,6 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public List<Schedule> findByDate(String date) {
-        System.out.println("파라미터 date 값: " + date);
         return scheduleRepository.findByDate(date);
     }
 
@@ -75,6 +74,11 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public List<Schedule> findById(Location id, String date) {
         return scheduleRepository.findByIdAndDate(id, date);
+    }
+
+    @Override
+    public List<Schedule> findByDateRange(String startDate, String endDate) {
+        return scheduleRepository.findByDateRange(startDate,endDate);
     }
 
 

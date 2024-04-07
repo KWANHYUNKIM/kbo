@@ -15,6 +15,8 @@ import io.security.corespringsecurity.service.kbo.ScheduleService;
 import io.security.corespringsecurity.service.kbo.games.EntrancePlayerService;
 import io.security.corespringsecurity.service.kbo.games.GameCommentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -71,8 +73,6 @@ public class gameController {
             scheduleDetails = scheduleService.findByDateAndTeam(date, awayTeam, homeTeam);
         }
 
-        System.out.println("scheduleDetails 값은?" + scheduleDetails);
-
         if(!scheduleDetails.isEmpty()){
             Schedule scheduleDetail = scheduleDetails.get(0);
             List<Entrance> entrances = scheduleService.findByEntrance(scheduleDetail);
@@ -90,11 +90,39 @@ public class gameController {
         return "/game/gameDetails";
     }
 
+//    @PostMapping("/members/game/{scheduleId}/comment")
+//    public String createForm(Principal principal, @PathVariable Long scheduleId,
+//                             @ModelAttribute GameCommentDto form) {
+//        Account account = null;
+//        GameComment comment = new GameComment();
+//
+//        if (principal instanceof UsernamePasswordAuthenticationToken) {
+//            account = (Account) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+//            comment.setAccount(account);
+//        }
+//
+//        Schedule schedule = scheduleService.findByComment(scheduleId);  // 해당 boardId에 대한 게시물을 가져옴
+//
+//
+//        comment.setComment(form.getComment());
+//        comment.setSchedule(schedule);  // Comment 엔티티의 board 속성에 Board 객체를 설정
+//
+//
+//
+//        // 여기서 boardId를 사용하여 해당 게시물을 식별하여 댓글을 저장합니다.
+//        gameCommentService.save(comment);
+//
+//
+//
+//        return "redirect:";
+//    }
+
+
     @PostMapping("/members/game/{scheduleId}/comment")
-    public String createForm(Principal principal, @PathVariable Long scheduleId,
-                             @ModelAttribute GameCommentDto form) {
+    public ResponseEntity<String> createForm(Principal principal, @PathVariable Long scheduleId, @ModelAttribute GameCommentDto form) {
         Account account = null;
         GameComment comment = new GameComment();
+        HttpStatus status = null;
 
         if (principal instanceof UsernamePasswordAuthenticationToken) {
             account = (Account) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
@@ -103,19 +131,21 @@ public class gameController {
 
         Schedule schedule = scheduleService.findByComment(scheduleId);  // 해당 boardId에 대한 게시물을 가져옴
 
+        if (schedule != null) {
+            comment.setComment(form.getComment());
+            comment.setSchedule(schedule);  // Comment 엔티티의 board 속성에 Board 객체를 설정
 
-        comment.setComment(form.getComment());
-        comment.setSchedule(schedule);  // Comment 엔티티의 board 속성에 Board 객체를 설정
+            // 여기서 boardId를 사용하여 해당 게시물을 식별하여 댓글을 저장합니다.
+            gameCommentService.save(comment);
 
+            status = HttpStatus.CREATED; // 댓글이 성공적으로 생성됨을 나타내는 HttpStatus 코드
+        } else {
+            status = HttpStatus.NOT_FOUND; // 요청된 게시물이 없음을 나타내는 HttpStatus 코드
+        }
 
-
-        // 여기서 boardId를 사용하여 해당 게시물을 식별하여 댓글을 저장합니다.
-        gameCommentService.save(comment);
-
-
-
-        return "redirect:/";
+        return ResponseEntity.status(status).body(null);
     }
+
 }
 
 

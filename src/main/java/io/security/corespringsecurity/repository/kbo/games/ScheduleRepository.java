@@ -29,4 +29,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule,Long> {
 
     @Query("SELECT s FROM Schedule s WHERE s.location = :id AND s.date = :date")
     List<Schedule> findByIdAndDate(@Param("id") Location id, @Param("date") String date);
+
+    @Query("SELECT s FROM Schedule s WHERE s.date BETWEEN :startDate AND :endDate")
+    List<Schedule> findByDateRange(@Param("startDate") String startDate, @Param("endDate") String endDate);
 }

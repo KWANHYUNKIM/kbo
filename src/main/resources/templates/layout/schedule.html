@@ -124,10 +124,12 @@
   <div id="schedule"  class="row justify-content-center">
     <div th:if="${not #lists.isEmpty(scheduleList)}" th:each="schedule, loop : ${scheduleList}"
          style="margin-top: 0px; margin-left: 10px; margin-bottom: 25px">
-      <div class="g-col-4" th:data-date="${schedule.date}"
-           th:data-time="${schedule.time}"
-           th:data-gameboard="${schedule.gameBoard != null ? schedule.gameBoard.id : 'none'}">
-        <!-- 경기 contents -->
+    <div th:if="${not #lists.isEmpty(schedule.gameBoard)}">
+        <div class="g-col-4"
+            th:data-date="${schedule.date}"
+            th:data-time="${schedule.time}"
+            th:data-gameboard="${schedule.gameBoard}">
+
         <div class="text-center container">
           <p style="font-weight: bold; display: inline;" th:text="${schedule.location.locationName}"></p>
           <p style="display: inline">|</p>
@@ -135,16 +137,9 @@
         </div>
 
         <div class="text-center container">
-          <div th:id="'background' + ${loop.index}" style="position: relative; width: 70px; height: 20px; background-color: #6dbef1; border-radius: 37.5px/75px; margin: 20px auto;">
-            <p th:id="'upcomingGame' + ${loop.index}" style="color: #fff; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: bold;">경기예정</p>
-          </div>
 
           <div th:id="'resultBackground' + ${loop.index}" style="position: relative; width: 70px; height: 20px; background-color: #000000; border-radius: 37.5px/75px; margin: 20px auto;">
             <p th:id="'resultGame' + ${loop.index}" style="color: #fff; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: bold;">경기종료</p>
-          </div>
-
-          <div th:id="'resultRainOut' + ${loop.index}" style="position: relative; width: 70px; height: 20px; background-color: #011e36; border-radius: 37.5px/75px; margin: 20px auto;">
-            <p th:id="'resultGameRainOut' + ${loop.index}" style="color: #fff; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: bold;">우천취소</p>
           </div>
         </div>
 
@@ -152,21 +147,6 @@
           <img style="display: inline;" th:src="${schedule.awayTeam.filepath}" alt="Away Team Logo">
           <p style="display: inline; font-weight: 700; font-size: 24px;">vs</p>
           <img style="display: inline" th:src="${schedule.homeTeam.filepath}" alt="Home Team Logo">
-        </div>
-
-        <div th:id="'bottom' + ${loop.index}" class="bottom container" style="position: absolute; bottom: 0; width: 100%; display: flex; justify-content: center;">
-          <div style="text-align: center;">
-            <img src="/images/home/bg_ticket.png" alt="bg-ticket" style="width: 100px; height: 40px;">
-            <p id="ticketLink" style="font-weight: bold; font-size: 13px; color: #fff; margin-top: -30px; vertical-align: top; cursor: pointer;">
-              TICKET
-            </p>
-          </div>
-          <div th:id="'bottomPreview' + ${loop.index}" style="text-align: center;"
-               th:onclick="|location.href='@{/game/{scheduleId}(scheduleId=${schedule.date + schedule.awayTeam.teamName + schedule.homeTeam.teamName})}/reply'|"
-          >
-            <img src="/images/home/bg_info.png" alt="bg-info" style="width: 100px; height: 40px;">
-            <p style="font-weight: bold; font-size: 13px; color: #fff; margin-top: -30px; vertical-align: top;">PREVIEW</p>
-          </div>
         </div>
 
         <div th:id="'result' + ${loop.index}" class="bottom container" style="position: absolute; bottom: 0; width: 100%; display: flex; justify-content: center; right : -85px;"
@@ -253,9 +233,12 @@
               </div>
               <!-- 테이블 끝 -->
               <div class="wPlayer container" style="text-align: center">
-                <div th:if="${not #lists.isEmpty(schedule.gameBoard.gameHighlights)}">
+                <div th:if="${not #lists.isEmpty(schedule.gameBoard)}">
                   <p id="gameWinningHit" th:data-player="${schedule.gameBoard.gameHighlights.gameWinningHit}"
                      th:text="'결승타 : ' + ${schedule.gameBoard.gameHighlights.gameWinningHit}"></p>
+                </div>
+
+                <div th:unless="${not #lists.isEmpty(schedule.gameBoard)}">
                 </div>
               </div>
 
@@ -263,7 +246,7 @@
               <div th:if="${not #lists.isEmpty(schedule.gameBoard)}">
 <!--                <img style="display: inline;" th:src="${schedule.awayTeam.filepath}" alt="Away Team Logo">-->
 <!--                <p th:text="${schedule.awayTeam.teamName}"></p>-->
-                <div th:if="${not #lists.isEmpty(schedule.gameBoard.pitcherStats)}" th:each="pitcher, loop : ${schedule.gameBoard.pitcherStats}">
+                <div th:if="${schedule.gameBoard != null and !#lists.isEmpty(schedule.gameBoard.pitcherStats)}" th:each="pitcher, loop : ${schedule.gameBoard.pitcherStats}">
                   <div th:if="${pitcher.teamType} == 'away' and ${pitcher.result} == '승'">
                     <p>승리투수</p>
                     <p style="display: inline" th:text="${pitcher.playerName}"></p>
@@ -278,12 +261,21 @@
                     <p style="display: inline" th:text="${pitcher.losses} + '패'"></p>
                   </div>
                 </div>
+
+                <div th:unless="${not #lists.isEmpty(schedule.gameBoard.pitcherStats)}">
+
+                </div>
               </div>
+
+              <div th:unless="${not #lists.isEmpty(schedule.gameBoard)}">
+
+              </div>
+
             </div>
               <div class="container">
 <!--                <img style="display: inline;" th:src="${schedule.homeTeam.filepath}" alt="Away Team Logo">-->
 <!--                <p th:text="${schedule.homeTeam.teamName}"></p>-->
-                <div th:if="${not #lists.isEmpty(schedule.gameBoard.pitcherStats)}" th:each="pitcher, loop : ${schedule.gameBoard.pitcherStats}">
+                <div th:if="${schedule.gameBoard != null and !#lists.isEmpty(schedule.gameBoard.pitcherStats)}" th:each="pitcher, loop : ${schedule.gameBoard.pitcherStats}">
                   <div th:if="${pitcher.teamType} == 'home' and ${pitcher.result} == '승'">
                     <p>승리투수</p>
                     <p style="display: inline" th:text="${pitcher.playerName}"></p>
@@ -298,6 +290,9 @@
                     <p style="display: inline" th:text="${pitcher.losses} + '패'"></p>
                   </div>
                 </div>
+
+                <div th:unless="${not #lists.isEmpty(schedule.gameBoard.pitcherStats)}">
+                </div>
               </div>
               </div>
             </div>
@@ -306,11 +301,58 @@
               </div>
             </div>
           </div>
+          </div>
+
+          <div th:unless="${not #lists.isEmpty(schedule.gameBoard)}">
+            <div class="g-col-4"
+                 th:data-date="${schedule.date}"
+                 th:data-time="${schedule.time}"
+                 th:data-gameboard="${#lists.isEmpty(schedule.gameBoard) ? 'none' : schedule.gameBoard}"
+            >
+
+
+              <!-- 경기 contents -->
+              <div class="text-center container">
+                <p style="font-weight: bold; display: inline;" th:text="${schedule.location.locationName}"></p>
+                <p style="display: inline">|</p>
+                <p style="font-weight: bold; display: inline" th:text="${schedule.time}"></p>
+              </div>
+
+              <div class="text-center container">
+                <div th:id="'background' + ${loop.index}" style="position: relative; width: 70px; height: 20px; background-color: #6dbef1; border-radius: 37.5px/75px; margin: 20px auto;">
+                  <p th:id="'upcomingGame' + ${loop.index}" style="color: #fff; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: bold;">경기예정</p>
+                </div>
+
+                <div th:id="'resultRainOut' + ${loop.index}" style="position: relative; width: 70px; height: 20px; background-color: #011e36; border-radius: 37.5px/75px; margin: 20px auto;">
+                  <p th:id="'resultGameRainOut' + ${loop.index}" style="color: #fff; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: bold;">우천취소</p>
+                </div>
+              </div>
+
+              <div class="text-center container">
+                <img style="display: inline;" th:src="${schedule.awayTeam.filepath}" alt="Away Team Logo">
+                <p style="display: inline; font-weight: 700; font-size: 24px;">vs</p>
+                <img style="display: inline" th:src="${schedule.homeTeam.filepath}" alt="Home Team Logo">
+              </div>
+
+              <div th:id="'bottom' + ${loop.index}" class="bottom container" style="position: absolute; bottom: 0; width: 100%; display: flex; justify-content: center;">
+                <div style="text-align: center;">
+                  <img src="/images/home/bg_ticket.png" alt="bg-ticket" style="width: 100px; height: 40px;">
+                  <p id="ticketLink" style="font-weight: bold; font-size: 13px; color: #fff; margin-top: -30px; vertical-align: top; cursor: pointer;">
+                    TICKET
+                  </p>
+                </div>
+                <div th:id="'bottomPreview' + ${loop.index}" style="text-align: center;"
+                     th:onclick="|location.href='@{/game/{scheduleId}(scheduleId=${schedule.date + schedule.awayTeam.teamName + schedule.homeTeam.teamName})}/reply'|"
+                >
+                  <img src="/images/home/bg_info.png" alt="bg-info" style="width: 100px; height: 40px;">
+                  <p style="font-weight: bold; font-size: 13px; color: #fff; margin-top: -30px; vertical-align: top;">PREVIEW</p>
+                </div>
+              </div>
+          </div>
         </div>
         </div>
       </div>
     </div>
-
       </div>
     </div>
     <div th:unless="${not #lists.isEmpty(scheduleList)}">
@@ -334,17 +376,16 @@
     const dateOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
     // 요일 옵션 설정
     const dayOptions = { weekday: 'long' };
-
     // 날짜 포매팅
     const formattedDate = currentDate.toLocaleDateString('ko-KR', dateOptions);
     // 요일 포매팅
     const formattedDay = currentDate.toLocaleDateString('ko-KR', dayOptions);
 
     // 최종 문자열 조합
-    const formattedDateForDisplay = `${formattedDate}${formattedDay}`;
+    const formattedDateForDisplay = `${formattedDate} ${formattedDay}`;
 
     // 텍스트 업데이트
-    document.getElementById('currentDateMain').textContent = formattedDateForDisplay.replace(/\./g, '.');
+    document.getElementById('currentDateMain').textContent = formattedDateForDisplay.replace(/\./g, '. ');
   }
   document.addEventListener('DOMContentLoaded', initDate);
 </script>
@@ -356,8 +397,6 @@
     const loopIndex = document.getElementById('loopIndex').value;
 
     for(var i = 0 ; i < loopIndex; i++) {
-
-
       // 모든 탭 내용 숨기기
       var allTabs = document.querySelectorAll('.content-tab + i');
       allTabs.forEach(tab => tab.style.display = 'none');
@@ -483,9 +522,6 @@
     document.getElementById('currentDateMain').textContent = formattedDateForDisplay;
   }
 
-
-  // ... (기존 코드)
-
   function updateCalendar() {
     const calendarContainer = document.getElementById('calendar');
     calendarContainer.innerHTML = ''; // 이전 내용 지우기
@@ -555,8 +591,16 @@
         $('.g-col-4').each(function() {
           var date = $(this).data('date');
           var time = $(this).data('time');
+          var gameBoard = $(this).data('gameboard');
 
-          schedules.push({date: date, time: time});
+
+          if (gameBoard === 'none') {
+            console.log("게임 보드가 비어있습니다.");
+          } else {
+            console.log("g-col-4 안에 " + gameBoard);
+          }
+
+          schedules.push({date: date, time: time, gameBoard: gameBoard});
         });
 
         updateGameStatus(schedules); // 함수 업데이트 호출
@@ -574,7 +618,7 @@
 
           var scheduleDateString = String(schedules[i].date);
           var scheduleTimeString = String(schedules[i].time);
-
+          var scheduleGameBoardString = String(schedules[i].gameBoard);
           var scheduleDateStr = scheduleDateString.substr(0, 4) + '-' + scheduleDateString.substr(4, 2) + '-' + scheduleDateString.substr(6, 2);
           var scheduleDate = new Date(scheduleDateStr + " " + scheduleTimeString);
           var timeDifference = currentDate - scheduleDate;
@@ -591,19 +635,10 @@
           var resultRainOutId = 'resultRainOut' + i;
           var resultGameRainOutId = 'resultGameRainOut' + i;
 
-          var gameBoardId = [];
-
-          $('.g-col-4').each(function() {
-            var gameBoard = $(this).data('gameboard'); // camelCase 대신 케밥 케이스 사용
-            gameBoardId.push(gameBoard);
-          });
-
-          var resultGameBoard = gameBoardId[i];
-
-          console.log(i + " " + resultGameBoard + "resultGameBoard값은?" );
+          console.log("시간확인" + hoursDifference);
 
           // 경기예정인 경우
-          if (hoursDifference < 0) {
+          if (scheduleGameBoardString == 'none' && hoursDifference < 0) {
             $('#' + upcomingGameId).show();
             $('#' + backgroundId).show();
             $('#' + bottomId).show();
@@ -615,7 +650,7 @@
             $('#' + resultGameRainOutId).hide();
           }
           // 우천 취소인 경우
-          else if(hoursDifference > 0 && resultGameBoard == 'none' ){
+          else if(scheduleGameBoardString == 'none'  && hoursDifference > 0 ){
             $('#' + resultRainOutId).show();
             $('#' + resultGameRainOutId).show();
 
@@ -674,80 +709,5 @@
     }
   }
 
-
-</script>
-
-<!--<script th:inline="javascript">-->
-<!--  /*<![CDATA[*/-->
-<!--  // 서버 측에서 전달된 'dates' 리스트를 JavaScript 배열로 변환-->
-<!--  var scheduleDates = /*[[${scheduleDate}]]*/ [];-->
-
-<!--  // 현재 선택된 날짜를 추적하는 변수 (기본값으로 오늘 날짜 설정)-->
-<!--  var currentSelectedDate = new Date();-->
-
-<!--  // 가장 가까운 날짜를 찾는 함수-->
-<!--  function findClosestDate(direction) {-->
-<!--    // scheduleDates를 Date 객체로 변환-->
-<!--    let dates = scheduleDates.map(date => new Date(date));-->
-
-<!--    // 현재 날짜와 가장 가까운 날짜 찾기-->
-<!--    let closestDate = null;-->
-<!--    let closestDiff = Infinity;-->
-
-<!--    for (let i = 0; i < dates.length; i++) {-->
-<!--      let diff = dates[i] - currentSelectedDate;-->
-<!--      // direction에 따라 이전 또는 다음 날짜 탐색-->
-<!--      if (direction < 0 && diff < 0 && Math.abs(diff) < closestDiff) {-->
-<!--        // 이전 날짜 탐색-->
-<!--        closestDiff = Math.abs(diff);-->
-<!--        closestDate = dates[i];-->
-<!--      } else if (direction > 0 && diff > 0 && Math.abs(diff) < closestDiff) {-->
-<!--        // 다음 날짜 탐색-->
-<!--        closestDiff = Math.abs(diff);-->
-<!--        closestDate = dates[i];-->
-<!--      }-->
-<!--    }-->
-
-<!--    // 가장 가까운 날짜 업데이트 (찾았다면)-->
-<!--    if (closestDate !== null) {-->
-<!--      currentSelectedDate = closestDate;-->
-<!--      // 여기에 closestDate를 화면에 표시하는 로직 추가-->
-<!--      console.log('가장 가까운 날짜:', currentSelectedDate);-->
-<!--    }-->
-<!--  }-->
-
-<!--  // 이전/다음 버튼 클릭 핸들러-->
-<!--  function changeDateByDay(direction) {-->
-<!--    findClosestDate(direction);-->
-<!--  }-->
-<!--  /*]]>*/-->
-<!--</script>-->
-
-
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    var ticketLink = document.getElementById('ticketLink');
-
-    ticketLink.addEventListener('click', function () {
-      // Get the team name dynamically from the schedule object
-      var teamHomeway = '삼성'; // Replace this with the actual expression from your template
-
-      // Define a mapping of team names to their ticketing URLs
-      var teamTicketUrls = {
-        '삼성': 'https://www.ticketlink.co.kr/sports/baseball/57#reservation',
-        '한화': 'https://www.ticketlink.co.kr/sports/baseball/63#reservation',
-        // Add other teams as needed
-      };
-
-      // Define the base URL
-      var baseUrl = 'https://www.ticketlink.co.kr/sports/baseball/';
-
-      // Set the dynamic href based on the team
-      var teamHref = teamTicketUrls[teamHomeway] || baseUrl + 'default'; // Use 'default' if no specific URL is found
-
-      // Redirect to the dynamically generated href
-      window.location.href = teamHref;
-    });
-  });
 </script>
 </html>

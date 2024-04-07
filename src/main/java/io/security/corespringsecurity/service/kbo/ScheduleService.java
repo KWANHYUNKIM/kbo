@@ -26,4 +26,6 @@ public interface ScheduleService {
     Schedule findByComment(Long scheduleId);
 
     List<Schedule> findById(Location id, String date);
+
+    List<Schedule> findByDateRange(String startDate, String endDate );
 }

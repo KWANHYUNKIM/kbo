@@ -59,30 +59,43 @@
     </div>
   </div>
 </div>
-
-
-
-<div class="calendar">
-  <div class="nav">
-    <img onclick="changeDate(-1)" src="/images/home/btn_prev.png">
-    <h2 id="currentDate">2024.03.23(토)</h2>
-    <img onclick="changeDate(1)" src="/images/home/btn_next.png">
-  </div>
-</div>
-
 <div class="row">
   <div class="container" style="text-align: center; font-weight: bold; font-size: 16px; margin-top: 20px;">
-    <h1>스코어 보드</h1>
+    <div class="col-12">
+      <div class="calendar">
+        <div class="nav">
+          <img onclick="changeDate(-1)" src="/images/home/btn_prev.png" style="padding-right: 5px; text-align: center; width: 25px; height: 25px;">
+          <h2 id="currentDate"></h2>
+          <img onclick="changeDate(1)" src="/images/home/btn_next.png" style="padding-right: 5px; text-align: center; width: 25px; height: 25px;">
+        </div>
+      </div>
+    </div>
+    <div class="col-2">
+      <div id="calendarContainer">
+        <select id="yearDropdown" onchange="changeYear()">
+        </select>
+        <select id="monthDropdown" onchange="changeMonth()">
+        </select>
+        <div id="calendar"></div>
+      </div>
+    </div>
   </div>
 </div>
 
 <div class="row p-3" style="margin-top: 20px">
   <div id ="scheduleData" class="container">
     <div class="table table-hover h-200 w-200"  th:if="${not #lists.isEmpty(scheduleList)}"
-           th:each="schedule, loop : ${scheduleList}" style="border: 0.1px solid #000; padding: 10px; border-radius: 10px; margin-top: 30px; cursor: pointer;"
+           th:each="schedule, loop : ${scheduleList}" style="border: 0.1px solid #000; padding: 10px; border-radius: 10px; margin-top: 30px; cursor: pointer;">
+
+      <div class="g-col-4"
+           th:data-date="${schedule.date}"
+           th:data-time="${schedule.time}"
+           th:data-gameboard="${#lists.isEmpty(schedule.gameBoard) ? 'none' : schedule.gameBoard}"
+           th:if="${schedule.date != null and schedule.time != null}">
+
+      <div th:if="${schedule.gameBoard != null}" style="margin-top: 30px"
            th:title="'상세 페이지로 넘어가기'"
            th:onclick="|location.href='@{/game/{scheduleId}(scheduleId=${schedule.date + schedule.awayTeam.teamName + schedule.homeTeam.teamName})}/reply'|">
-      <div th:if="${schedule.gameBoard != null}" style="margin-top: 30px">
 
         <div class="container" style="margin-top: 30px">
           <p style="display: inline; font-weight: bold" th:text="${schedule.location.locationName}"></p>
@@ -92,7 +105,6 @@
           <img style="display: inline" th:src="${schedule.awayTeam.filepath}" alt="Away Team Logo">
           <p style="display: inline; font-size: 16px; font-weight: bold;"  th:text="${schedule.awayTeam.teamName}"></p>
           <p style="display: inline; color: red; font-size: 16px; font-weight: bold" th:text="${schedule.gameBoard.awayTeamR}"></p>
-          <!-- Todo : 수정 (경기전 , 경기중, 경기종료 만들기 )-->
           <p style="display: inline; font-weight: bold; color: black; font-size: 12px;">경기종료</p>
           <p style="display: inline; color: red; font-size: 16px; font-weight: bold" th:text="${schedule.gameBoard.homeTeamR}"></p>
 
@@ -158,16 +170,18 @@
 
       <div th:if="${schedule.gameBoard == null}">
         <div class="container" style="margin-top: 30px">
+
           <p style="display: inline; font-weight: bold" th:text="${schedule.location.locationName}"></p>
           <p style="display: inline; font-weight: bold" th:text="${schedule.time}"></p>
 
           <div class="text-center">
             <img style="display: inline" th:src="${schedule.awayTeam.filepath}" alt="Away Team Logo">
-            <p style="display: inline; font-size: 16px; font-weight: bold;"  th:text="${schedule.awayTeam.teamName}"></p>
-            <p style="display: inline; font-weight: bold; color: #316ac5; font-size: 12px;">우천취소</p>
+            <p style="display: inline; font-size: 16px; font-weight: bold;" th:text="${schedule.awayTeam.teamName}"></p>
+            <p th:id="'gameStatus' + ${loop.index}" style="display: inline; font-weight: bold; color: #316ac5; font-size: 12px;"></p>
             <p style="display: inline; font-size: 16px; font-weight: bold;" th:text="${schedule.homeTeam.teamName}"></p>
             <img style="display: inline" th:src="${schedule.homeTeam.filepath}" alt="Home Team Logo">
           </div>
+
           <table th:if="${schedule.gameBoard == null}">
             <thead>
             <tr>
@@ -192,7 +206,7 @@
             </thead>
 
             <!-- 어웨이 팀 점수 행 -->
-            <p>우천취소로 인해 경기가 없습니다.</p>
+            <p th:id="'gameResult' + ${loop.index}"></p>
             <tbody>
             <tr>
               <td>-</td> <!-- TEAM 이름 대신 사용 -->
@@ -233,13 +247,13 @@
               <td>-</td> <!-- E -->
               <td>-</td> <!-- B -->
             </tr>
-
             </tbody>
           </table>
+        </div>
       </div>
     </div> <!-- schedule.game == null -->
   </div>
-    <div th:unless="${not #lists.isEmpty(scheduleList)}">
+    <div th:unless="${not #lists.isEmpty(scheduleList)}" style="text-align: center; font-weight: bold; color: red;">
       <p>경기가 없습니다.</p>
     </div>
   </div>
@@ -248,32 +262,187 @@
 
 
 <script>
-  let currentDate = new Date(2023, 3, 1); // Corrected the month to represent March (0-based)
+  function initDropdowns() {
+    populateYearDropdown();
+    populateMonthDropdown();
+    updateDate();
+    generateCalendar();
+  }
+
+  function populateYearDropdown() {
+    const yearDropdown = document.getElementById('yearDropdown');
+    const currentYear = currentDate.getFullYear();
+    for (let i = currentYear - 10; i <= currentYear + 10; i++) {
+      let option = new Option(i, i);
+      yearDropdown.add(option);
+      if (i === currentYear) option.selected = true;
+    }
+  }
+
+  function populateMonthDropdown() {
+    const monthDropdown = document.getElementById('monthDropdown');
+    const currentMonth = currentDate.getMonth();
+    const months = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
+    months.forEach((month, index) => {
+      let option = new Option(month, index);
+      monthDropdown.add(option);
+      if (index === currentMonth) option.selected = true;
+    });
+  }
+
+  function changeYear() {
+    const yearDropdown = document.getElementById('yearDropdown');
+    const newYear = parseInt(yearDropdown.value);
+    currentDate.setFullYear(newYear);
+    generateCalendar();
+    sendAjaxRequest(); // 새로운 날짜로 AJAX 요청
+  }
+
+  function changeMonth() {
+    const monthDropdown = document.getElementById('monthDropdown');
+    const newMonth = parseInt(monthDropdown.value);
+    currentDate.setMonth(newMonth);
+    generateCalendar();
+    sendAjaxRequest(); // 새로운 날짜로 AJAX 요청
+  }
+
+  let currentDate = new Date(2023, 3, 1); // April 1, 2023
+
+  function generateCalendar() {
+    const month = currentDate.getMonth();
+    const year = currentDate.getFullYear();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const firstDay = new Date(year, month, 1).getDay();
+
+    let calendarHtml = '<table><tr><th>일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th>토</th></tr><tr>';
+
+    for (let i = 0; i < firstDay; i++) {
+      calendarHtml += '<td></td>'; // Fill empty cells
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      if ((day + firstDay - 1) % 7 === 0) calendarHtml += '</tr><tr>'; // Start a new row every week
+      calendarHtml += `<td class="calendar-day" data-day="${day}">${day}</td>`; // Fill day
+    }
+
+    calendarHtml += '</tr></table>';
+    document.getElementById('calendar').innerHTML = calendarHtml;
+
+    // Attach click event to days
+    document.querySelectorAll('.calendar-day').forEach(day => {
+      day.addEventListener('click', function() {
+        const selectedDay = this.getAttribute('data-day');
+        changeDate(selectedDay - currentDate.getDate());
+      });
+    });
+  }
 
   function changeDate(days) {
     currentDate.setDate(currentDate.getDate() + days);
     updateDate();
+    sendAjaxRequest();
+  }
 
-    // Format the date as 'yyyyMMdd'
+  function sendAjaxRequest() {
     const formattedDateForServer = formatDateForServer(currentDate);
-
-    // Display the formatted date (for debugging)
-    // alert(formattedDateForServer);
-
-    // Send AJAX request to the server
     $.ajax({
       url: '/schedule/scoreboard',
       type: 'GET',
       data: { date: formattedDateForServer },
       success: function(data) {
-        // Update the table content
         $('#scheduleData').html($(data).find('#scheduleData').html());
+
+        var schedules = [];
+
+        $('.g-col-4').each(function() {
+          var date = $(this).data('date');
+          var time = $(this).data('time');
+          var gameBoard = $(this).data('gameboard');
+          // console.log("g-col-4 안에 " + gameBoard);
+          schedules.push({date: date, time: time, gameBoard: gameBoard});
+
+          updateGameStatus(schedules); // 함수 업데이트 호출
+        });
       },
       error: function () {
         console.error('Failed to load data.');
       }
     });
   }
+
+  // function updateGameStatus() {
+  //   const schedulesCount = document.querySelectorAll('[id^="scheduleDate"]').length;
+  //   var elementValue = document.getElementById('index').value;
+  //   console.log(elementValue); // 이렇게 하면 '0'이 출력됩니다 (loop.index가 0일 때)
+  //   console.log("scheduleCount" + " " + schedulesCount);
+  //
+  //   for (let i = 0; i < schedulesCount; i++) {
+  //     const scheduleDateString = document.getElementById('scheduleDate' + i).value;
+  //     const scheduleTimeString = document.getElementById('scheduleTime' + i).value;
+  //     console.log(`scheduleDate${i}:`, scheduleDateString); // 날짜 값 확인
+  //     console.log(`scheduleTime${i}:`, scheduleTimeString); // 시간 값 확인
+  //
+  //     const scheduleDateTime = new Date(`${scheduleDateString.slice(0, 4)}-${scheduleDateString.slice(4, 6)}-${scheduleDateString.slice(6)}T${scheduleTimeString}:00`);
+  //     console.log(`scheduleDateTime${i}:`, scheduleDateTime); // Date 객체 확인
+  //
+  //     const currentDate = new Date();
+  //     console.log("currentDate:", currentDate); // 현재 날짜 및 시간 확인
+  //
+  //     const gameStatusText = document.getElementById('gameStatus' + i);
+  //     const gameResult = document.getElementById('gameResult' + i);
+  //     console.log(`gameStatusText Element${i}:`, gameStatusText); // gameStatusText 요소 확인
+  //
+  //     if (scheduleDateTime < currentDate) {
+  //       console.log(`결과${i}:`, '우천취소'); // 결정된 결과 로깅
+  //       gameStatusText.textContent = '우천취소';
+  //       gameResult.textContent = '우천취소로 인해 경기가 없습니다.';
+  //     } else {
+  //       console.log(`결과${i}:`, '경기 예정'); // 결정된 결과 로깅
+  //       gameStatusText.textContent = '경기 예정';
+  //     }
+  //   }
+  // }
+
+  function updateGameStatus(schedules) {
+    $('.g-col-4').each(function(index) {
+
+      for (var i = 0; i < schedules.length; i++) {
+        const scheduleDate = schedules[i].date;
+        const scheduleTime = schedules[i].time;
+        const gameBoardStatus = schedules[i].gameBoard;
+        console.log("i 값은?" + i);
+        console.log("schedule 값은?" + scheduleDate);
+
+
+        const scheduleDateTimeString = scheduleDate  + scheduleTime ;
+
+
+        const currentDate = new Date();
+        const compareToCurrentTime = formatDateForServer(currentDate);
+
+        console.log("scheduletime 값은?" + scheduleDateTimeString);
+        console.log("gameboardStatus 값은?" + compareToCurrentTime);
+
+        const gameStatusText = $(this).find('[id^="gameStatus' + i + '"]');
+        const gameResult = $(this).find('[id^="gameResult' + i + '"]');
+
+
+        // gameBoard가 'none'이고 현재 시간보다 미래인 경우
+        if (gameBoardStatus === 'none' && scheduleDateTimeString > compareToCurrentTime) {
+          console.log(index + ': 경기 예정');
+          gameStatusText.text('경기 예정');
+          gameResult.text(''); // 필요에 따라 추가 정보 업데이트
+        }
+        // gameBoard가 'none'이고 현재 시간이 지난 경우
+        else if (gameBoardStatus === 'none' && scheduleDateTimeString <= compareToCurrentTime) {
+          console.log(index + ': 우천 취소');
+          gameStatusText.text('우천 취소');
+          gameResult.text('우천 취소로 인해 경기가 없습니다.');
+        }
+      }
+    });
+  }
+
 
   function formatDateForServer(date) {
     const year = date.getFullYear();
@@ -284,15 +453,15 @@
   }
 
   function updateDate() {
-    // Format the date as '2024.03.24(일)'
     const options = { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'long' };
     const formattedDateForDisplay = currentDate.toLocaleDateString('ko-KR', options).replace(/-/g, '').replace(/\./g, '.');
     document.getElementById('currentDate').textContent = formattedDateForDisplay;
   }
 
   // Initialize
-  updateDate();
+  document.addEventListener('DOMContentLoaded', function() {
+    initDropdowns(); // 이 함수는 페이지가 로드될 때 드롭다운을 채우고 초기 캘린더를 생성합니다.
+  });
 </script>
-
 
 </html>

@@ -64,83 +64,88 @@
                 <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link text-dark" th:href="@{/login}">로그인</a></li>
                 <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link text-dark" th:href="@{/users}">회원가입</a></li>
 
+                <div class = "navbar-nav justify-content-center" style="display: inline-block">
+                    <div class="container"  style="justify-content: space-between; display: flex; align-items: center; width: 100%;">
 
-                <div class = "navbar-nav justify-content-center">
-                    <div class="container" style="justify-content: space-between; display: flex;">
-                        <form th:action="@{/boards/search}" method="GET" >
-                            <input style="width: 200px; height: 30px; border-radius: 15px; border-color: #e3dfdf" type="text" id="query" name="query" placeholder="커뮤니티 내에서 검색">
-                            <button style="border: none; background: none; position: relative" type="submit">
-                                <img src="/images/icons/search.png" alt="Search" style="width: 23px; height: 23px; position: relative;">
-                            </button>
-                        </form>
-                    </div>
-                </div>
+                        <!-- 검색 폼 -->
+                        <div style="display: flex; align-items: center;">
+                            <form th:action="@{/boards/search}" method="GET" style="padding-left: 15px;">
+                                <input style="width: 200px; height: 30px; border-radius: 15px; border-color: #e3dfdf" type="text" id="query" name="query" placeholder="커뮤니티 내에서 검색">
+                                <button style="border: none; background: none;" type="submit">
+                                    <img src="/images/icons/search.png" alt="Search" style="width: 23px; height: 23px;">
+                                </button>
+                            </form>
+                            <!-- 채팅 목록 -->
+                            <div th:replace="chat/chatList" style="padding-left: 15px;"></div>
+                        </div>
+                        <!-- 북마크 아이콘 -->
+                        <div th:each="account : ${account}" style="padding-left: 15px;">
+                            <a class="nav-link text-dark" sec:authorize="isAuthenticated()" th:href="@{/users/{userId}/scraped(userId=${account.id})}">
+                                <img src="/images/icons/bookmark.png" height="23" width="23" title="북마크" class="nav-item" sec:authorize="isAuthenticated()">
+                            </a>
+                        </div>
 
-                <div th:each="account : ${account}">     <!-- bookMark icons -->
-                    <a class="nav-link text-dark" sec:authorize="isAuthenticated()" th:href="@{/users/{userId}/scraped(userId=${account.id})}">
-                        <img src="/images/icons/bookmark.png" height="18" width="18" title="북마크" class="nav-item" sec:authorize="isAuthenticated()">
-                    </a>
-                </div>
+                        <!-- 알람 아이콘 -->
+                        <div style="padding-left: 10px;">
+                            <a href="#" onclick="toggleNotifications()" title="알람" sec:authorize="isAuthenticated()">
+                                <div id="notificationIconContainer">
+                                    <img id="notificationIcon" src="/images/icons/bell.png" height="23" width="23" title="알람" class="nav-item"/>
+                                    <span id="notificationCount" th:if="${falseNotificationCounts >= 1}"
+                                          style="position: absolute; top: 15px; right: 53px; width: 8px; height: 8px; border-radius: 50%; background-color: rgb(255, 0, 0, 0.95);"></span>
+                                </div>
+                            </a>
+                        </div>
+                        <!-- style="visibility: hidden; position: absolute; top: 100%; left: 0;
+                            background-color: white; border: 1px solid #ccc; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                            z-index: 999;" -->
 
-                <!-- alarm icons -->
-                <a href="#" onclick="toggleNotifications()" title="알람" sec:authorize="isAuthenticated()">
-                    <div id="notificationIconContainer">
-                        <img id="notificationIcon" src="/images/icons/bell.png" height="18" width="18" title="알람" class="nav-item"/>
-                        <span id="notificationCount"  th:if="${falseNotificationCounts >= 1}"
-                              style="position: absolute; top: 15px; right: 53px; width: 8px; height: 8px;
-                              border-radius: 50%; background-color: rgb(255, 0, 0, 0.95); display: inline-block;"></span>
-
-                    </div>
-                </a>
-                <!-- style="visibility: hidden; position: absolute; top: 100%; left: 0;
-                    background-color: white; border: 1px solid #ccc; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                    z-index: 999;" -->
-
-                <div id="notificationsContainer" style="display: none; position: absolute; width: 100%; height: 200px; overflow: auto;
-                top: 130px;">
-                    <table class="table" th:each="notification, loop : ${notifications}"
-                           style="position: relative; width: 100%; z-index: 999; border-radius: 0.1px; border-color:black;
+                        <div id="notificationsContainer" style="display: none; position: absolute; width: 100%; height: 200px; overflow: auto;
+                         top: 130px; padding-left: 10px; ">
+                            <table class="table" th:each="notification, loop : ${notifications}"
+                                   style="position: relative; width: 100%; z-index: 999; border-radius: 0.1px; border-color:black;
                            background-color: white;
                            ">
-                        <tbody>
-                        <tr class="" th:each="notification, loop : ${notifications}"
-                            style="margin-top: 20px; position: relative;"
-                            th:style="'top: calc(20px * ' + ${loop.index} + ');'">
-                            <td class="" th:text="${notification.message}" style="padding: 20px; width: 200px;"></td>
-                            <!-- Add additional logic to display details based on notification type (like, comment, etc.) -->
-                        </tr>
-                        </tbody>
-                    </table>
+                                <tbody>
+                                <tr class="" th:each="notification, loop : ${notifications}"
+                                    style="margin-top: 20px; position: relative;"
+                                    th:style="'top: calc(20px * ' + ${loop.index} + ');'">
+                                    <td class="" th:text="${notification.message}" style="padding: 20px; width: 200px;"></td>
+                                    <!-- Add additional logic to display details based on notification type (like, comment, etc.) -->
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- 프로필 드롭다운 -->
+                        <div th:replace="home/profileDropdown" style="display: block; align-items: center;"></div>
+                        <script th:src="@{/js/profileDropdown.js}"></script>
+                    </div>
                 </div>
-
-                <div th:replace="home/profileDropdown"></div>
-                <script th:src="@{/js/profileDropdown.js}"></script>
-
-                <script th:inline="javascript">
-                    function toggleNotifications() {
-                        var notificationsContainer = document.getElementById('notificationsContainer');
-                        notificationsContainer.style.display = (notificationsContainer.style.display === 'none' || notificationsContainer.style.display === '') ? 'block' : 'none';
-
-                        // Ajax 호출
-                        $.ajax({
-                            type: "POST",
-                            url: "/notifications",  // 해당 URL을 알맞게 수정하세요.
-                            success: function(response) {
-                                // Ajax 호출이 성공하면 이 부분이 실행됩니다.
-                                console.log("Ajax 호출 성공");
-                                // 추가적인 로직을 여기에 작성하세요.
-                            },
-                            error: function(error) {
-                                // Ajax 호출이 실패하면 이 부분이 실행됩니다.
-                                console.error("Ajax 호출 실패", error);
-                            }
-                        });
-                    }
-                </script>
             </ul>
         </div>
+        <script th:inline="javascript">
+            function toggleNotifications() {
+                var notificationsContainer = document.getElementById('notificationsContainer');
+                notificationsContainer.style.display = (notificationsContainer.style.display === 'none' || notificationsContainer.style.display === '') ? 'block' : 'none';
+
+                // Ajax 호출
+                $.ajax({
+                    type: "POST",
+                    url: "/notifications",  // 해당 URL을 알맞게 수정하세요.
+                    success: function(response) {
+                        // Ajax 호출이 성공하면 이 부분이 실행됩니다.
+                        console.log("Ajax 호출 성공");
+                        // 추가적인 로직을 여기에 작성하세요.
+                    },
+                    error: function(error) {
+                        // Ajax 호출이 실패하면 이 부분이 실행됩니다.
+                        console.error("Ajax 호출 실패", error);
+                    }
+                });
+            }
+        </script>
     </div>
 </nav>
+
 
 </html>
 
