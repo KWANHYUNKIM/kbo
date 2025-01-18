@@ -7,7 +7,7 @@ build
 !.mvn/wrapper/maven-wrapper.jar
 /src/main/resources/maxmind/
 !.out/artifacts/corespringsecurity_jar/corespringsecurity.jar
-
+*.jar
 ### STS ###
 .apt_generated
 .classpath
@@ -30,4 +30,4 @@ build
 /nbbuild/
 /dist/
 /nbdist/
-/.nb-gradle/
+/.nb-gradle/out/artifacts/corespringsecurity_jar/corespringsecurity.jar
