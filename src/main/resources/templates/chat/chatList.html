@@ -167,7 +167,7 @@
                                 <i class="far fa-user-circle"></i>
                                 <img style="border-radius: 50%;" th:src="*{room.filepath}">
 
-                                <a th:href="@{/chat/chatRoom/{roomId}(roomId=${room.roomId})}"
+                                <a th:href="@{/members/chat/chatRoom/{roomId}(roomId=${room.roomId})}"
                                    th:text="${room.name}"></a>
                             </li>
                         </div>

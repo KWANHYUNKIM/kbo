@@ -40,14 +40,12 @@ public class GameHighlights {
 
     @OneToOne
     @JoinColumn(name = "game_board_id")
-    private GameBoardEntity gameBoard;
-
+    private GameBoardEntity gameBoard;    
+    
     public void setGameWinningHit(String gameWinningHit) {
         this.gameWinningHit = gameWinningHit;
     }
-
     // 나머지 세터 메서드 생략...
-
     public void matchAndSetData(String header, String data) {
         switch (header) {
             case "결승타":

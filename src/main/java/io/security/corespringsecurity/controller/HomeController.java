@@ -36,6 +36,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.security.Principal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -63,7 +65,10 @@ public class HomeController {
 	private ChatService chatService;
 
 	@GetMapping(value="/")
-	public String home(Model model, Principal principal, @RequestParam(name = "date" , defaultValue = "20240323") String date){
+	public String home(Model model, Principal principal){
+
+		LocalDate currentDate = LocalDate.now();
+		String date = currentDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 
 		Account account = null;
 		if (principal instanceof UsernamePasswordAuthenticationToken) {
@@ -103,7 +108,6 @@ public class HomeController {
 
 		List<Team> team = teamRepository.findAll();
 		List<Teams> clubs =  clubService.findAll();
-
 		List<Schedule> findByScheduleAll = scheduleService.findAll();
 
 		List<String> dates = findByScheduleAll.stream()
@@ -131,6 +135,7 @@ public class HomeController {
 		model.addAttribute("scheduleList",scheduleList);
 		model.addAttribute("scheduleDate", dates);
 		model.addAttribute("clubs", clubs);
+		model.addAttribute("currentDate",date);
 		model.addAttribute("teams", team);
 		model.addAttribute("communityTop5",top5Boards);
 		model.addAttribute("roomList",roomList);

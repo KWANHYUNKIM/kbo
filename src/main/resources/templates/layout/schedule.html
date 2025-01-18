@@ -309,8 +309,6 @@
                  th:data-time="${schedule.time}"
                  th:data-gameboard="${#lists.isEmpty(schedule.gameBoard) ? 'none' : schedule.gameBoard}"
             >
-
-
               <!-- 경기 contents -->
               <div class="text-center container">
                 <p style="font-weight: bold; display: inline;" th:text="${schedule.location.locationName}"></p>
@@ -371,7 +369,8 @@
 
 <script>
   function initDate(){
-    const currentDate = new Date();
+
+    let currentDate = new Date();
     // 날짜 옵션 설정
     const dateOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
     // 요일 옵션 설정
@@ -382,10 +381,10 @@
     const formattedDay = currentDate.toLocaleDateString('ko-KR', dayOptions);
 
     // 최종 문자열 조합
-    const formattedDateForDisplay = `${formattedDate} ${formattedDay}`;
+    const formattedDateForDisplay = `${formattedDate.replace('년', '')} ${formattedDay}`;
 
     // 텍스트 업데이트
-    document.getElementById('currentDateMain').textContent = formattedDateForDisplay.replace(/\./g, '. ');
+    document.getElementById('currentDateMain').textContent = formattedDateForDisplay;
   }
   document.addEventListener('DOMContentLoaded', initDate);
 </script>
@@ -450,8 +449,8 @@
   let current = new Date();
 
   let formattedYear = `${current.getFullYear()}`;
-  let formattedMonth = `${current.getMonth() + 1}`;
-  let formattedDay = `${current.getDay()}`;
+  let formattedMonth = `${current.getMonth()}`;
+  let formattedDay = `${current.getDay() + 7 }`;
 
 
   let currentDate = new Date(formattedYear, formattedMonth, formattedDay); // Corrected the month to represent March (0-based)
@@ -504,7 +503,7 @@
 
   function changeDateByDay(day) {
     currentDate.setDate(currentDate.getDate() + day);
-    updateDate();
+    updateDate(currentDate);
     updateCalendar();
     sendAjaxRequest();
   }
@@ -516,8 +515,8 @@
     return `${year}${month}${day}`;
   }
 
-  function updateDate() {
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'long' };
+  function updateDate(date) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
     const formattedDateForDisplay = currentDate.toLocaleDateString('ko-KR', options).replace(/-/g, '').replace(/\./g, '.');
     document.getElementById('currentDateMain').textContent = formattedDateForDisplay;
   }
@@ -576,6 +575,13 @@
 
     calendarContainer.appendChild(table);
   }
+
+  window.onload = function() {
+    // 드롭다운을 현재 날짜로 초기화
+    document.getElementById('yearDropdown').value = currentDate.getFullYear();
+    document.getElementById('monthDropdown').value = currentDate.getMonth();
+  }
+
   function sendAjaxRequest() {
     const formattedDateForServer = formatDateForServer(currentDate);
 

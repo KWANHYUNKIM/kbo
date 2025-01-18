@@ -20,7 +20,7 @@ import java.util.Set;
 public class Resources implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(name = "resource_id")
     private Long id;
 

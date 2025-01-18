@@ -2,23 +2,51 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <style>
+        .content {
+            background-image: url('[[${account.filepath}]]');
+            background-size: contain;
+            background-repeat: no-repeat;
+            padding: 10px;
+
+        }
+
+    </style>
 </head>
 <body>
-<input type="text" placeholder="보낼 메세지를 입력하세요." class="content">
-<button type="button" value="전송" class="sendBtn" onclick="sendMsg()">전송</button>
-<button type="button" value="방나가기" class="quit" onclick="quit()">방 나가기 </button>
-<div>
-    <span>메세지</span>
-    <div class="msgArea"></div>
+<div class="container" style="width: 500px;">
+    <!-- • 한화 이글스
+           363,528명 방문 | 홈 바로가기 버튼 3개 >  -->
+    <div class="container">
+        <button type="button" value="방나가기" class="quit" onclick="quit()">방 나가기 </button>
+    </div>
+    <!-- 프로필 사진 , 닉네임
+         메세지  , 보낸 시간   -->
+    <div class="container">
+        <span>메세지</span>
+        <div class="msgArea"></div>
+    </div>
+
+    <br>
+    <hr>
+    <!-- 댓글 쓰기  -->
+    <div class ="container">
+        <input type="text" th:attr="placeholder='(' + ${account.username} + ')로 메세지 작성'" class="content" style="width: 300px; padding-left: 35px;">
+    </div>
+    <!-- 이모티콘, 사진, 좋아요, 보내기 버튼 -->
+    <div class ="container">
+        <button type="button" value="전송" class="sendBtn" onclick="sendMsg()">보내기</button>
+    </div>
 </div>
+
 </body>
+
 
 <script th:inline="javascript">
     /* roomId를 JavaScript 변수로 설정 */
     var roomId = [[${room?.roomId}]];
-
+    var profile = [[${account?.filepath}]];
+    var useName = [[${account?.username}]];
     function enterRoom(socket){
         console.log(roomId);
 
@@ -58,7 +86,12 @@
 
             let msgArea = document.querySelector('.msgArea');
             let newMsg = document.createElement('div');
-            newMsg.innerText = "You: " + content;
+            newMsg.innerText = useName + ':' + content;
+
+            var img = document.createElement('img');
+            img.src = profile;  // 프로필 이미지 파일 경로
+
+            msgArea.append(img);  // 이미지를 메시지 영역에 추가
             msgArea.append(newMsg);
         } else {
             console.log("WebSocket is not open:", socket.readyState);

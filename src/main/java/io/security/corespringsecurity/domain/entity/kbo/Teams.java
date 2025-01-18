@@ -19,7 +19,7 @@ public class Teams {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name ="teams_id")
+    @Column(name ="team_id")
     private long id;
     @Column(name = "teamName")
     private String teamName;
@@ -29,6 +29,4 @@ public class Teams {
 
     @OneToMany(mappedBy = "teams")
     private List<Players> players = new ArrayList<Players>();
-
-
 }

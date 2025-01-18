@@ -106,7 +106,6 @@
                                     </a>
                                 </div>
                             </div>
-                            <input type="hidden" id="selectedImagePathInput" name="selectedImagePath" th:value="${chatForm.filepath}" />
                         </div>
 
 
@@ -170,6 +169,7 @@
                         </div>
 
                         <div class="form-group" style="padding-top: 5px;">
+                            <input type="hidden" id="selectedImagePathInput" name="selectedImagePath" th:value="${chatForm.filepath}" />
                             <div style="padding-top: 5px; text-align: right">
                                 <button type="submit" class="btn btn-primary" style="width: 75px; height: 35px; border-radius: 10px;">완료</button>
                             </div>

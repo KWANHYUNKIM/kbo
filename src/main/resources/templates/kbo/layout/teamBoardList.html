@@ -3,9 +3,29 @@
 
 <head>
     <style>
+        .table {
+            text-align: center;
+        }
+        th, td {
+            text-align: center;
+        }
         .table-responsive .table {
             min-height: 450px;
             min-weight: 500px;
+        }
+        .table-img {
+            height:25px;
+            weight:25px;
+        }
+        .first-row-style {
+            color: navy;
+            font-weight: bold;
+        }
+    </style>
+
+    <style>
+        .table-ranking {
+            color: skyblue;
         }
     </style>
 </head>
@@ -22,22 +42,69 @@
             <th>무</th>
             <th>승률</th>
             <th>게임차</th>
-
         </tr>
         </thead>
         <tbody>
-        <tr style="font-size: 14px" th:each="teams : ${teams}">
-            <td th:text="${teams.ranking}"></td>
-            <td th:text="${teams.teamName}"></td>
-            <td th:text="${teams.matches}"></td>
-            <td th:text="${teams.win}"></td>
-            <td th:text="${teams.loss}"></td>
-            <td th:text="${teams.draw}"></td>
-            <td th:text="${teams.winningPercentage}"></td>
-            <td th:text="${teams.gameDifference}"></td>
+        <tr style="font-size: 14px" th:each="teams, iterStat : ${teams}">
+            <th:block th:each="clubs : ${clubs}">
+                <td th:if="${teams.teamName} == ${clubs.teamName}" th:text="${teams.ranking}" class="table-ranking"></td>
+                <td th:if="${teams.teamName} == ${clubs.teamName}"
+                    th:classappend="${iterStat.index == 0} ? 'first-row-style' : ''">
+                    <img th:src="${clubs.filepath}" th:name="${clubs.filename}" class="table-img">
+                    <span th:text="${teams.teamName}"></span>
+                </td>
+                <td th:if="${teams.teamName} == ${clubs.teamName}"
+                    th:classappend="${iterStat.index == 0} ? 'first-row-style' : ''"
+                    th:text="${teams.matches}"></td>
+                <td th:if="${teams.teamName} == ${clubs.teamName}"
+                    th:classappend="${iterStat.index == 0} ? 'first-row-style' : ''"
+                    th:text="${teams.win}"></td>
+                <td th:if="${teams.teamName} == ${clubs.teamName}"
+                    th:classappend="${iterStat.index == 0} ? 'first-row-style' : ''"
+                    th:text="${teams.loss}"></td>
+                <td th:if="${teams.teamName} == ${clubs.teamName}"
+                    th:classappend="${iterStat.index == 0} ? 'first-row-style' : ''"
+                    th:text="${teams.draw}"></td>
+                <td th:if="${teams.teamName} == ${clubs.teamName}"
+                    th:classappend="${iterStat.index == 0} ? 'first-row-style' : ''">
+                    <span class="winning-percentage" th:text="${teams.winningPercentage}"></span>
+                </td>
+                <td th:if="${teams.teamName} == ${clubs.teamName}"
+                    th:classappend="${iterStat.index == 0} ? 'first-row-style' : ''">
+                    <span class="game-difference" th:text="${teams.gameDifference}"></span>
+                </td>
+            </th:block>
         </tr>
         </tbody>
     </table>
 </div>
 </body>
+
+
+<script>
+    function formatNumberWithOneDecimalPlace() {
+        var gameDifferenceElements = document.querySelectorAll('.game-difference');
+        var winningPercentageElements = document.querySelectorAll('.winning-percentage');
+
+        winningPercentageElements.forEach(function(element) {
+            var winningPercentageValue = parseFloat(element.textContent)
+            if (!isNaN(winningPercentageValue)) {
+                element.textContent = winningPercentageValue.toFixed(3);
+            }
+        });
+
+        gameDifferenceElements.forEach(function(element) {
+            var gameDifferenceValue = parseFloat(element.textContent);
+            if (!isNaN(gameDifferenceValue)) {
+                element.textContent = gameDifferenceValue.toFixed(1);
+            }
+        });
+    }
+
+    // 문서가 로드되면 함수를 실행
+    document.addEventListener('DOMContentLoaded', function() {
+        formatNumberWithOneDecimalPlace();
+    });
+</script>
+
 </html>

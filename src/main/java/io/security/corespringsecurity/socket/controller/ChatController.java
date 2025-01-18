@@ -72,9 +72,9 @@ public class ChatController {
         }
 
         String uniqueID = UUID.randomUUID().toString();
-
+        
         ChatRoom chatRoom = new ChatRoom();
-
+        
         chatRoom.setRoomId(uniqueID);
         chatRoom.setName(form.getName());
         chatRoom.setKeyword(form.getKeyword());
@@ -85,19 +85,19 @@ public class ChatController {
         chatRoom.setGender(form.getGender());
         chatRoom.setMinYear(form.getMinYear());
         chatRoom.setMaxYear(form.getMaxYear());
-
+        
         chatService.create(chatRoom);
 
         webSocketHandler.getChatRoomSessions().putIfAbsent(uniqueID, ConcurrentHashMap.newKeySet());
-
+        
         return "redirect:/chat/chatRoom/" + uniqueID;
     }
 
-    @GetMapping("/chat/chatRoom/{roomId}")
-    public String chatRoom(Model model, @PathVariable String roomId) {
+    @GetMapping("/members/chat/chatRoom/{roomId}")
+    public String chatRoom(Model model, @PathVariable String roomId ,  @AuthenticationPrincipal Account account) {
         ChatRoom room = chatService.findRoomById(roomId);
-        System.out.println("room 확인 " + room);
 
+        model.addAttribute("account" , account);
         model.addAttribute("room", room);
         return "chat/chatRoom";
     }
